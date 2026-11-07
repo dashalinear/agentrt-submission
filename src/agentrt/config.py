@@ -39,6 +39,7 @@ class Config:
     # --- workload control -------------------------------------------------
     global_concurrency: int = 4
     per_tenant_concurrency: int = 2
+    worker_concurrency: int | None = None  # local slots of ONE worker process (default: global)
     max_queue_size: int = 1000           # max admitted QUEUED+RUNNING jobs (admission control)
     max_queue_per_tenant: int | None = None
 

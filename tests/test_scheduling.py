@@ -40,12 +40,13 @@ def test_global_and_per_tenant_limits_never_exceeded(tmp_path, policy):
 def test_limits_hold_across_two_worker_processes_sharing_the_db(tmp_path):
     """Limits are enforced inside the claim transaction, so they hold for several workers."""
     db = str(tmp_path / "s.db")
-    cfg = fast_cfg(global_concurrency=2, per_tenant_concurrency=1)
+    cfg = fast_cfg(global_concurrency=2, per_tenant_concurrency=1, worker_concurrency=2)
     s = Store(db, cfg)
     ids = [s.create_job(t, params={"require_approval": False})[0]["job_id"] for t in ["a", "b", "c"] * 5]
 
     async def two():
         w1, w2 = make_worker(db, cfg, "w1"), make_worker(db, cfg, "w2")
+        w2.cfg = type(cfg)(**{**cfg.to_dict(), "worker_concurrency": 1})  # w2 cannot take every slot
         t2 = asyncio.create_task(w2.run())
         try:
             await run_until(w1, lambda: all(s.get_job(i)["state"] == "SUCCEEDED" for i in ids), timeout=60)
@@ -55,7 +56,7 @@ def test_limits_hold_across_two_worker_processes_sharing_the_db(tmp_path):
 
     asyncio.run(two())
     runs = s.conn.execute("SELECT tenant_id, started_at, ended_at, worker FROM step_runs").fetchall()
-    assert len({r[3].split(":")[0] for r in runs}) == 2  # both workers did work
+    assert len({r[3].split(":")[0] for r in runs}) == 2  # both workers did work (w1 started later)
     assert max_overlap([(r[1], r[2]) for r in runs]) <= 2
     for t in "abc":
         assert max_overlap([(r[1], r[2]) for r in runs if r[0] == t]) <= 1

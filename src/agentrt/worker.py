@@ -78,7 +78,7 @@ class Worker:
     async def _scheduler_loop(self) -> None:
         while not self._stop.is_set():
             if time.time() >= self._paused_until:
-                while len(self.active) < self.cfg.global_concurrency:
+                while len(self.active) < (self.cfg.worker_concurrency or self.cfg.global_concurrency):
                     job = self.store.claim_next(self.incarnation, self.policy)
                     if job is None:
                         break
