@@ -14,7 +14,7 @@ import os
 import shutil
 import time
 
-from experiments.common import (RAW, WORK, environment, hard_kill, ro, spawn_worker, start_publisher, wait_for,
+from experiments.common import (RAW, WORK, environment, fresh_dir, hard_kill, ro, spawn_worker, start_publisher, wait_for,
                                 write_csv, write_jsonl)
 
 from agentrt.config import Config
@@ -53,9 +53,7 @@ def job_terminal(db, job_id):
 
 def run_case(case: str, rep: int, pub_url: str, pub_db: str, llm: str, seed: int) -> tuple[dict, list, list]:
     spec = CASES[case]
-    d = os.path.join(WORK, "recovery", f"{case}_{rep}")
-    shutil.rmtree(d, ignore_errors=True)
-    os.makedirs(d)
+    d = fresh_dir("recovery", f"{case}_{rep}")
     db, ledger, cfg_path = os.path.join(d, "state.db"), os.path.join(d, "ledger.db"), os.path.join(d, "cfg.json")
     faults = json.loads(json.dumps(spec["faults"]))
     if faults.get("crash_after_publish_response"):
@@ -128,10 +126,13 @@ def run_case(case: str, rep: int, pub_url: str, pub_db: str, llm: str, seed: int
     extra_ok = [cl for cl in ok_calls if (cl["step_key"], cl["attempt"]) not in used]
     unknown = [cl for cl in calls if cl["ended_at"] is None]
     extra_tokens = sum(cl["prompt_tokens"] + cl["completion_tokens"] for cl in extra_ok)
-    extra_tokens_upper = extra_tokens + sum(cl["prompt_tokens"] for cl in unknown if cl["provider"] == "llm")
+    # an LLM call cut off by the crash may still have been processed and billed by the provider:
+    # upper bound = its prompt tokens + max_output_tokens (200, agent default)
+    extra_tokens_upper = extra_tokens + sum(cl["prompt_tokens"] + 200 for cl in unknown if cl["provider"] == "llm")
     price = lambda p, cpl: p / 1000 * cfg.price_per_1k_prompt + cpl / 1000 * cfg.price_per_1k_completion  # noqa: E731
     cost_total = sum(price(cl["prompt_tokens"], cl["completion_tokens"]) for cl in ok_calls)
     cost_extra = sum(price(cl["prompt_tokens"], cl["completion_tokens"]) for cl in extra_ok)
+    cost_extra_upper = cost_extra + sum(price(cl["prompt_tokens"], 200) for cl in unknown if cl["provider"] == "llm")
 
     resume_ts = None
     w_new = None
@@ -155,7 +156,7 @@ def run_case(case: str, rep: int, pub_url: str, pub_db: str, llm: str, seed: int
         "repeated_llm_calls": repeated_llm, "repeated_tool_calls": repeated_tool,
         "unknown_outcome_calls": len(unknown), "checkpointed_step_reexecuted": violations,
         "tokens_total_ok": tokens_total, "extra_tokens_ok": extra_tokens, "extra_tokens_upper_bound": extra_tokens_upper,
-        "cost_total_usd": round(cost_total, 8), "cost_extra_usd": round(cost_extra, 8),
+        "cost_total_usd": round(cost_total, 8), "cost_extra_usd": round(cost_extra, 8), "cost_extra_upper_usd": round(cost_extra_upper, 8),
         "publish_physical": phys, "publish_logical": logical, "logical_duplicates": max(0, logical - 1),
         "transient_attempts": len(transient_runs), "retry_pauses_s": json.dumps(pauses),
     }
@@ -174,9 +175,7 @@ def main(argv=None):
     ap.add_argument("--cases", default=",".join(CASES))
     a = ap.parse_args(argv)
     os.makedirs(WORK, exist_ok=True)
-    pub_dir = os.path.join(WORK, "recovery_publisher")
-    shutil.rmtree(pub_dir, ignore_errors=True)
-    os.makedirs(pub_dir)
+    pub_dir = fresh_dir("recovery_publisher")
     pub_db = os.path.join(pub_dir, "publisher.db")
     pub, url = start_publisher(pub_db)
     rows, all_runs, all_calls = [], [], []

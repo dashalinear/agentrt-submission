@@ -20,6 +20,16 @@ WORK = os.path.join(ROOT, "results", "work")
 sys.path.insert(0, SRC)
 
 
+RUN_ID = time.strftime("%Y%m%d-%H%M%S") + f"-{os.getpid()}"
+
+
+def fresh_dir(*parts: str) -> str:
+    """New, empty working directory unique to this process run (never reuses old state)."""
+    d = os.path.join(WORK, RUN_ID, *parts)
+    os.makedirs(d, exist_ok=False)
+    return d
+
+
 def env() -> dict:
     return dict(os.environ, PYTHONPATH=SRC + os.pathsep + os.environ.get("PYTHONPATH", ""),
                 AGENTRT_LOG_LEVEL=os.environ.get("AGENTRT_LOG_LEVEL", "INFO"))

@@ -16,7 +16,7 @@ import random
 import shutil
 import time
 
-from experiments.common import RAW, WORK, environment, high_res_timer, write_csv
+from experiments.common import RAW, WORK, environment, fresh_dir, high_res_timer, write_csv
 
 from agentrt.config import DEFAULT_SIM, Config
 from agentrt.runtime import build_worker
@@ -73,9 +73,7 @@ def make_cfg(policy: str, seed: int, scale: float) -> Config:
 
 
 async def run_once(policy: str, seed: int, trace: list[dict], scale: float, sample_v: float = 0.5) -> dict:
-    d = os.path.join(WORK, "load", f"{policy}_{seed}")
-    shutil.rmtree(d, ignore_errors=True)
-    os.makedirs(d)
+    d = fresh_dir("load", f"{policy}_{seed}")
     db = os.path.join(d, "s.db")
     cfg = make_cfg(policy, seed, scale)
     store = Store(db, cfg)

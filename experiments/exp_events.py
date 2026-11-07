@@ -15,7 +15,7 @@ import time
 import uuid
 from collections import Counter
 
-from experiments.common import (RAW, WORK, environment, hard_kill, pct, ro, spawn_worker, wait_for, write_csv,
+from experiments.common import (RAW, WORK, environment, fresh_dir, hard_kill, pct, ro, spawn_worker, wait_for, write_csv,
                                 write_jsonl)
 
 from agentrt.config import Config
@@ -36,10 +36,7 @@ def cfg_fast(**kw) -> Config:
 
 
 def fresh(name: str) -> str:
-    d = os.path.join(WORK, "events", name)
-    shutil.rmtree(d, ignore_errors=True)
-    os.makedirs(d)
-    return d
+    return fresh_dir("events", name)
 
 
 def state(store, jid):
@@ -367,10 +364,15 @@ def main(argv=None):
     ap.add_argument("--out", default=RAW)
     a = ap.parse_args(argv)
     rng = random.Random(a.seed)
+    # worker and event senders are threads of ONE process here: shorten the GIL switch interval
+    # (default 5 ms) so that measured latencies are not dominated by GIL hand-offs
+    import sys
+
+    sys.setswitchinterval(0.0005)
     from agentrt.logs import setup_logging
     os.makedirs(WORK, exist_ok=True)
     setup_logging(path=os.path.join(WORK, "events_experiment.log"))
-    summary = {"seed": a.seed, "env": environment(), "time_scale": 1.0}
+    summary = {"seed": a.seed, "env": environment(), "time_scale": 1.0, "gil_switch_interval_s": 0.0005}
 
     e1, inv1 = e1_approval_on_time(a.n, rng)
     e2, inv2 = e2_no_approval_timeout(40)

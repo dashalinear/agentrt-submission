@@ -1,0 +1,20 @@
+# Optional. NOT exercised in the reported runs (see REPORT.md "Ограничения"); everything works without Docker.
+services:
+  publisher:
+    build: .
+    command: python -m agentrt.cli publisher --db /data/publisher.db --host 0.0.0.0 --port 8765
+    volumes: [data:/data]
+    ports: ["8765:8765"]
+  api:
+    build: .
+    command: python -m agentrt.cli serve --db /data/state.db --host 0.0.0.0 --port 8000
+    volumes: [data:/data]
+    ports: ["8000:8000"]
+  worker:
+    build: .
+    command: python -m agentrt.cli worker --db /data/state.db --name w1 --publisher-url http://publisher:8765 --llm ${LLM:-sim}
+    env_file: [{path: .env, required: false}]
+    volumes: [data:/data]
+    depends_on: [publisher, api]
+volumes:
+  data: {}
