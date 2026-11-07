@@ -1,0 +1,15 @@
+# secrets
+.env
+*.env.local
+# python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+# runtime state / scratch (raw results ARE committed: results/raw, results/figures)
+results/work/
+*.db
+*.db-wal
+*.db-shm
+*.log
+submission.zip
