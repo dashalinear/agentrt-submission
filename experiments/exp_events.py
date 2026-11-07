@@ -210,13 +210,14 @@ def e5_races(reps, rng, batch=10):
                     time.sleep(t_target - time.time() - 0.002)
                 while time.time() < t_target:
                     pass
+                t_send = time.time()
                 if kind == "approve":
                     apr = s2.get_job(jid)["approval_id"]
                     r = s2.submit_event(jid, "evt-race-a-" + jid, "approval", {"approval_id": apr})
                 else:
                     r = s2.cancel(jid)
                     r["committed_at"] = time.time()
-                results[(jid, kind)] = (time.time(), r)
+                results[(jid, kind)] = (t_send, r)
 
             ths = [threading.Thread(target=actor, args=(p, k)) for p in plan for k in ("approve", "cancel")]
             [t.start() for t in ths]
@@ -239,6 +240,8 @@ def e5_races(reps, rng, batch=10):
                             "terminal_from": term[0][1] if term else None, "n_terminal_transitions": len(term),
                             "approve_offset_ms": round(p["approve_off"] * 1000, 2),
                             "cancel_offset_ms": round(p["cancel_off"] * 1000, 2),
+                            "approve_sent_ms": round((ta - j["deadline"]) * 1000, 2),
+                            "cancel_sent_ms": round((tc - j["deadline"]) * 1000, 2),
                             "approval_outcome": ra["outcome"], "cancel_outcome": rc["outcome"],
                             "cancel_was": rc.get("was"),
                             "terminal_ts_minus_deadline_ms": round((term[0][0] - j["deadline"]) * 1000, 2) if term else None,

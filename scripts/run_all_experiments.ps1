@@ -9,4 +9,5 @@ New-Item -ItemType Directory -Force results\raw, results\figures | Out-Null
 & $py -m experiments.exp_recovery --reps 5
 & $py -m experiments.exp_events --race-reps 300
 & $py -m experiments.exp_load --seeds 11,12,13 --policies fifo,drr,drr_iso --scale 0.1
+& $py -m experiments.sample_log
 & $py -m experiments.make_report

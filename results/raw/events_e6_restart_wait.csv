@@ -1,0 +1,16 @@
+exp,rep,variant,job_id,final,open_step_runs_while_waiting,state_while_worker_down,event_outcome,worker_ready_to_first_step_ms,worker_ready_to_terminal_ms,timeout_lateness_ms,downtime_s
+e6,0,approval_while_down,job-7a66bc9261fc4867,SUCCEEDED,0,QUEUED,applied,0.33,66.28,,0.505
+e6,0,deadline_while_down,job-23cc886695274f5e,TIMED_OUT,0,WAITING_EVENT,,,-1.03,1295.3,2.229
+e6,0,approval_after_restart,job-6df2c5c4c01b453e,SUCCEEDED,0,WAITING_EVENT,applied,22.17,70.87,,0.504
+e6,1,approval_while_down,job-fe466dc3912f49a8,SUCCEEDED,0,QUEUED,applied,0.19,56.63,,0.505
+e6,1,deadline_while_down,job-dc35ccd6cb9a4a21,TIMED_OUT,0,WAITING_EVENT,,,-0.86,1802.92,2.214
+e6,1,approval_after_restart,job-6463f5a6cfb44a98,SUCCEEDED,0,WAITING_EVENT,applied,9.05,56.65,,0.504
+e6,2,approval_while_down,job-18049d8d916b4c4d,SUCCEEDED,0,QUEUED,applied,0.19,55.28,,0.505
+e6,2,deadline_while_down,job-ca138deffb634b1a,TIMED_OUT,0,WAITING_EVENT,,,-1.07,1324.87,2.21
+e6,2,approval_after_restart,job-a2a62595feea4f13,SUCCEEDED,0,WAITING_EVENT,applied,8.34,64.9,,0.504
+e6,3,approval_while_down,job-6ed4e33a59124308,SUCCEEDED,0,QUEUED,applied,0.19,53.97,,0.505
+e6,3,deadline_while_down,job-06d35174422740d4,TIMED_OUT,0,WAITING_EVENT,,,-0.86,1282.92,2.222
+e6,3,approval_after_restart,job-7bb311f340954486,SUCCEEDED,0,WAITING_EVENT,applied,13.42,70.13,,0.504
+e6,4,approval_while_down,job-3168c27a17b0409b,SUCCEEDED,0,QUEUED,applied,0.2,64.49,,0.505
+e6,4,deadline_while_down,job-88a8236dfc0e49d6,TIMED_OUT,0,WAITING_EVENT,,,-1.07,1299.92,2.23
+e6,4,approval_after_restart,job-c61aa06e7dd2491d,SUCCEEDED,0,WAITING_EVENT,applied,15.86,64.69,,0.504

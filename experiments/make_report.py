@@ -138,7 +138,7 @@ def section_part2(ev):
                 r["event_outcome"] or "–", fmt(r["worker_ready_to_first_step_ms"]), fmt(r["worker_ready_to_terminal_ms"]),
                 fmt(r["timeout_lateness_ms"])] for r in ev["e6"]]
     e7 = s["e7"]["by_state"]
-    e7_t = table(["отмена в состоянии", "N", "p50, мс", "p95, мс", "max, мс"],
+    e7_t = table(["отмена в состоянии", "N", "p50, мс", "p95, мс", "max, мс (QUEUED/WAITING: 0 по определению)"],
                  [[k, v["n"], v["p50"], v["p95"], v["max"]] for k, v in e7.items()])
     out = [
         "Все эксперименты — `time_scale = 1.0`, воркер в отдельном потоке (E1–E5, E7) или отдельном процессе (E6). "
@@ -148,7 +148,10 @@ def section_part2(ev):
         f"{sum(e1['final'].values())} job, итог: {cnt(e1['final'])}; исходы событий: {cnt(e1['outcomes'])}.", "", lat, "",
         "«event → state transition» — от приёма события до коммита перехода `WAITING_EVENT → QUEUED` (inbox и переход "
         "в одной транзакции). «event → next step started» дополнительно включает ожидание цикла планировщика "
-        "(поллинг `poll_interval_s = 3 мс`, межпроцессного уведомления нет).", "",
+        "(поллинг `poll_interval_s = 3 мс`, межпроцессного уведомления нет). Медиана — доли миллисекунды, а хвост "
+        "(p95/max) — по всей видимости ожидание блокировки записи: если в этот момент транзакцию держит воркер, "
+        "`BEGIN IMMEDIATE` отправителя попадает в busy-handler SQLite, который ждёт ступенями (1, 2, 5, 10, 15, 20, "
+        "25… мс). Это плата за single-writer хранилище.", "",
         "![latency](results/figures/events_latency.png)", "",
         "### E2. Approval не пришёл → TIMED_OUT", "",
         f"{sum(s['e2']['final'].values())} job с дедлайном 0.5 с: итог {cnt(s['e2']['final'])}. Запаздывание перехода "
@@ -167,7 +170,11 @@ def section_part2(ev):
         "### E5. Почти одновременные approval + cancel + deadline + завершение шагов", "",
         f"{e5['reps']} повторов. Для каждой job дедлайн T = создание + 0.6 с; approval отправляется в "
         f"T + U(−150, +20) мс, cancel — в T + U(−60, +60) мс (seed {s.get('seed')}); после approval воркер "
-        f"исполняет `save_report` и `publish` (~30–50 мс), так что их завершение тоже попадает в окно гонки.", "",
+        f"исполняет `save_report` и `publish` (~30–50 мс), так что их завершение тоже попадает в окно гонки. "
+        "Плановые сдвиги и фактические моменты отправки (`approve_sent_ms`, `cancel_sent_ms` — по часам отправителя "
+        "перед вызовом) записаны в `events_e5_races.csv`; на графике — фактические (они могут отличаться от плановых "
+        "из-за планирования потоков ОС и ожидания блокировки записи; если job ещё не дошла до `WAITING_EVENT`, "
+        "отправитель ждёт её, поэтому часть событий уходит позже дедлайна).", "",
         table(["итоговое состояние", "N"], [[k, v] for k, v in sorted(e5["final"].items())]), "",
         f"Откуда пришли в терминал: {cnt(e5['terminal_from'])}. Исходы approval: {cnt(e5['approval_outcomes'])}. "
         f"Исходы cancel: {cnt(e5['cancel_outcomes'])}. Счётчики рантайма: {cnt(e5['invariants'].get('counters', {}))}.",
@@ -188,7 +195,8 @@ def section_part2(ev):
         "Ожидание не держит слот (0 открытых `step_runs`), событие принимается и применяется даже когда воркер мёртв "
         "(inbox в БД), а дедлайн, истёкший во время простоя, срабатывает при старте нового воркера (таймер хранится в "
         "БД). Для `deadline_while_down` «опоздание таймаута» ≈ длительность простоя — таймер не может сработать, пока "
-        "нет ни одного живого воркера.", "",
+        "нет ни одного живого воркера; отрицательное «готов → терминал» означает, что просроченный таймер сработал в "
+        "процедуре старта воркера ещё до отметки готовности.", "",
         "### E7. Время до реальной остановки после cancel", "", e7_t, "",
         f"Исходы LLM-вызовов в E7: {cnt(s['e7']['llm_call_outcomes'])}. В `RUNNING` остановка ограничена интервалом "
         "heartbeat (0.1 с в E7): шаг узнаёт об отмене на следующем heartbeat и прерывает LLM-вызов; в `QUEUED` и "
@@ -213,11 +221,11 @@ def section_part3(ld):
                  f"{fmt(x['p95_seed_min'])}–{fmt(x['p95_seed_max'])}", x["max"], x["expired"], x["e2e_p50"]] for x in g])
     pp = ld["per_policy"]
     pt = table(["политика", "прогонов", "заявок", "принято", "отклонено (по user)", "SUCCEEDED", "TIMED_OUT (по user)",
-                "jobs/s (весь прогон)", "jobs/s в burst", "max ожидание, с", "max возраст старейшей в очереди, с",
+                "jobs/s (весь прогон)", "jobs/s в burst", "загрузка слотов в burst", "max ожидание, с", "max возраст старейшей в очереди, с",
                 "max длина очереди", "max одновременно global / лимит", "max на tenant / лимит"],
                [[p["policy"], p["runs"], p["arrivals"], p["admitted"], f"{p['rejected']} ({cnt(p['rejected_by_tenant'])})",
                  p["succeeded"], f"{p['timed_out']} ({cnt(p['timed_out_by_tenant'])})", fmt(p["throughput"], 3),
-                 fmt(p["burst_throughput"], 3), p["max_wait"], p["max_oldest_age"], p["max_queue"],
+                 fmt(p["burst_throughput"], 3), f"{p['slot_utilization_burst']:.1%}", p["max_wait"], p["max_oldest_age"], p["max_queue"],
                  f"{p['max_global_obs']} / {p['global_limit']}", f"{p['max_tenant_obs']} / {p['tenant_limit']}"]
                 for p in pp])
     b0, b1 = ld["burst"]
@@ -269,13 +277,21 @@ def section_part3(ld):
         "отклоняется. DRR выбирает следующий шаг по кругу между tenant, поэтому лёгкие пользователи, чей спрос "
         "ниже их доли (33 %), получают всё, что просят, а перегрузка ложится на виновника:",
         *lines,
-        "* **Throughput vs latency vs isolation.** Пока есть работа хотя бы одного tenant, `fifo` и `drr` "
-        "work-conserving — общий throughput у них близок (см. jobs/s), DRR лишь перераспределяет ожидание. "
-        f"`drr_iso` не даёт `heavy` занять больше 3 из 6 слотов даже когда остальные простаивают: throughput в burst "
+        "* **Throughput vs latency vs isolation.** `fifo` и `drr` work-conserving: загрузка слотов в burst "
+        f"{pd.get('fifo', {}).get('slot_utilization_burst', 0):.1%} и {pd.get('drr', {}).get('slot_utilization_burst', 0):.1%}, "
+        "общий throughput близок (jobs/s), DRR лишь перераспределяет ожидание (и истечения) в сторону виновника "
+        "перегрузки; число успешных job у DRR даже немного выше, т.к. короткие задачи лёгких пользователей не истекают. "
+        f"`drr_iso` не даёт `heavy` занять больше 3 из 6 слотов даже когда остальные простаивают: загрузка слотов в burst "
+        f"{pd.get('drr_iso', {}).get('slot_utilization_burst', 0):.1%}, throughput в burst "
         f"{fmt(pd.get('drr_iso', {}).get('burst_throughput'), 3)} против {fmt(pd.get('drr', {}).get('burst_throughput'), 3)} "
-        f"job/с у `drr` — плата за гарантированный запас ёмкости для лёгких пользователей. Квота очереди на tenant "
+        f"job/с у `drr` — плата за гарантированный запас ёмкости и за то, что лёгкие пользователи вообще не получают "
+        f"отказов (все {pd.get('drr_iso', {}).get('rejected')} отказов `drr_iso` — у `heavy`). Квота очереди на tenant "
         "дополнительно защищает лёгких пользователей от отказов `queue_full`, которые в `fifo`/`drr` вызывает чужой burst "
         "(общий `max_queue_size`).",
+        "* **Чтение таблиц.** p95 ожидания `heavy` short ≈ 59–60 с во всех политиках — это цензурирование дедлайном "
+        "60 с (задачи истекают в очереди, см. TIMED_OUT); «e2e p50 успешных» считается только по выжившим задачам "
+        "(survivorship), поэтому у `heavy` он мал при большом ожидании. «Возраст старейшей задачи» у DRR больше, чем у "
+        "FIFO: FIFO старит всех одинаково, DRR намеренно держит в очереди именно backlog `heavy`.",
         "* **Длительная перегрузка.** Admission control ограничивает очередь (429/REJECTED с причиной), дедлайны "
         "вычищают то, что всё равно не успеет (TIMED_OUT в очереди), поэтому очередь и возраст старейшей задачи "
         "ограничены сверху, а не растут бесконечно; после окончания burst очередь рассасывается (фаза P3).",
@@ -338,6 +354,20 @@ def section_real(rec, rl):
             "текст черновика при повторе может отличаться, но это не ломает идемпотентность публикации — тело "
             "собирается из *сохранённых* результатов шагов, а повтор `draft` после чекпоинта невозможен."]
     return "\n".join(out)
+
+
+def section_logs():
+    p = os.path.join(ROOT, "results", "raw", "sample_structured_log.jsonl")
+    if not os.path.exists(p):
+        return ""
+    lines = [ln for ln in open(p, encoding="utf-8").read().splitlines() if ln.strip()]
+    pick = [ln for ln in lines if any(k in ln for k in ('"step start"', 'transient', '"event applied"',
+                                                          '"event duplicate"', 'ignored_terminal'))][:6]
+    nl = "\n"
+    return (nl + nl + "**Структурированные логи.** Каждая запись — JSON с полями `job_id, step, attempt, event_id` "
+            f"(и `worker, tenant_id, state, data`). Пример ({len(lines)} строк, один job с transient-ошибкой, "
+            "дублем и поздним событием): `results/raw/sample_structured_log.jsonl`:" + nl + nl + "```" + nl +
+            nl.join(pick) + nl + "```")
 
 
 def section_tests():
@@ -449,7 +479,7 @@ Simulated и Real LLM не смешиваются.
 
 ## 2. Автотесты
 
-{section_tests()}
+{section_tests()}{section_logs()}
 
 ## 3. Part 1 — восстановление и идемпотентность (Simulated)
 

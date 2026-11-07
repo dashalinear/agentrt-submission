@@ -1,0 +1,36 @@
+case,rep,seed,llm,job_id,final_state,error,total_time_s,kill_ts,restart_spawn_ts,worker_ready_after_spawn_s,resume_after_spawn_s,resume_after_ready_s,resume_after_kill_s,step_runs,llm_calls,tool_calls,repeated_llm_calls,repeated_tool_calls,unknown_outcome_calls,checkpointed_step_reexecuted,tokens_total_ok,extra_tokens_ok,extra_tokens_upper_bound,cost_total_usd,cost_extra_usd,cost_extra_upper_usd,publish_physical,publish_logical,logical_duplicates,transient_attempts,retry_pauses_s
+baseline,0,1000,sim,job-063a4deb94444ef7,SUCCEEDED,,2.882,,,,,,,7,2,1,0,0,0,0,330,0,0,0.0001089,0,0,1,1,0,0,[]
+baseline,1,1001,sim,job-c57fb2b42dac4150,SUCCEEDED,,2.864,,,,,,,7,2,1,0,0,0,0,377,0,0,0.0001362,0,0,1,1,0,0,[]
+baseline,2,1002,sim,job-3b222a52062e4696,SUCCEEDED,,2.858,,,,,,,7,2,1,0,0,0,0,345,0,0,0.0001179,0,0,1,1,0,0,[]
+baseline,3,1003,sim,job-cb6a8fd524db485c,SUCCEEDED,,2.837,,,,,,,7,2,1,0,0,0,0,338,0,0,0.0001137,0,0,1,1,0,0,[]
+baseline,4,1004,sim,job-febec83e29854991,SUCCEEDED,,2.873,,,,,,,7,2,1,0,0,0,0,339,0,0,0.0001125,0,0,1,1,0,0,[]
+s1_kill_between_steps,0,1000,sim,job-82399a06311642d5,SUCCEEDED,,4.494,1794048434.5287123,1794048434.531566,1.412,1.412,0.0,1.415,7,2,1,0,0,0,0,330,0,0,0.0001089,0,0,1,1,0,0,[]
+s1_kill_between_steps,1,1001,sim,job-4433c0c036084360,SUCCEEDED,,4.512,1794048440.7945387,1794048440.7993512,1.446,1.447,0.0,1.451,7,2,1,0,0,0,0,377,0,0,0.0001362,0,0,1,1,0,0,[]
+s1_kill_between_steps,2,1002,sim,job-9d570f4ac6ee4376,SUCCEEDED,,5.034,1794048447.6350024,1794048447.6368039,1.93,1.93,0.0,1.932,7,2,1,0,0,0,0,345,0,0,0.0001179,0,0,1,1,0,0,[]
+s1_kill_between_steps,3,1003,sim,job-792fd15aad1f4adb,SUCCEEDED,,4.466,1794048454.9553223,1794048454.958339,1.401,1.402,0.0,1.405,7,2,1,0,0,0,0,338,0,0,0.0001137,0,0,1,1,0,0,[]
+s1_kill_between_steps,4,1004,sim,job-d9f04cb086634e1f,SUCCEEDED,,4.477,1794048461.2214098,1794048461.223627,1.406,1.407,0.0,1.409,7,2,1,0,0,0,0,339,0,0,0.0001125,0,0,1,1,0,0,[]
+s2a_kill_during_llm_lease,0,1000,sim,job-91d321405b5d4321,SUCCEEDED,,5.21,1794048467.5682578,1794048467.5707898,1.431,2.051,0.62,2.054,8,3,1,1,0,1,0,330,0,299,0.0001089,0,0.00013485,1,1,0,0,[]
+s2a_kill_during_llm_lease,1,1001,sim,job-f4aeb4ff31ba459e,SUCCEEDED,,5.317,1794048475.1124802,1794048475.1149065,1.939,2.148,0.209,2.151,8,3,1,1,0,1,0,377,0,300,0.0001362,0,0.000135,1,1,0,0,[]
+s2a_kill_during_llm_lease,2,1002,sim,job-6d7ec06663a045ec,SUCCEEDED,,5.214,1794048482.7567368,1794048482.7597132,1.43,2.045,0.615,2.048,8,3,1,1,0,1,0,345,0,299,0.0001179,0,0.00013485,1,1,0,0,[]
+s2a_kill_during_llm_lease,3,1003,sim,job-a7510f54274f4426,SUCCEEDED,,5.194,1794048489.772477,1794048489.7758348,1.421,2.031,0.61,2.034,8,3,1,1,0,1,0,338,0,299,0.0001137,0,0.00013485,1,1,0,0,[]
+s2a_kill_during_llm_lease,4,1004,sim,job-a6fc65df62b64ffc,SUCCEEDED,,5.216,1794048496.8118944,1794048496.8151453,1.431,2.054,0.623,2.057,8,3,1,1,0,1,0,339,0,301,0.0001125,0,0.00013515,1,1,0,0,[]
+s2b_kill_during_llm_restart,0,1000,sim,job-fbde7715a64e4c6c,SUCCEEDED,,5.104,1794048504.337808,1794048504.339662,1.92,1.92,0.0,1.922,8,3,1,1,0,1,0,330,0,299,0.0001089,0,0.00013485,1,1,0,0,[]
+s2b_kill_during_llm_restart,1,1001,sim,job-f2b051c893774fba,SUCCEEDED,,4.591,1794048511.7689016,1794048511.7711065,1.402,1.402,0.0,1.405,8,3,1,1,0,1,0,377,0,300,0.0001362,0,0.000135,1,1,0,0,[]
+s2b_kill_during_llm_restart,2,1002,sim,job-e527ae9357be4ccc,SUCCEEDED,,4.607,1794048518.1506279,1794048518.1532454,1.427,1.427,0.0,1.43,8,3,1,1,0,1,0,345,0,299,0.0001179,0,0.00013485,1,1,0,0,[]
+s2b_kill_during_llm_restart,3,1003,sim,job-89c32966217842a7,SUCCEEDED,,4.748,1794048524.5682044,1794048524.5702965,1.584,1.585,0.0,1.587,8,3,1,1,0,1,0,338,0,299,0.0001137,0,0.00013485,1,1,0,0,[]
+s2b_kill_during_llm_restart,4,1004,sim,job-06f8e4d8ced441c2,SUCCEEDED,,5.227,1794048531.153636,1794048531.1564808,2.057,2.058,0.0,2.06,8,3,1,1,0,1,0,339,0,301,0.0001125,0,0.00013515,1,1,0,0,[]
+s3a_crash_after_publish,0,1000,sim,job-41228756d6e14f30,SUCCEEDED,,4.964,1794048540.6854053,1794048540.685407,1.918,1.918,0.0,1.918,8,2,1,0,0,0,0,330,0,0,0.0001089,0,0,2,1,0,0,[]
+s3a_crash_after_publish,1,1001,sim,job-91ba134c885143df,SUCCEEDED,,4.567,1794048547.4380865,1794048547.4380875,1.526,1.526,0.0,1.526,8,2,1,0,0,0,0,377,0,0,0.0001362,0,0,2,1,0,0,[]
+s3a_crash_after_publish,2,1002,sim,job-8b84e699b3504255,SUCCEEDED,,4.508,1794048553.850734,1794048553.850735,1.465,1.465,0.0,1.465,8,2,1,0,0,0,0,345,0,0,0.0001179,0,0,2,1,0,0,[]
+s3a_crash_after_publish,3,1003,sim,job-ba3c0bbebae3492e,SUCCEEDED,,4.496,1794048560.1440558,1794048560.1440566,1.458,1.458,0.0,1.458,8,2,1,0,0,0,0,338,0,0,0.0001137,0,0,2,1,0,0,[]
+s3a_crash_after_publish,4,1004,sim,job-7a3ed0aaf1c04b0b,SUCCEEDED,,5.023,1794048566.961948,1794048566.961949,1.973,1.973,0.0,1.973,8,2,1,0,0,0,0,339,0,0,0.0001125,0,0,2,1,0,0,[]
+s3b_ack_lost_network,0,1000,sim,job-1c6831b060d24fe1,SUCCEEDED,,3.354,,,,,,,8,2,1,0,0,0,0,330,0,0,0.0001089,0,0,2,1,0,1,[0.373]
+s3b_ack_lost_network,1,1001,sim,job-614426454e004d39,SUCCEEDED,,3.366,,,,,,,8,2,1,0,0,0,0,377,0,0,0.0001362,0,0,2,1,0,1,[0.392]
+s3b_ack_lost_network,2,1002,sim,job-c90079d69f7d44d2,SUCCEEDED,,3.663,,,,,,,8,2,1,0,0,0,0,345,0,0,0.0001179,0,0,2,1,0,1,[0.423]
+s3b_ack_lost_network,3,1003,sim,job-780705ac51b6498c,SUCCEEDED,,3.604,,,,,,,8,2,1,0,0,0,0,338,0,0,0.0001137,0,0,2,1,0,1,[0.358]
+s3b_ack_lost_network,4,1004,sim,job-e6c4728c96ee4fef,SUCCEEDED,,3.436,,,,,,,8,2,1,0,0,0,0,339,0,0,0.0001125,0,0,2,1,0,1,[0.356]
+s4_transient_repeated,0,1000,sim,job-4c54113aa19a4869,FAILED,step draft#0.0 failed after 4 attempts (max_attempts=4); last error: TransientError: simulated transient LLM error (503) on draft#0.0,7.4,,,,,,,6,4,1,3,0,0,0,0,0,0,0,0,0,0,0,0,4,"[0.465, 0.647, 1.493]"
+s4_transient_repeated,1,1001,sim,job-2d13cdb574724427,FAILED,step draft#0.0 failed after 4 attempts (max_attempts=4); last error: TransientError: simulated transient LLM error (503) on draft#0.0,7.614,,,,,,,6,4,1,3,0,0,0,0,0,0,0,0,0,0,0,0,4,"[0.478, 0.519, 1.742]"
+s4_transient_repeated,2,1002,sim,job-6ecf3a44320c4556,FAILED,step draft#0.0 failed after 4 attempts (max_attempts=4); last error: TransientError: simulated transient LLM error (503) on draft#0.0,7.088,,,,,,,6,4,1,3,0,0,0,0,0,0,0,0,0,0,0,0,4,"[0.25, 0.652, 1.329]"
+s4_transient_repeated,3,1003,sim,job-b3da981e2dc24f58,FAILED,step draft#0.0 failed after 4 attempts (max_attempts=4); last error: TransientError: simulated transient LLM error (503) on draft#0.0,7.265,,,,,,,6,4,1,3,0,0,0,0,0,0,0,0,0,0,0,0,4,"[0.49, 0.628, 1.271]"
+s4_transient_repeated,4,1004,sim,job-8a294a2d22c44a60,FAILED,step draft#0.0 failed after 4 attempts (max_attempts=4); last error: TransientError: simulated transient LLM error (503) on draft#0.0,7.66,,,,,,,6,4,1,3,0,0,0,0,0,0,0,0,0,0,0,0,4,"[0.348, 0.986, 1.459]"

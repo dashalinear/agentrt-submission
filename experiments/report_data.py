@@ -134,8 +134,10 @@ def load():
         succ = sum(1 for r in pj if r["state"] == "SUCCEEDED")
         # work actually executed per tenant inside the burst window (clipped step durations)
         work = Counter()
+        busy = 0.0
         for r in pr:
             ov = max(0.0, min(r["end_v"], b1) - max(r["start_v"], b0))
+            busy += ov
             if ov > 0 and r["outcome"] == "ok":
                 work[r["tenant"]] += ov
         tot = sum(work.values()) or 1.0
@@ -154,6 +156,7 @@ def load():
             "max_oldest_age": max(x["oldest_queued_age_v"] for x in pts) if pts else None,
             "max_queue": max(x["queued_total"] for x in pts) if pts else None,
             "work_share_burst": {t: work[t] / tot for t in TENANTS},
+            "slot_utilization_burst": busy / (len(mk) * (b1 - b0) * (mk[0]["global_limit"] if mk else 1)),
             "max_global_obs": max(m["max_global_concurrency_observed"] for m in mk),
             "global_limit": mk[0]["global_limit"] if mk else None,
             "max_tenant_obs": max(max(m["max_per_tenant_observed"].values()) for m in mk),

@@ -1,0 +1,426 @@
+{
+  "seed": 7,
+  "env": {
+    "os": "Windows-10-10.0.19045-SP0",
+    "python": "3.13.7",
+    "machine": "AMD64",
+    "processor": "AMD64 Family 25 Model 116 Stepping 1, AuthenticAMD",
+    "cpu_count": 16,
+    "sqlite": "3.50.4",
+    "ram_gb": 15.2,
+    "fastapi": "0.162.0",
+    "uvicorn": "0.54.0",
+    "httpx": "0.28.1",
+    "pydantic": "2.14.3",
+    "starlette": "1.10.0",
+    "pytest": "9.2.0",
+    "matplotlib": "3.11.2",
+    "numpy": "2.5.4",
+    "Markdown": "3.11.3"
+  },
+  "time_scale": 1.0,
+  "gil_switch_interval_s": 0.0005,
+  "e1": {
+    "final": {
+      "SUCCEEDED": 100
+    },
+    "outcomes": {
+      "applied": 100
+    },
+    "latency": [
+      {
+        "metric": "event_to_transition_ms",
+        "n": 100,
+        "p50": 0.122,
+        "p95": 27.058,
+        "max": 51.101
+      },
+      {
+        "metric": "client_roundtrip_ms",
+        "n": 100,
+        "p50": 0.476,
+        "p95": 27.351,
+        "max": 51.503
+      },
+      {
+        "metric": "event_to_next_step_start_ms",
+        "n": 100,
+        "p50": 9.982,
+        "p95": 56.993,
+        "max": 99.486
+      }
+    ],
+    "invariants": {
+      "transitions_checked": 1400,
+      "invalid_transitions": 0,
+      "terminal_changes": 0,
+      "version_gaps": 0,
+      "multiple_terminal": 0,
+      "log_state_mismatch": 0
+    }
+  },
+  "e2": {
+    "final": {
+      "TIMED_OUT": 40
+    },
+    "lateness": {
+      "metric": "timeout_lateness_ms",
+      "n": 40,
+      "p50": 3.996,
+      "p95": 6.581,
+      "max": 6.909
+    },
+    "step_runs_during_wait_total": 0,
+    "invariants": {
+      "transitions_checked": 400,
+      "invalid_transitions": 0,
+      "terminal_changes": 0,
+      "version_gaps": 0,
+      "multiple_terminal": 0,
+      "log_state_mismatch": 0
+    }
+  },
+  "e3": {
+    "events_sent": 250,
+    "applied": 50,
+    "duplicates_detected": 200,
+    "jobs_with_more_than_one_transition": 0,
+    "final": {
+      "SUCCEEDED": 50
+    },
+    "invariants": {
+      "transitions_checked": 700,
+      "invalid_transitions": 0,
+      "terminal_changes": 0,
+      "version_gaps": 0,
+      "multiple_terminal": 0,
+      "log_state_mismatch": 0
+    }
+  },
+  "e4": {
+    "late_events": 40,
+    "event_outcomes": {
+      "ignored_terminal": 40
+    },
+    "cancel_outcomes": {
+      "already_terminal": 40
+    },
+    "state_changed": 0,
+    "version_changed": 0,
+    "invariants": {
+      "transitions_checked": 400,
+      "invalid_transitions": 0,
+      "terminal_changes": 0,
+      "version_gaps": 0,
+      "multiple_terminal": 0,
+      "log_state_mismatch": 0
+    }
+  },
+  "e5": {
+    "reps": 300,
+    "final": {
+      "SUCCEEDED": 99,
+      "CANCELLED": 123,
+      "TIMED_OUT": 78
+    },
+    "terminal_from": {
+      "RUNNING->SUCCEEDED": 99,
+      "RUNNING->CANCELLED": 66,
+      "WAITING_EVENT->TIMED_OUT": 21,
+      "RUNNING->TIMED_OUT": 48,
+      "WAITING_EVENT->CANCELLED": 39,
+      "QUEUED->TIMED_OUT": 9,
+      "QUEUED->CANCELLED": 18
+    },
+    "approval_outcomes": {
+      "applied": 240,
+      "ignored_terminal": 48,
+      "deadline_won": 12
+    },
+    "cancel_outcomes": {
+      "already_terminal": 177,
+      "cancelled": 123
+    },
+    "multi_terminal_jobs": 0,
+    "orphan_publications": 0,
+    "succeeded_without_publication": 0,
+    "published_then_retracted": 54,
+    "cancel_stop": {
+      "metric": "cancel_stop_ms",
+      "n": 60,
+      "p50": 23.48,
+      "p95": 63.927,
+      "max": 76.51
+    },
+    "invariants": {
+      "transitions_checked": 3787,
+      "invalid_transitions": 0,
+      "terminal_changes": 0,
+      "version_gaps": 0,
+      "multiple_terminal": 0,
+      "log_state_mismatch": 0,
+      "invalid_transition_attempts_counter": 0,
+      "counters": {
+        "events_late": 48,
+        "cancel_after_terminal": 177,
+        "late_results_discarded": 62
+      }
+    }
+  },
+  "e6": {
+    "rows": [
+      {
+        "exp": "e6",
+        "rep": 0,
+        "variant": "approval_while_down",
+        "job_id": "job-7a66bc9261fc4867",
+        "final": "SUCCEEDED",
+        "open_step_runs_while_waiting": 0,
+        "state_while_worker_down": "QUEUED",
+        "event_outcome": "applied",
+        "worker_ready_to_first_step_ms": 0.33,
+        "worker_ready_to_terminal_ms": 66.28,
+        "timeout_lateness_ms": null,
+        "downtime_s": 0.505
+      },
+      {
+        "exp": "e6",
+        "rep": 0,
+        "variant": "deadline_while_down",
+        "job_id": "job-23cc886695274f5e",
+        "final": "TIMED_OUT",
+        "open_step_runs_while_waiting": 0,
+        "state_while_worker_down": "WAITING_EVENT",
+        "event_outcome": null,
+        "worker_ready_to_first_step_ms": null,
+        "worker_ready_to_terminal_ms": -1.03,
+        "timeout_lateness_ms": 1295.3,
+        "downtime_s": 2.229
+      },
+      {
+        "exp": "e6",
+        "rep": 0,
+        "variant": "approval_after_restart",
+        "job_id": "job-6df2c5c4c01b453e",
+        "final": "SUCCEEDED",
+        "open_step_runs_while_waiting": 0,
+        "state_while_worker_down": "WAITING_EVENT",
+        "event_outcome": "applied",
+        "worker_ready_to_first_step_ms": 22.17,
+        "worker_ready_to_terminal_ms": 70.87,
+        "timeout_lateness_ms": null,
+        "downtime_s": 0.504
+      },
+      {
+        "exp": "e6",
+        "rep": 1,
+        "variant": "approval_while_down",
+        "job_id": "job-fe466dc3912f49a8",
+        "final": "SUCCEEDED",
+        "open_step_runs_while_waiting": 0,
+        "state_while_worker_down": "QUEUED",
+        "event_outcome": "applied",
+        "worker_ready_to_first_step_ms": 0.19,
+        "worker_ready_to_terminal_ms": 56.63,
+        "timeout_lateness_ms": null,
+        "downtime_s": 0.505
+      },
+      {
+        "exp": "e6",
+        "rep": 1,
+        "variant": "deadline_while_down",
+        "job_id": "job-dc35ccd6cb9a4a21",
+        "final": "TIMED_OUT",
+        "open_step_runs_while_waiting": 0,
+        "state_while_worker_down": "WAITING_EVENT",
+        "event_outcome": null,
+        "worker_ready_to_first_step_ms": null,
+        "worker_ready_to_terminal_ms": -0.86,
+        "timeout_lateness_ms": 1802.92,
+        "downtime_s": 2.214
+      },
+      {
+        "exp": "e6",
+        "rep": 1,
+        "variant": "approval_after_restart",
+        "job_id": "job-6463f5a6cfb44a98",
+        "final": "SUCCEEDED",
+        "open_step_runs_while_waiting": 0,
+        "state_while_worker_down": "WAITING_EVENT",
+        "event_outcome": "applied",
+        "worker_ready_to_first_step_ms": 9.05,
+        "worker_ready_to_terminal_ms": 56.65,
+        "timeout_lateness_ms": null,
+        "downtime_s": 0.504
+      },
+      {
+        "exp": "e6",
+        "rep": 2,
+        "variant": "approval_while_down",
+        "job_id": "job-18049d8d916b4c4d",
+        "final": "SUCCEEDED",
+        "open_step_runs_while_waiting": 0,
+        "state_while_worker_down": "QUEUED",
+        "event_outcome": "applied",
+        "worker_ready_to_first_step_ms": 0.19,
+        "worker_ready_to_terminal_ms": 55.28,
+        "timeout_lateness_ms": null,
+        "downtime_s": 0.505
+      },
+      {
+        "exp": "e6",
+        "rep": 2,
+        "variant": "deadline_while_down",
+        "job_id": "job-ca138deffb634b1a",
+        "final": "TIMED_OUT",
+        "open_step_runs_while_waiting": 0,
+        "state_while_worker_down": "WAITING_EVENT",
+        "event_outcome": null,
+        "worker_ready_to_first_step_ms": null,
+        "worker_ready_to_terminal_ms": -1.07,
+        "timeout_lateness_ms": 1324.87,
+        "downtime_s": 2.21
+      },
+      {
+        "exp": "e6",
+        "rep": 2,
+        "variant": "approval_after_restart",
+        "job_id": "job-a2a62595feea4f13",
+        "final": "SUCCEEDED",
+        "open_step_runs_while_waiting": 0,
+        "state_while_worker_down": "WAITING_EVENT",
+        "event_outcome": "applied",
+        "worker_ready_to_first_step_ms": 8.34,
+        "worker_ready_to_terminal_ms": 64.9,
+        "timeout_lateness_ms": null,
+        "downtime_s": 0.504
+      },
+      {
+        "exp": "e6",
+        "rep": 3,
+        "variant": "approval_while_down",
+        "job_id": "job-6ed4e33a59124308",
+        "final": "SUCCEEDED",
+        "open_step_runs_while_waiting": 0,
+        "state_while_worker_down": "QUEUED",
+        "event_outcome": "applied",
+        "worker_ready_to_first_step_ms": 0.19,
+        "worker_ready_to_terminal_ms": 53.97,
+        "timeout_lateness_ms": null,
+        "downtime_s": 0.505
+      },
+      {
+        "exp": "e6",
+        "rep": 3,
+        "variant": "deadline_while_down",
+        "job_id": "job-06d35174422740d4",
+        "final": "TIMED_OUT",
+        "open_step_runs_while_waiting": 0,
+        "state_while_worker_down": "WAITING_EVENT",
+        "event_outcome": null,
+        "worker_ready_to_first_step_ms": null,
+        "worker_ready_to_terminal_ms": -0.86,
+        "timeout_lateness_ms": 1282.92,
+        "downtime_s": 2.222
+      },
+      {
+        "exp": "e6",
+        "rep": 3,
+        "variant": "approval_after_restart",
+        "job_id": "job-7bb311f340954486",
+        "final": "SUCCEEDED",
+        "open_step_runs_while_waiting": 0,
+        "state_while_worker_down": "WAITING_EVENT",
+        "event_outcome": "applied",
+        "worker_ready_to_first_step_ms": 13.42,
+        "worker_ready_to_terminal_ms": 70.13,
+        "timeout_lateness_ms": null,
+        "downtime_s": 0.504
+      },
+      {
+        "exp": "e6",
+        "rep": 4,
+        "variant": "approval_while_down",
+        "job_id": "job-3168c27a17b0409b",
+        "final": "SUCCEEDED",
+        "open_step_runs_while_waiting": 0,
+        "state_while_worker_down": "QUEUED",
+        "event_outcome": "applied",
+        "worker_ready_to_first_step_ms": 0.2,
+        "worker_ready_to_terminal_ms": 64.49,
+        "timeout_lateness_ms": null,
+        "downtime_s": 0.505
+      },
+      {
+        "exp": "e6",
+        "rep": 4,
+        "variant": "deadline_while_down",
+        "job_id": "job-88a8236dfc0e49d6",
+        "final": "TIMED_OUT",
+        "open_step_runs_while_waiting": 0,
+        "state_while_worker_down": "WAITING_EVENT",
+        "event_outcome": null,
+        "worker_ready_to_first_step_ms": null,
+        "worker_ready_to_terminal_ms": -1.07,
+        "timeout_lateness_ms": 1299.92,
+        "downtime_s": 2.23
+      },
+      {
+        "exp": "e6",
+        "rep": 4,
+        "variant": "approval_after_restart",
+        "job_id": "job-c61aa06e7dd2491d",
+        "final": "SUCCEEDED",
+        "open_step_runs_while_waiting": 0,
+        "state_while_worker_down": "WAITING_EVENT",
+        "event_outcome": "applied",
+        "worker_ready_to_first_step_ms": 15.86,
+        "worker_ready_to_terminal_ms": 64.69,
+        "timeout_lateness_ms": null,
+        "downtime_s": 0.504
+      }
+    ]
+  },
+  "e7": {
+    "by_state": {
+      "QUEUED": {
+        "metric": "stop_latency_ms[QUEUED]",
+        "n": 15,
+        "p50": 0.0,
+        "p95": 0.0,
+        "max": 0.0
+      },
+      "RUNNING": {
+        "metric": "stop_latency_ms[RUNNING]",
+        "n": 15,
+        "p50": 67.29,
+        "p95": 106.996,
+        "max": 109.67
+      },
+      "WAITING_EVENT": {
+        "metric": "stop_latency_ms[WAITING_EVENT]",
+        "n": 15,
+        "p50": 0.0,
+        "p95": 0.0,
+        "max": 0.0
+      }
+    },
+    "cancel_in": {
+      "QUEUED": 15,
+      "RUNNING": 15,
+      "WAITING_EVENT": 15
+    },
+    "llm_call_outcomes": {
+      "cancelled": 15,
+      "ok": 15
+    },
+    "invariants": {
+      "transitions_checked": 285,
+      "invalid_transitions": 0,
+      "terminal_changes": 0,
+      "version_gaps": 0,
+      "multiple_terminal": 0,
+      "log_state_mismatch": 0
+    }
+  }
+}

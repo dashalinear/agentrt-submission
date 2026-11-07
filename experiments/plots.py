@@ -22,7 +22,7 @@ plt.rcParams.update({
     "figure.facecolor": SURF, "axes.facecolor": SURF, "axes.edgecolor": AXIS, "axes.labelcolor": INK2,
     "xtick.color": INK2, "ytick.color": INK2, "text.color": INK, "axes.grid": True, "grid.color": GRID,
     "grid.linewidth": 0.6, "axes.spines.top": False, "axes.spines.right": False, "font.size": 9,
-    "axes.titlesize": 10, "axes.titleweight": "bold", "legend.frameon": False, "savefig.dpi": 150,
+    "axes.titlesize": 10, "axes.axisbelow": True, "axes.titleweight": "bold", "legend.frameon": False, "savefig.dpi": 150,
 })
 
 
@@ -90,14 +90,16 @@ def race_scatter(e5):
     for outcome, col in OUTCOME_COLORS.items():
         rs = [r for r in e5 if r["final"] == outcome]
         if rs:
-            ax.scatter([r["approve_offset_ms"] for r in rs], [r["cancel_offset_ms"] for r in rs], s=14, color=col,
+            kx = "approve_sent_ms" if "approve_sent_ms" in rs[0] else "approve_offset_ms"
+            ky = "cancel_sent_ms" if "cancel_sent_ms" in rs[0] else "cancel_offset_ms"
+            ax.scatter([r[kx] for r in rs], [r[ky] for r in rs], s=14, color=col,
                        label=f"{outcome} (n={len(rs)})", edgecolor=SURF, linewidth=0.8, zorder=3)
     ax.axhline(0, color=AXIS, lw=1)
     ax.axvline(0, color=AXIS, lw=1)
-    ax.set_xlabel("approval sent at deadline + Δ (ms)")
-    ax.set_ylabel("cancel sent at deadline + Δ (ms)")
+    ax.set_xlabel("approval actually sent at deadline + Δ (ms)")
+    ax.set_ylabel("cancel actually sent at deadline + Δ (ms)")
     ax.set_title("Part 2 / E5: outcome of approval + cancel + deadline races")
-    ax.legend(loc="upper left", fontsize=8)
+    ax.legend(loc="upper left", bbox_to_anchor=(1.01, 1.0), fontsize=8)
     return _save(fig, "events_race_outcomes.png")
 
 
@@ -169,6 +171,7 @@ def load_p95(ld):
         for x, v, n in zip(xs, vals, ns):
             ax.text(x, v, f"N={n}", ha="center", va="bottom", fontsize=6, color=INK2, rotation=90)
     ax.set_xticks(range(len(labels)), labels)
+    ax.set_ylim(0, max(g["p95"] for g in groups) * 1.18)
     ax.set_ylabel("p95 queue wait (virtual s)")
     ax.set_title("Part 3: p95 wait by user × class, pooled over 3 seeds (N above bars)")
     ax.legend(fontsize=8)
@@ -177,6 +180,8 @@ def load_p95(ld):
 
 def load_share(ld):
     fig, ax = plt.subplots(figsize=(7.5, 2.8))
+    ax.set_axisbelow(True)
+    ax.grid(axis="y", visible=False)
     rows = [("demand", ld["demand_share"])] + [(p["policy"], p["work_share_burst"]) for p in ld["per_policy"]]
     for i, (name, share) in enumerate(rows):
         left = 0.0
@@ -191,5 +196,5 @@ def load_share(ld):
     ax.set_xlim(0, 1)
     ax.set_xlabel("share of executed step-work in burst window (weights 1:1:1)")
     ax.set_title("Part 3: who got the capacity during overload")
-    ax.legend(ncol=3, loc="lower right", fontsize=8, bbox_to_anchor=(1, 1.08))
+    ax.legend(ncol=3, loc="upper center", fontsize=8, bbox_to_anchor=(0.5, -0.28))
     return _save(fig, "load_work_share.png")

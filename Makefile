@@ -20,6 +20,7 @@ exp-load:
 	$(PY) -m experiments.exp_load --seeds 11,12,13 --policies fifo,drr,drr_iso --scale 0.1
 
 report:
+	$(PY) -m experiments.sample_log
 	$(PY) -m experiments.make_report
 
 all: clean test exp-recovery exp-events exp-load report
