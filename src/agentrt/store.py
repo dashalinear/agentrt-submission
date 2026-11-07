@@ -14,7 +14,7 @@ from dataclasses import dataclass
 
 from . import states as S
 from .config import Config, JobLimits
-from .db import bump_counter, init_db, tx
+from .db import bump_counter, connect, init_db, tx
 from .logs import get_logger, log
 
 logger = get_logger("store")
@@ -52,10 +52,10 @@ class StepCompletion:
 
 
 class Store:
-    def __init__(self, path: str, cfg: Config | None = None):
+    def __init__(self, path: str, cfg: Config | None = None, init: bool = True):
         self.path = path
         self.cfg = cfg or Config()
-        self.conn = init_db(path)
+        self.conn = init_db(path) if init else connect(path)
 
     def now(self) -> float:
         return time.time()
