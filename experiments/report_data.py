@@ -184,9 +184,9 @@ def load():
             "step_overhead_p50": q(over, 50), "step_overhead_p95": q(over, 95)}
 
 
-def real_llm():
-    s = load_json("summary.json", REAL)
-    rec = load_csv("recovery_runs_real.csv", REAL)
+def real_llm(path=REAL):
+    s = load_json("summary.json", path)
+    rec = load_csv("recovery_runs_real.csv", path)
     return {"summary": s, "recovery": rec}
 
 

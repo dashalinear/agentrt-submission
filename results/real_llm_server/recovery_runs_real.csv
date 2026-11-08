@@ -1,0 +1,4 @@
+case,rep,seed,llm,job_id,final_state,error,total_time_s,kill_ts,restart_spawn_ts,worker_ready_after_spawn_s,resume_after_spawn_s,resume_after_ready_s,resume_after_kill_s,step_runs,llm_calls,tool_calls,repeated_llm_calls,repeated_tool_calls,unknown_outcome_calls,checkpointed_step_reexecuted,tokens_total_ok,extra_tokens_ok,extra_tokens_upper_bound,cost_total_usd,cost_extra_usd,cost_extra_upper_usd,publish_physical,publish_logical,logical_duplicates,transient_attempts,retry_pauses_s
+baseline,0,1000,real,job-28bfa52802594087,SUCCEEDED,,3.061,,,,,,,7,2,1,0,0,0,0,413,0,0,0.000147,0,0,1,1,0,0,[]
+s2b_kill_during_llm_restart,0,1000,real,job-6927b4f0bbf74899,SUCCEEDED,,4.517,1794163976.744991,1794163976.7468946,1.293,1.315,0.023,1.317,8,3,1,1,0,1,0,413,0,299,0.000147,0,0.00013485,1,1,0,0,[]
+s3a_crash_after_publish,0,1000,real,job-d383b883b3ab44de,SUCCEEDED,,4.528,1794163985.0104575,1794163985.01046,1.347,1.37,0.022,1.37,8,2,1,0,0,0,0,413,0,0,0.000147,0,0,2,1,0,0,[]
