@@ -309,33 +309,46 @@ def section_part3(ld):
     return "\n".join(out)
 
 
+def _real_rows(s, recovery_rows, cost_text):
+    """Rows of one Real-LLM table; the same set of metrics for every real run."""
+    from collections import Counter
+    lat = s.get("llm_latency_s", {})
+    rr = {x["case"]: x for x in recovery_rows}
+    b = rr.get("baseline", {})
+    k = rr.get("s2b_kill_during_llm_restart", {})
+    p = rr.get("s3a_crash_after_publish", {})
+    e2e = [j["e2e_s"] for j in s["jobs"] if j.get("e2e_s") is not None]
+    e2e_txt = f"{fmt(min(e2e))}–{fmt(max(e2e))} (N = {len(e2e)})" if e2e else "…"
+    return [["модель / endpoint", f"{s['model']} / {s['base_url']}"],
+            ["job: итог", cnt(dict(Counter(j["state"] for j in s["jobs"])))],
+            ["время job end-to-end, с (min–max)", e2e_txt],
+            ["LLM-вызовов (ok / всего)", f"{s['llm_calls_ok']} / {s['llm_calls']}"],
+            ["латентность LLM-вызова p50 / max, с", f"{fmt(lat.get('p50'))} / {fmt(lat.get('max'))} (N = {lat.get('n', '…')})"],
+            ["токенов prompt / completion", f"{s['prompt_tokens']} / {s['completion_tokens']}"],
+            ["стоимость, USD", cost_text],
+            ["recovery baseline (без отказов): время job, с / повторных LLM",
+             f"{b.get('total_time_s', '…')} / {b.get('repeated_llm_calls', '…')}"],
+            ["kill во время LLM: resume после spawn, с", f"{k.get('resume_after_spawn_s', '…')}"],
+            ["kill во время LLM: повторных вызовов / доп. токены (факт / верх.)",
+             f"{k.get('repeated_llm_calls', '…')} / {k.get('extra_tokens_ok', '…')} / ≤{k.get('extra_tokens_upper_bound', '…')}"],
+            ["крэш после publish: физ./лог. публикаций / resume после spawn, с",
+             f"{p.get('publish_physical', '…')} / {p.get('publish_logical', '…')} / {p.get('resume_after_spawn_s', '…')}"]]
+
+
 def _server_block():
-    import os
-    from experiments.common import ROOT
     from experiments.report_data import real_llm as _load
     r = _load(os.path.join(ROOT, "results", "real_llm_server"))
     s = r["summary"]
     if not s:
         return []
-    lat = s.get("llm_latency_s", {})
-    rr = {x["case"]: x for x in r["recovery"]}
-    k = rr.get("s2b_kill_during_llm_restart", {})
-    p = rr.get("s3a_crash_after_publish", {})
-    rows = [["модель / endpoint", f"{s['model']} / {s['base_url']}"],
-            ["job: итог", cnt({j['state']: 1 for j in s['jobs']})],
-            ["LLM-вызовов (ok / всего)", f"{s['llm_calls_ok']} / {s['llm_calls']}"],
-            ["латентность LLM-вызова p50 / max, с", f"{fmt(lat.get('p50'))} / {fmt(lat.get('max'))}"],
-            ["токенов prompt / completion", f"{s['prompt_tokens']} / {s['completion_tokens']}"],
-            ["стоимость, USD", "не считалась (тариф сервера неизвестен)"],
-            ["kill во время LLM: resume после spawn, с", f"{k.get('resume_after_spawn_s', '…')}"],
-            ["kill во время LLM: повторных вызовов / доп. токены (факт / верх.)",
-             f"{k.get('repeated_llm_calls', '…')} / {k.get('extra_tokens_ok', '…')} / ≤{k.get('extra_tokens_upper_bound', '…')}"],
-            ["крэш после publish: физ./лог. публикаций", f"{p.get('publish_physical', '…')} / {p.get('publish_logical', '…')}"]]
+    rows = _real_rows(s, r["recovery"], "не считалась (тариф сервера неизвестен; цены в прогоне = 0)")
     return ["", "### Real LLM run: сервер ITMO (qwen3.8-27b)", "",
             "> **Статус: ЗАПУЩЕН** (данные из `results/real_llm_server/`; не смешиваются ни с симуляцией, ни с прогоном на qwen3.5:4b).", "",
             table(["метрика", "Real LLM (сервер ITMO)"], rows), "",
             "Один повтор на сценарий восстановления — это иллюстрация, а не статистика. Латентность и время job нельзя напрямую "
-            "сравнивать с прогоном на Ollama: другая модель и другое железо (CPU против сервера университета)."]
+            "сравнивать с прогоном на Ollama: другая модель и другое железо (CPU против сервера университета). "
+            "Столбцы `cost_*` в `results/real_llm_server/recovery_runs_real.csv` посчитаны подпрограммой восстановления "
+            "по иллюстративным ценам из конфига по умолчанию и реальной стоимостью не являются."]
 
 
 def section_real(rec, rl):
@@ -361,27 +374,19 @@ def section_real(rec, rl):
                        ["стоимость, USD", "…"], ["kill во время LLM: повторных вызовов / доп. токены", "…"],
                        ["крэш после publish: физ./лог. публикаций", "…"]])]
     else:
-        lat = s.get("llm_latency_s", {})
-        rr = {r["case"]: r for r in rl["recovery"]}
-        k = rr.get("s2b_kill_during_llm_restart", {})
-        p = rr.get("s3a_crash_after_publish", {})
+        cost = (f"{s['cost_usd']} — условная (цена из конфига; локальная модель, реальных затрат нет)"
+                if s.get("cost_usd") else "не считалась")
         out += ["> **Статус: ЗАПУЩЕН** (данные из `results/real_llm/`, не смешиваются с симуляцией).", "",
-                table(["метрика", "Real LLM"],
-                      [["модель / endpoint", f"{s['model']} / {s['base_url']}"],
-                       ["job: итог", cnt({j['state']: 1 for j in s['jobs']})],
-                       ["LLM-вызовов (ok / всего)", f"{s['llm_calls_ok']} / {s['llm_calls']}"],
-                       ["латентность LLM-вызова p50 / max, с", f"{fmt(lat.get('p50'))} / {fmt(lat.get('max'))}"],
-                       ["токенов prompt / completion", f"{s['prompt_tokens']} / {s['completion_tokens']}"],
-                       ["стоимость, USD", f"{s['cost_usd']}"],
-                       ["kill во время LLM: повторных вызовов / доп. токены (факт / верх.)",
-                        f"{k.get('repeated_llm_calls', '…')} / {k.get('extra_tokens_ok', '…')} / ≤{k.get('extra_tokens_upper_bound', '…')}"],
-                       ["крэш после publish: физ./лог. публикаций",
-                        f"{p.get('publish_physical', '…')} / {p.get('publish_logical', '…')}"]])]
-    out += ["", "Чем реальная LLM отличается от симулятора (ожидаемо, проверить по таблице): латентность и токены не "
-            "детерминированы; ошибки 429/5xx/таймауты классифицируются как transient и ретраятся; прерванный крэшем "
+                table(["метрика", "Real LLM (Ollama, локально)"], _real_rows(s, rl["recovery"], cost))]
+    out += ["", "Чем реальная LLM отличается от симулятора (ожидаемо, проверить по таблице): латентность не "
+            "детерминирована; ошибки 429/5xx/таймауты классифицируются как transient и ретраятся; прерванный крэшем "
             "вызов почти наверняка оплачен провайдером (верхняя граница доп. токенов становится реальной ценой); "
             "текст черновика при повторе может отличаться, но это не ломает идемпотентность публикации — тело "
-            "собирается из *сохранённых* результатов шагов, а повтор `draft` после чекпоинта невозможен."]
+            "собирается из *сохранённых* результатов шагов, а повтор `draft` после чекпоинта невозможен.", "",
+            "Запросы к реальной LLM идут с `temperature = 0` (`src/agentrt/llm.py`), поэтому в сценариях восстановления "
+            "одного прогона (одинаковые документы и промпты) число completion-токенов совпадает между сценариями "
+            "(см. `recovery_calls_real.jsonl`); между тремя job основного прогона промпты различаются, и токены разные "
+            "(`calls.jsonl`). Для прерванного вызова в журнале записан только prompt (ответа не было)."]
     out += _server_block()
     return "\n".join(out)
 
@@ -442,8 +447,12 @@ LLM стоит денег — измерено как доп. вызовы/то�
 (веса, quantum в секундах работы) + aging внутри tenant; опционально жёсткие per-tenant лимиты слотов и
 квоты очереди. При длительной перегрузке очередь ограничена admission control (429/REJECTED с причиной и
 метрикой), дедлайны снимают задачи, которые не успеют (TIMED_OUT, в т.ч. из очереди), DRR не даёт одному
-tenant вытеснить остальных; throughput остаётся равным ёмкости (work-conserving), а отказы и истечения
-концентрируются у tenant-источника перегрузки (Part 3).
+tenant вытеснить остальных. `fifo` и `drr` work-conserving — в burst слоты заняты почти полностью (столбец
+«загрузка слотов в burst» в Part 3), а DRR только перераспределяет ожидание, отказы и истечения в сторону
+tenant-источника перегрузки; `drr_iso` сознательно не work-conserving: жёсткий per-tenant лимит оставляет часть
+ёмкости свободной ценой throughput, зато лёгкие пользователи не получают ни отказов, ни истечений (Part 3).
+Throughput в job/с не равен номинальной ёмкости из Part 3 (она посчитана для смеси заявок): он зависит от того,
+какая доля выполненных задач — long; отдельно эта разница не анализировалась.
 
 **6. Какие гарантии от инфраструктуры, а какие из кода?** Инфраструктура (SQLite): атомарность,
 сериализуемость писателей, долговечность коммита (WAL), уникальные индексы и триггеры. Код: модель
@@ -496,8 +505,8 @@ def build_md() -> str:
 Вариант стека: **custom runtime** — Python asyncio + SQLite (WAL) как durable state store + transactional outbox +
 таблицы `events`, `timers`, `scheduler`; FastAPI + CLI. Архитектура, форматы, таблица переходов, правило гонок и
 обоснование выбора — в [README.md](README.md). **Все числа ниже вычислены скриптом `experiments/make_report.py`
-из сырых данных `results/raw/`** (симуляция) и `results/real_llm/` (реальная LLM, если запускалась); разделы
-Simulated и Real LLM не смешиваются.
+из сырых данных `results/raw/`** (симуляция), `results/real_llm/` (реальная LLM: Ollama, локально) и
+`results/real_llm_server/` (реальная LLM: сервер ITMO); разделы Simulated и два прогона Real LLM не смешиваются.
 
 ## 1. Окружение
 

@@ -40,6 +40,19 @@ python -m agentrt.cli cancel --db state.db <job_id>
 
 Реальная LLM: `OPENAI_API_KEY`, `OPENAI_BASE_URL`, `MODEL` (см. `.env.example`; `.env` в `.gitignore`).
 Для Ollama: `OPENAI_BASE_URL=http://localhost:11434/v1 OPENAI_API_KEY=ollama MODEL=llama3.1`.
+Опционально `LLM_REASONING_EFFORT` (например, `none`) — передаётся в запрос как `reasoning_effort`; для
+«рассуждающих» моделей (qwen3.x в Ollama) без него ответ может прийти с пустым `content`. Запросы идут с `temperature = 0`.
+
+Отчётные прогоны с реальной LLM (результаты лежат отдельно и не смешиваются с симуляцией):
+
+```powershell
+# 1) локально, Ollama (CPU): в .env MODEL=qwen3.5:4b, OPENAI_BASE_URL=http://localhost:11434/v1, LLM_REASONING_EFFORT=none
+.\scripts\run_real_llm.ps1                                  # -> results/real_llm/
+# 2) сервер университета (vLLM, нужен VPN): в .env MODEL=qwen3.8-27b, OPENAI_BASE_URL=<адрес сервера>/v1,
+#    OPENAI_API_KEY=<выданный токен>, PRICE_PER_1K_PROMPT=0, PRICE_PER_1K_COMPLETION=0
+.\scripts\run_real_llm.ps1 --out results/real_llm_server   # -> results/real_llm_server/
+```
+Оба скрипта в конце пересобирают REPORT.md/PDF.
 
 ## Почему свой рантайм, а не Temporal / FastStream
 
@@ -266,5 +279,6 @@ tests/            pytest (вывод: results/pytest_output.txt)
 scripts/          *.sh и *.ps1 обёртки
 results/raw/      сырые CSV/JSONL/JSON всех симулированных прогонов
 results/figures/  PNG
-results/real_llm/ появляется только после scripts/run_real_llm.*
+results/real_llm/         реальная LLM, Ollama локально (scripts/run_real_llm.*)
+results/real_llm_server/  реальная LLM, сервер университета (scripts/run_real_llm.* --out results/real_llm_server)
 ```
