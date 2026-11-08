@@ -122,6 +122,7 @@ class OpenAICompatibleLLM:
         self.name = f"openai-compatible:{self.model}"
         self.ledger = ledger
         self._client = httpx.AsyncClient(timeout=timeout_s, transport=transport)
+        self._extra = ({"reasoning_effort": os.environ["LLM_REASONING_EFFORT"]} if os.environ.get("LLM_REASONING_EFFORT") else {})
 
     async def complete(self, prompt: str, *, max_tokens: int, meta: CallMeta,
                        system: str | None = None) -> LLMResult:
@@ -141,7 +142,7 @@ class OpenAICompatibleLLM:
                     f"{self.base_url}/chat/completions",
                     headers={"Authorization": f"Bearer {self.api_key}"} if self.api_key else {},
                     json={"model": self.model, "messages": messages, "max_tokens": max_tokens,
-                          "temperature": 0},
+                          "temperature": 0, **self._extra},
                 )
             except (httpx.TimeoutException, httpx.TransportError) as e:
                 raise TransientError(f"LLM transport error: {type(e).__name__}: {e}") from e

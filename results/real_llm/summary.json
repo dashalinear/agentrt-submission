@@ -1,0 +1,87 @@
+{
+  "kind": "REAL LLM RUN",
+  "model": "qwen3.5:4b",
+  "base_url": "http://localhost:11434/v1",
+  "env": {
+    "os": "Windows-10-10.0.19045-SP0",
+    "python": "3.13.7",
+    "machine": "AMD64",
+    "processor": "AMD64 Family 25 Model 116 Stepping 1, AuthenticAMD",
+    "cpu_count": 16,
+    "sqlite": "3.50.4",
+    "ram_gb": 15.2,
+    "fastapi": "0.162.0",
+    "uvicorn": "0.54.0",
+    "httpx": "0.28.1",
+    "pydantic": "2.14.3",
+    "starlette": "1.10.0",
+    "pytest": "9.2.0",
+    "matplotlib": "3.11.2",
+    "numpy": "2.5.4",
+    "Markdown": "3.11.3"
+  },
+  "jobs": [
+    {
+      "job_id": "job-a7d3b289b78142ea",
+      "state": "SUCCEEDED",
+      "error": null,
+      "tokens_used": 604,
+      "e2e_s": 77.442,
+      "steps": [
+        "fetch_documents#0",
+        "extract#0",
+        "draft#0.0",
+        "draft#0.1",
+        "decide#0",
+        "save_report#0",
+        "publish#0"
+      ]
+    },
+    {
+      "job_id": "job-de5e0a57fb83458e",
+      "state": "SUCCEEDED",
+      "error": null,
+      "tokens_used": 531,
+      "e2e_s": 77.336,
+      "steps": [
+        "fetch_documents#0",
+        "extract#0",
+        "draft#0.0",
+        "draft#0.1",
+        "decide#0",
+        "save_report#0",
+        "publish#0"
+      ]
+    },
+    {
+      "job_id": "job-60c01656c78d4040",
+      "state": "SUCCEEDED",
+      "error": null,
+      "tokens_used": 486,
+      "e2e_s": 88.499,
+      "steps": [
+        "fetch_documents#0",
+        "extract#0",
+        "draft#0.0",
+        "draft#0.1",
+        "decide#0",
+        "save_report#0",
+        "publish#0"
+      ]
+    }
+  ],
+  "llm_calls": 6,
+  "llm_calls_ok": 6,
+  "llm_latency_s": {
+    "n": 6,
+    "p50": 27.875741243362427,
+    "max": 33.38719868659973
+  },
+  "prompt_tokens": 702,
+  "completion_tokens": 919,
+  "cost_usd": 0.000657,
+  "price_per_1k": [
+    0.00015,
+    0.0006
+  ]
+}

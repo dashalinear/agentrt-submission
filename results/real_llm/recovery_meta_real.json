@@ -1,0 +1,93 @@
+{
+  "env": {
+    "os": "Windows-10-10.0.19045-SP0",
+    "python": "3.13.7",
+    "machine": "AMD64",
+    "processor": "AMD64 Family 25 Model 116 Stepping 1, AuthenticAMD",
+    "cpu_count": 16,
+    "sqlite": "3.50.4",
+    "ram_gb": 15.2,
+    "fastapi": "0.162.0",
+    "uvicorn": "0.54.0",
+    "httpx": "0.28.1",
+    "pydantic": "2.14.3",
+    "starlette": "1.10.0",
+    "pytest": "9.2.0",
+    "matplotlib": "3.11.2",
+    "numpy": "2.5.4",
+    "Markdown": "3.11.3"
+  },
+  "config": {
+    "time_scale": 1.0,
+    "lease_timeout_s": 2.0,
+    "heartbeat_interval_s": 0.25,
+    "reaper_interval_s": 0.2,
+    "poll_interval_s": 0.01,
+    "backoff_base_s": 0.5,
+    "backoff_cap_s": 4.0,
+    "global_concurrency": 2,
+    "per_tenant_concurrency": 2,
+    "sim": {
+      "short": {
+        "fetch_documents": 0.3,
+        "extract": 0.2,
+        "draft": 1.0,
+        "draft_chunks": 2,
+        "decide": 0.05,
+        "save_report": 0.05,
+        "publish": 0.1,
+        "docs": 3
+      }
+    }
+  },
+  "cases": {
+    "baseline": {
+      "desc": "no failure",
+      "faults": {}
+    },
+    "s1_kill_between_steps": {
+      "desc": "kill after extract#0 committed, before draft starts; restart same worker name",
+      "faults": {
+        "pause_after_step": {
+          "extract": 1.0
+        }
+      },
+      "restart_name": "w1"
+    },
+    "s2a_kill_during_llm_lease": {
+      "desc": "kill during LLM call (draft#0.0); recovery by another worker after lease expiry",
+      "faults": {},
+      "restart_name": "w2"
+    },
+    "s2b_kill_during_llm_restart": {
+      "desc": "kill during LLM call; same worker name restarts (immediate reclaim)",
+      "faults": {},
+      "restart_name": "w1"
+    },
+    "s3a_crash_after_publish": {
+      "desc": "worker crashes right after publisher committed (ack never checkpointed)",
+      "faults": {
+        "crash_after_publish_response": true
+      },
+      "restart_name": "w1"
+    },
+    "s3b_ack_lost_network": {
+      "desc": "publisher commits but answers 503 (ack lost); retry with same key",
+      "faults": {},
+      "publisher_lose_ack": true
+    },
+    "s4_transient_repeated": {
+      "desc": "LLM always returns transient 503 on draft; max_attempts=4",
+      "faults": {
+        "llm_fail": {
+          "draft": -1
+        }
+      }
+    }
+  },
+  "reps": 1,
+  "seeds": [
+    1000
+  ],
+  "time_scale": 1.0
+}

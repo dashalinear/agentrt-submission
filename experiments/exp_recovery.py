@@ -88,7 +88,7 @@ def run_case(case: str, rep: int, pub_url: str, pub_db: str, llm: str, seed: int
         time.sleep(0.3)  # mid-call
         t_kill = hard_kill(w)
     elif case == "s3a_crash_after_publish":
-        wait_for(lambda: w.poll() is not None, timeout=60)
+        wait_for(lambda: w.poll() is not None, timeout=300)
         t_kill = time.time()
     if restart:
         t_spawn = time.time()
