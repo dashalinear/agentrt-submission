@@ -2,8 +2,8 @@
 
 All *durations* in this module are expressed in **virtual seconds**. The runtime
 multiplies them by ``time_scale`` to obtain real (wall-clock) seconds.  With
-``time_scale = 1.0`` virtual == real; the load test uses ``time_scale = 0.05``
-(1 virtual second == 50 real milliseconds).
+``time_scale = 1.0`` virtual == real; the load test uses ``time_scale = 0.1``
+(1 virtual second == 100 real milliseconds).
 """
 from __future__ import annotations
 

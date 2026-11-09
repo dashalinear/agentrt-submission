@@ -38,6 +38,16 @@ python -m agentrt.cli event  --db state.db <job_id> --type approval --decision a
 python -m agentrt.cli cancel --db state.db <job_id>
 ```
 
+### Воспроизведение сбоев, дублей событий и нагрузки
+
+| что | команда (Windows; для Linux/macOS — `scripts/*.sh`) |
+|---|---|
+| ручное демо в отдельных процессах: дубль создания по ключу → kill воркера посреди job → автоматическое возобновление → дубль approval с тем же `event_id` → позднее событие и cancel после терминала → 1 логическая публикация | `.\scripts\demo_manual.ps1` (только PowerShell) |
+| все сценарии Part 1 (kill между шагами, kill во время LLM, крэш после publish, потерянный ack, повторяющаяся transient-ошибка) | `.\scripts\exp_recovery.ps1`; один сценарий, не трогая отчётные данные: `python -m experiments.exp_recovery --cases s1_kill_between_steps --reps 1 --out results/work/try` |
+| E1–E7 Part 2 (в т.ч. E3 — дубли событий, E5 — гонки) | `.\scripts\exp_events.ps1` |
+| нагрузка Part 3, 3 политики × 3 seed | `.\scripts\exp_load.ps1` |
+| вручную отправить одно и то же событие дважды | `python -m agentrt.cli event --db state.db <job_id> --event-id evt-1` (повторить) → второй ответ `"outcome": "duplicate"` |
+
 Реальная LLM: `OPENAI_API_KEY`, `OPENAI_BASE_URL`, `MODEL` (см. `.env.example`; `.env` в `.gitignore`).
 Для Ollama: `OPENAI_BASE_URL=http://localhost:11434/v1 OPENAI_API_KEY=ollama MODEL=llama3.1`.
 Опционально `LLM_REASONING_EFFORT` (например, `none`) — передаётся в запрос как `reasoning_effort`; для
@@ -225,6 +235,32 @@ stateDiagram-v2
 
 **Не** exactly-once: вызовы LLM и tool (at-least-once — после крэша посреди вызова он повторяется),
 доставка outbox (at-least-once, дедуп на стороне получателя по `message_id`).
+
+## Настройки доставки сообщений
+
+Брокера нет: роль очереди играет таблица `jobs` (work item = «следующий шаг job»), роль inbox — `events`,
+роль исходящей очереди — `outbox`. Семантика и значения по умолчанию (`src/agentrt/config.py`, длительности в
+виртуальных секундах, при `time_scale = 1` они равны реальным; переопределяются JSON-конфигом `--config`):
+
+| канал / параметр | значение по умолчанию | семантика |
+|---|---|---|
+| **work item → воркер** (claim шага) | `BEGIN IMMEDIATE` + CAS по `version` | один шаг выдаётся одному воркеру; «ack» = коммит результата шага вместе с `next_step` |
+| `lease_timeout_s` (visibility timeout) | 3.0 | если нет heartbeat дольше — reaper возвращает шаг в очередь (redelivery, `attempt + 1`) |
+| `heartbeat_interval_s` | 0.25 | продление lease; также граница задержки остановки после cancel |
+| `reaper_interval_s` | 0.5 | период поиска истёкших lease |
+| `poll_interval_s` | 0.02 (реальные с) | опрос очереди/таймеров (межпроцессных уведомлений нет) |
+| `max_attempts` (на шаг) | 4 | redelivery ограничена: после исчерпания → `FAILED` с причиной; потеря lease тоже попытка |
+| `backoff_base_s` / `backoff_cap_s` | 0.5 / 8.0 | пауза перед повтором: `d = min(cap, base·2^(n-1))`, equal jitter `[d/2, d]` |
+| `step_timeout_s` (на попытку) | 30 | превышение → `TransientError` → повтор по политике |
+| HTTP-таймаут LLM / сервиса публикаций | 120 с / 10 с | обрыв или таймаут → transient |
+| **внешнее событие → job** (`POST /jobs/{id}/events`, CLI `event`) | синхронно, одна транзакция | `event_id` — PK таблицы `events`: дубль → `duplicate`, состояние не меняется; ответ 202 с исходом после коммита |
+| **outbox → получатель** (`approval.requested`, `job.<terminal>`) | at-least-once | пишется в той же транзакции, что и переход; relay повторяет с паузой `min(8, 0.5·2^n)` **без ограничения числа попыток**; `Idempotency-Key = message_id`, получатель дедуплицирует |
+| **publish → FakePublisherService** | at-least-once запросов, ≤ 1 логическая публикация | `Idempotency-Key = <job_id>:publish`; повтор возвращает прежний `publication_id` |
+| SQLite | `journal_mode=WAL`, `synchronous=NORMAL` (`AGENTRT_SYNC=FULL`), `busy_timeout=60 с` | коммит переживает убийство процесса; от потери питания защищает только `FULL` |
+
+Значения в экспериментах отличаются от дефолтов; они заданы в `experiments/exp_*.py` (для Part 1 конфиг ещё и
+сохранён в `results/raw/recovery_meta.json`): Part 1 — `lease_timeout_s = 2.0`, heartbeat 0.25, backoff 0.5–4.0; Part 2 — heartbeat 0.05 (E7: 0.1),
+lease 2.0, poll 3 мс; Part 3 — `time_scale = 0.1`, lease 10, heartbeat 1.0.
 
 ## Правило разрешения гонок
 

@@ -14,7 +14,7 @@ import sys
 
 from experiments import plots
 from experiments.common import ROOT, WORK
-from experiments.report_data import TENANTS, events, fmt, load, pytest_summary, real_llm, recovery
+from experiments.report_data import TENANTS, events, fmt, load, pytest_summary, q, real_llm, recovery
 
 CASE_RU = {
     "baseline": "без отказов (baseline)",
@@ -189,6 +189,12 @@ def section_part2(ev):
         "CANCELLED; если approval пришёл достаточно рано, шаги успевают закоммитить SUCCEEDED, и более поздние "
         "cancel получают `already_terminal`; если к моменту approval или коммита шага дедлайн уже прошёл, побеждает "
         "TIMED_OUT (`deadline_won`, `aborted_deadline`, `late_results_discarded`).", "",
+        "**Воспроизводимость E5.** Seed фиксирует только *плановые* моменты отправки; фактический порядок коммитов "
+        "зависит от планирования потоков ОС и ожидания блокировки записи, поэтому распределение итоговых состояний "
+        "(CANCELLED / SUCCEEDED / TIMED_OUT) при повторном запуске заметно меняется — это наблюдалось при контрольном "
+        "полном перезапуске всех экспериментов из чистого клона (его сырые данные в репозиторий не входят). "
+        "Воспроизводимым результатом E5 являются инварианты (0 нарушений в обоих прогонах) и соответствие каждого "
+        "исхода правилу гонок, а не доли исходов.", "",
         "### E6. Рестарт воркера во время ожидания", "",
         table(["вариант", "повтор", "итог", "открытых step_runs в ожидании", "состояние пока воркер мёртв",
                "исход события", "готов → первый шаг, мс", "готов → терминал, мс", "опоздание таймаута, мс"], e6_rows), "",
@@ -244,6 +250,35 @@ def section_part3(ld):
         lines.append(f"  * heavy: short p95 {fmt(grp('fifo', 'heavy', 'short'))} → {fmt(grp('drr', 'heavy', 'short'))} с, "
                      f"long p95 {fmt(grp('fifo', 'heavy', 'long'))} → {fmt(grp('drr', 'heavy', 'long'))} с.")
     pd = {p["policy"]: p for p in pp}
+    # waiting by priority (aging / starvation evidence), computed from the same raw jobs
+    prio_rows, prio = [], {}
+    for p in ld["policies"]:
+        for gname, ts in (("heavy", ("heavy",)), ("light1+light2", ("light1", "light2"))):
+            for pr in sorted({r["priority"] for r in ld["jobs"]}):
+                xs = [r for r in ld["jobs"] if r["policy"] == p and r["tenant"] in ts and r["priority"] == pr]
+                if not xs:
+                    continue
+                w = [r["wait_total_v"] for r in xs]
+                rec = {"n": len(xs), "p50": q(w, 50), "p95": q(w, 95), "max": max(w),
+                       "ok": sum(r["state"] == "SUCCEEDED" for r in xs), "to": sum(r["state"] == "TIMED_OUT" for r in xs)}
+                prio[(p, gname, pr)] = rec
+                prio_rows.append([p, gname, pr, rec["n"], fmt(rec["p50"]), fmt(rec["p95"]), fmt(rec["max"]),
+                                  rec["ok"], rec["to"]])
+    prio_t = table(["политика", "пользователи", "priority", "N", "p50 ожидания, с", "p95 ожидания, с", "max, с",
+                    "SUCCEEDED", "TIMED_OUT"], prio_rows)
+    prio_note = []
+    h0, h1 = prio.get(("drr", "heavy", 0)), prio.get(("drr", "heavy", 1))
+    f0, f1 = prio.get(("fifo", "heavy", 0)), prio.get(("fifo", "heavy", 1))
+    if h0 and h1 and f0 and f1:
+        prio_note = [
+            f"В `fifo` приоритет не учитывается: у `heavy` p50 ожидания priority 0 и 1 почти одинаковы "
+            f"({fmt(f0['p50'])} и {fmt(f1['p50'])} с). В `drr` priority = 1 внутри tenant обслуживается первым "
+            f"(p50 {fmt(h1['p50'])} с против {fmt(h0['p50'])} с у priority 0), но задачи priority 0 не вытесняются "
+            f"бесконечно: aging (+1 к эффективному приоритету за 10 с ожидания) возвращает их в оборот — "
+            f"{h0['ok']} из {h0['n']} завершились успешно. Остальные ({h0['to']}) истекли по дедлайну: при длительной "
+            f"перегрузке «защита от голодания» не создаёт ёмкость, и дедлайн снимает в первую очередь давно ждущую "
+            f"низкоприоритетную работу перегружающего tenant. У лёгких пользователей приоритет почти не влияет — их "
+            f"спрос ниже доли. Для priority = 1 наблюдений мало (10 % заявок), см. столбец N."]
     out = [
         f"**Нагрузка.** 3 пользователя (`heavy` шлёт сильно больше остальных), 2 класса: short ≈ {nom['short']:.2f} c и "
         f"long ≈ {nom['long']:.2f} c номинальной работы (long = {meta['long_share']:.0%} заявок; long разбит на шаги "
@@ -262,6 +297,7 @@ def section_part3(ld):
         "### Ожидание по user × class (ожидание = суммарное время в очереди в состоянии «готов к запуску», "
         "по всем шагам; для истёкших в очереди — до момента истечения)", "", gt, "",
         "![p95](results/figures/load_wait_p95.png)", "",
+        "### Ожидание по приоритету (aging и защита от голодания; все 3 seed)", "", prio_t, "", *prio_note, "",
         "### Сводка по политикам (сумма/максимум по 3 прогонам)", "", pt, "",
         f"Масштабирование времени добавляет накладные расходы: медиана (фактическая − номинальная длительность шага) = "
         f"{fmt(ld['step_overhead_p50'], 3)} вирт. с, p95 = {fmt(ld['step_overhead_p95'], 3)} вирт. с "
@@ -299,7 +335,8 @@ def section_part3(ld):
         "короткая задача ждёт не всю 10-секундную job, а максимум один шаг; цена — лишняя транзакция claim/complete "
         "на каждый шаг (см. накладные расходы выше).",
         "* **Aging.** Внутри tenant priority = 1 обгоняет priority = 0, но задача с низким приоритетом, прождавшая "
-        "10 с, получает +1 и не голодает (`tests/test_scheduling.py::test_aging_lets_old_low_priority_job_overtake`).",
+        "10 с, получает +1 и не голодает (`tests/test_scheduling.py::test_aging_lets_old_low_priority_job_overtake`; "
+        "измерения под нагрузкой — таблица «Ожидание по приоритету» выше).",
         "* **Лимиты.** По трассе `step_runs` (интервалы исполнения) максимальная одновременность ни разу не превысила "
         "global/per-tenant лимит (столбцы «max … / лимит»; то же проверяют автотесты).",
         "* **Ожидание approval не занимает слоты** — подтверждено автотестом "
@@ -484,7 +521,13 @@ LIMITS = """
 * **Цены токенов** в конфиге иллюстративные (не прайс-лист провайдера); стоимость = токены × цена из конфига.
 * **Межпроцессных уведомлений нет**: воркер узнаёт о новых событиях/заявках из других процессов поллингом
   (`poll_interval_s`), это входит в латентность «event → next step».
-* `docker-compose.yml` приложен как опция и в отчётных прогонах не использовался.
+* **Outbox без dead-letter.** Недоставленные уведомления повторяются с ограниченной паузой (≤ 8 с), но без
+  предела числа попыток; при долго недоступном получателе строки копятся в `outbox` (видны по `attempts`,
+  `last_error`), отдельной очереди «мёртвых» сообщений нет. На состояние job это не влияет.
+* `docker-compose.yml` приложен как опция и в отчётных прогонах не использовался (Docker на машине не установлен).
+* **Воспроизводимость с нуля проверена** на той же машине: клон из Git → новое окружение из `requirements.txt` →
+  `scripts/run_all_experiments.ps1` (≈ 14 мин) — тесты зелёные, выводы всех трёх частей совпали; абсолютные
+  времена и доли исходов E5 отличаются (см. E5). В другой ОС/на другом железе не проверялось.
 * Политика агента (`decide`) — детерминированные правила с ограничениями (min_docs, max_tool_calls, approval),
   а не решение LLM; LLM используется для черновика.
 """

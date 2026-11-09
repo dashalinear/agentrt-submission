@@ -24,9 +24,18 @@ def _setup(tmp_path, **faults):
 
 
 def _calls(ledger):
+    # The worker process creates the ledger file first and its schema a moment later; while polling we may
+    # observe the file without the table yet -> treat that as "no calls so far" instead of failing the test.
     c = sqlite3.connect(ledger)
     c.row_factory = sqlite3.Row
-    return [dict(r) for r in c.execute("SELECT * FROM calls")]
+    try:
+        return [dict(r) for r in c.execute("SELECT * FROM calls")]
+    except sqlite3.OperationalError as e:
+        if "no such table" in str(e):
+            return []
+        raise
+    finally:
+        c.close()
 
 
 def _state(store, jid):
