@@ -1,4 +1,6 @@
-# Optional. NOT exercised in the reported runs (see REPORT.md "Ограничения"); everything works without Docker.
+# Optional (everything also runs without Docker). Verified end-to-end by scripts/demo_docker.ps1
+# (HTTP API, SIGKILL of the worker, duplicate event, containers recreated while WAITING_EVENT).
+# The reported experiments were NOT run under compose (see REPORT.md "Ограничения").
 services:
   publisher:
     build: .

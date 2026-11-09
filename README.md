@@ -11,7 +11,25 @@ HTTP API на **FastAPI** и CLI-обёрткой. Агент: `register job →
 ## Быстрый старт
 
 Проверено: Windows 10 (PowerShell / Git Bash), Python 3.13.7 (`.python-version`); код требует ≥ 3.11.
-Docker не нужен (есть опциональный `docker-compose.yml`).
+Также проверено в Linux-контейнере (`Dockerfile`, Python 3.13.18): все тесты, Part 1 и `docker-compose.yml`.
+Docker не обязателен.
+
+### Docker (опционально)
+
+```powershell
+docker compose -p agentrt up -d --build      # publisher :8765, api :8000, worker (SQLite в именованном томе)
+.\scripts\demo_docker.ps1                    # сквозная проверка compose через HTTP API (см. ниже), затем down -v
+.\scripts\exp_recovery_linux.ps1             # Part 1 в Linux-контейнере с POSIX SIGKILL -> results/raw_linux/
+docker build -t agentrt:local .              # образ для запуска тестов в Linux:
+docker run --rm -v "${PWD}:/w:ro" -w /w -e PYTHONDONTWRITEBYTECODE=1 agentrt:local python -m pytest -q -p no:cacheprovider
+```
+`demo_docker.ps1` проверяет: два `POST /jobs` с одним `Idempotency-Key` → 201 и 200 с тем же `job_id`;
+`docker compose kill -s SIGKILL worker` посреди job → после `start` job продолжается сама (шаги с чекпоинтом не
+повторяются, прерванный — вторая попытка); дубль approval с тем же `event_id` → `duplicate`; cancel после
+`SUCCEEDED` → `already_terminal`; `docker compose down` + `up` во время `WAITING_EVENT` → состояние, дедлайн и
+`approval_id` сохранены, approval применяется; у FakePublisherService 2 логические публикации на 2 job.
+Воркер в compose подхватывает `.env`, если он есть (в образ он не попадает — см. `.dockerignore`); ключи нужны
+только при `LLM=real`, по умолчанию `LLM=sim`.
 
 ```bash
 python -m venv .venv
@@ -317,4 +335,5 @@ results/raw/      сырые CSV/JSONL/JSON всех симулированны�
 results/figures/  PNG
 results/real_llm/         реальная LLM, Ollama локально (scripts/run_real_llm.*)
 results/real_llm_server/  реальная LLM, сервер университета (scripts/run_real_llm.* --out results/real_llm_server)
+results/raw_linux/        Part 1 в Linux-контейнере с POSIX SIGKILL (scripts/exp_recovery_linux.*)
 ```

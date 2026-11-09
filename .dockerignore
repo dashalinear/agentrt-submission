@@ -1,0 +1,14 @@
+# keep the build context small and secret-free (the image only needs requirements.txt, src/, experiments/)
+.env
+*.env.local
+.venv/
+.git/
+results/
+**/__pycache__/
+.pytest_cache/
+*.db
+*.db-wal
+*.db-shm
+*.log
+submission.zip
+REPORT.pdf

@@ -116,7 +116,32 @@ def section_part1(rec):
                    f"неудачных попыток в {s4['n']} прогонах), паузы между попытками (с, по прогонам): {pauses} — растут "
                    f"экспоненциально с jitter (ожидаемые интервалы [0.25–0.5], [0.5–1.0], [1.0–2.0] плюс время "
                    f"поллинга). Итог — `FAILED` с причиной: `{s4['errors'][0]}`.")
+    txt += _part1_linux()
     return "\n".join(txt)
+
+
+def _part1_linux():
+    """Same Part 1 experiment re-run in a Linux container (real POSIX SIGKILL); separate block, not merged."""
+    from experiments.report_data import recovery as _rec
+    lr = _rec(os.path.join(ROOT, "results", "raw_linux"))
+    if not lr["cases"]:
+        return []
+    env = (lr["meta"] or {}).get("env", {})
+    rows = [[CASE_RU.get(c["case"], c["case"]), c["n"], cnt(c["final"]),
+             f"{fmt(c['total_p50'])} [{fmt(c['total_min'])}–{fmt(c['total_max'])}]",
+             fmt(c["resume_ready_p50"], 3), c["rep_llm"], c["reexec"], f"{c['phys']} / {c['logical']}", c["dups"]]
+            for c in lr["cases"]]
+    return ["", "### Part 1 на Linux: тот же эксперимент в Docker-контейнере (настоящий SIGKILL)", "",
+            f"Окружение: {env.get('os', '?')}, Python {env.get('python', '?')} (образ из `Dockerfile`, Docker Desktop "
+            "на этой же машине, ядро WSL2). Код и параметры те же (`python -m experiments.exp_recovery --reps 5`), "
+            "но `Popen.kill()` здесь посылает POSIX SIGKILL. Сырые данные — отдельно, в `results/raw_linux/`; с "
+            "Windows-прогоном выше не смешиваются. Команда: `.\\scripts\\exp_recovery_linux.ps1`.", "",
+            table(["сценарий", "N", "итог", "время job p50 [min–max], с", "воркер готов → возобновление p50, с",
+                   "повторных LLM", "перевыполнено шагов с чекпоинтом", "publish физ. / лог.", "дублей лог. публикаций"],
+                  rows), "",
+            "Гарантии воспроизвелись и под SIGKILL: шаги с чекпоинтом не перевыполняются, прерванный LLM-вызов "
+            "повторяется ровно один раз, повторная публикация не создаёт дубля, transient-ошибка исчерпывает 4 попытки "
+            "и даёт `FAILED`. Абсолютные времена отличаются от Windows (другой запуск процесса, файловая система тома)."]
 
 
 def section_part2(ev):
@@ -504,9 +529,10 @@ LIMITS = """
 * **Один узел, один писатель.** SQLite сериализует все записи; масштабирование — несколько процессов на одной
   машине (лимиты проверяются в транзакции и для них верны), но не кластер. Узкое место — частота транзакций
   (claim + complete на каждый шаг + heartbeats).
-* **Windows вместо Linux.** Эксперименты выполнены на Windows 10: «SIGKILL» реализован как
-  `Popen.kill()` → `TerminateProcess` (те же свойства: без обработчиков/`finally`). На POSIX тот же код
-  посылает SIGKILL, но там прогон не выполнялся.
+* **Основная ОС — Windows.** Отчётные эксперименты Part 1–3 выполнены на Windows 10: «SIGKILL» там — `Popen.kill()` →
+  `TerminateProcess` (без обработчиков/`finally`). В Linux-контейнере (Docker Desktop, ядро WSL2 на той же машине,
+  не отдельный Linux-сервер) повторены только Part 1 с настоящим POSIX SIGKILL (`results/raw_linux/`) и все 56
+  автотестов (passed); Part 2 и Part 3 на Linux не прогонялись.
 * **`synchronous=NORMAL`**: гарантия durable — против падения процесса (это и проверялось), но не против
   потери питания/краха ОС для последних транзакций (`AGENTRT_SYNC=FULL` закрывает это ценой латентности; не измерялось).
 * **Масштабированное время** в Part 3 (1 вирт. с = 0.1 с): накладные расходы рантайма (транзакции, поллинг)
@@ -524,7 +550,10 @@ LIMITS = """
 * **Outbox без dead-letter.** Недоставленные уведомления повторяются с ограниченной паузой (≤ 8 с), но без
   предела числа попыток; при долго недоступном получателе строки копятся в `outbox` (видны по `attempts`,
   `last_error`), отдельной очереди «мёртвых» сообщений нет. На состояние job это не влияет.
-* `docker-compose.yml` приложен как опция и в отчётных прогонах не использовался (Docker на машине не установлен).
+* **`docker-compose.yml` проверен сквозным сценарием**, а не нагрузкой: `scripts/demo_docker.ps1` поднимает publisher,
+  api и worker, через HTTP API проверяет идемпотентное создание, SIGKILL воркера (`docker compose kill`) с
+  автоматическим продолжением, дубль события и пересоздание всех контейнеров во время ожидания approval (состояние,
+  дедлайн и `approval_id` сохраняются в именованном томе). Отчётные эксперименты в compose не запускались.
 * **Воспроизводимость с нуля проверена** на той же машине: клон из Git → новое окружение из `requirements.txt` →
   `scripts/run_all_experiments.ps1` (≈ 14 мин) — тесты зелёные, выводы всех трёх частей совпали; абсолютные
   времена и доли исходов E5 отличаются (см. E5). В другой ОС/на другом железе не проверялось.

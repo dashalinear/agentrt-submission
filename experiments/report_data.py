@@ -54,8 +54,10 @@ def fmt(x, nd=2):
 
 
 # ----------------------------------------------------------------------------- Part 1
-def recovery():
-    rows = load_csv("recovery_runs.csv")
+def recovery(base: str = RAW):
+    rows = load_csv("recovery_runs.csv", base)
+    if not rows:
+        return {"rows": [], "cases": [], "baseline_p50": None, "meta": None}
     by = defaultdict(list)
     for r in rows:
         by[r["case"]].append(r)
@@ -84,7 +86,7 @@ def recovery():
             "transient_attempts": sum(r["transient_attempts"] for r in rs),
             "pauses": [json.loads(r["retry_pauses_s"]) for r in rs], "errors": [r["error"] for r in rs],
         })
-    return {"rows": rows, "cases": out, "baseline_p50": base_p50, "meta": load_json("recovery_meta.json")}
+    return {"rows": rows, "cases": out, "baseline_p50": base_p50, "meta": load_json("recovery_meta.json", base)}
 
 
 # ----------------------------------------------------------------------------- Part 2
