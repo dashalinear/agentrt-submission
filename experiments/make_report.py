@@ -135,7 +135,7 @@ def _part1_linux():
             f"Окружение: {env.get('os', '?')}, Python {env.get('python', '?')} (образ из `Dockerfile`, Docker Desktop "
             "на этой же машине, ядро WSL2). Код и параметры те же (`python -m experiments.exp_recovery --reps 5`), "
             "но `Popen.kill()` здесь посылает POSIX SIGKILL. Сырые данные — отдельно, в `results/raw_linux/`; с "
-            "Windows-прогоном выше не смешиваются. Команда: `.\\scripts\\exp_recovery_linux.ps1`.", "",
+            "Windows-прогоном выше не смешиваются. Команда: `.\\scripts\\run_linux.ps1 -Parts recovery`.", "",
             table(["сценарий", "N", "итог", "время job p50 [min–max], с", "воркер готов → возобновление p50, с",
                    "повторных LLM", "перевыполнено шагов с чекпоинтом", "publish физ. / лог.", "дублей лог. публикаций"],
                   rows), "",
@@ -216,10 +216,16 @@ def section_part2(ev):
         "TIMED_OUT (`deadline_won`, `aborted_deadline`, `late_results_discarded`).", "",
         "**Воспроизводимость E5.** Seed фиксирует только *плановые* моменты отправки; фактический порядок коммитов "
         "зависит от планирования потоков ОС и ожидания блокировки записи, поэтому распределение итоговых состояний "
-        "(CANCELLED / SUCCEEDED / TIMED_OUT) при повторном запуске заметно меняется — это наблюдалось при контрольном "
-        "полном перезапуске всех экспериментов из чистого клона (его сырые данные в репозиторий не входят). "
-        "Воспроизводимым результатом E5 являются инварианты (0 нарушений в обоих прогонах) и соответствие каждого "
-        "исхода правилу гонок, а не доли исходов.", "",
+        "(CANCELLED / SUCCEEDED / TIMED_OUT) от запуска к запуску заметно меняется (наблюдалось при контрольных "
+        "перезапусках; их сырые данные в репозиторий не входят). Воспроизводимым результатом E5 являются инварианты "
+        "(0 нарушений во всех прогонах) и соответствие каждого исхода правилу гонок, а не доли исходов.", "",
+        "**Исправление стенда E5 (найдено при прогоне на Linux).** В первой версии каждый из 20 потоков-отправителей "
+        "сам опрашивал БД каждые 3 мс в том же процессе, что и воркер. На Windows это почти не влияло, а в "
+        "Linux-контейнере из-за конкуренции за GIL воркер вытеснялся (замер: путь job до `WAITING_EVENT` 5.05 с против "
+        "0.10 с без опроса), job не успевали дойти до ожидания за 0.6 с, и все 300 повторов заканчивались TIMED_OUT — "
+        "гонки не было. Сейчас состояние опрашивает один поток-монитор, отправители ждут его сигнала; E5 (и весь "
+        "Part 2) перезапущен этим кодом на обеих ОС, данные выше и в блоке «на Linux» — уже с исправленным стендом. "
+        "Рантайм при этом не менялся: это свойство стенда, где воркер и отправители живут в одном процессе.", "",
         "### E6. Рестарт воркера во время ожидания", "",
         table(["вариант", "повтор", "итог", "открытых step_runs в ожидании", "состояние пока воркер мёртв",
                "исход события", "готов → первый шаг, мс", "готов → терминал, мс", "опоздание таймаута, мс"], e6_rows), "",
@@ -234,7 +240,57 @@ def section_part2(ev):
         "`WAITING_EVENT` исполняемой работы нет — остановка мгновенная (коммит перехода).", "",
         "### Сводка инвариантов (переходы из журнала `transitions`, пишется триггером)", "", inv_t,
     ]
+    out += _part2_linux()
     return "\n".join(out)
+
+
+LINUX = os.path.join(ROOT, "results", "raw_linux")
+
+
+def _linux_env(meta):
+    env = (meta or {}).get("env", {})
+    return f"{env.get('os', '?')}, Python {env.get('python', '?')}"
+
+
+def _part2_linux():
+    """Part 2 re-run in a Linux container; separate block, never merged with the Windows numbers."""
+    lv = events(LINUX)
+    s = lv["summary"]
+    if not s:
+        return []
+    lat = {m["metric"]: m for m in s["e1"]["latency"]}
+    tr = lat.get("event_to_transition_ms", {})
+    la = s["e2"]["lateness"]
+    run = s["e7"]["by_state"].get("RUNNING", {})
+    e6 = lv["e6"]
+    e6_ok = sum(1 for r in e6 if r["final"] == ("TIMED_OUT" if r["variant"] == "deadline_while_down" else "SUCCEEDED")
+                and r["open_step_runs_while_waiting"] == 0)
+    inv_keys = ("invalid_transitions", "terminal_changes", "version_gaps", "multiple_terminal", "log_state_mismatch")
+    viol = sum(s[k]["invariants"][x] for k in ("e1", "e2", "e3", "e4", "e5", "e7") for x in inv_keys)
+    checked = sum(s[k]["invariants"]["transitions_checked"] for k in ("e1", "e2", "e3", "e4", "e5", "e7"))
+    e5 = s["e5"]
+    rows = [
+        ["E1 approval вовремя", f"{cnt(s['e1']['final'])}; event → transition p50 {tr.get('p50')} / p95 {tr.get('p95')} мс (N = {tr.get('n')})"],
+        ["E2 approval не пришёл", f"{cnt(s['e2']['final'])}; опоздание таймаута p50 {la['p50']} / p95 {la['p95']} мс (N = {la['n']}); "
+                                  f"шагов во время ожидания: {s['e2']['step_runs_during_wait_total']}"],
+        ["E3 дубли события", f"отправлено {s['e3']['events_sent']}, применено {s['e3']['applied']}, дублей "
+                             f"{s['e3']['duplicates_detected']}; job с >1 переходом: {s['e3']['jobs_with_more_than_one_transition']}"],
+        ["E4 approval после терминала", f"{s['e4']['late_events']} поздних: {cnt(s['e4']['event_outcomes'])}; "
+                                        f"изменений состояния: {s['e4']['state_changed']}"],
+        ["E5 гонки", f"{cnt(e5['final'])}; job с ≠1 терминальным переходом: {e5['multi_terminal_jobs']}; "
+                     f"неотозванных публикаций не-SUCCEEDED job: {e5['orphan_publications']}"],
+        ["E6 рестарт во время ожидания", f"{e6_ok} из {len(e6)} прогонов с ожидаемым итогом и 0 открытых step_runs"],
+        ["E7 остановка после cancel в RUNNING", f"p50 {run.get('p50')} / p95 {run.get('p95')} мс (N = {run.get('n')})"],
+        ["инварианты E1–E5, E7", f"проверено переходов {checked}, нарушений {viol}"],
+    ]
+    return ["", "### Part 2 на Linux (Docker-контейнер)", "",
+            f"Окружение: {_linux_env(s)}; те же скрипт и параметры (`exp_events --race-reps 300`, seed {s.get('seed')}). "
+            "Сырые данные отдельно — `results/raw_linux/events_*`; с Windows-прогоном выше не смешиваются "
+            "(команда: `.\\scripts\\run_linux.ps1`).", "",
+            table(["эксперимент", "результат на Linux"], rows), "",
+            "Поведение совпадает с Windows по всем проверкам (итоги E1–E4, E6, нулевые нарушения инвариантов). "
+            "Латентности и доли исходов E5 различаются — они зависят от планировщика ОС и файловой системы тома "
+            "(см. «Воспроизводимость E5»)."]
 
 
 def section_part3(ld):
@@ -368,7 +424,39 @@ def section_part3(ld):
         "`tests/test_timers_and_slots.py::test_waiting_job_does_not_occupy_execution_slot` (при `global_concurrency=1` "
         "вторая job полностью выполняется, пока первая ждёт approval) и E2/E6 (0 открытых `step_runs` в ожидании).",
     ]
+    out += _part3_linux()
     return "\n".join(out)
+
+
+def _part3_linux():
+    """Part 3 re-run in a Linux container with the same seeds; separate block."""
+    ll = load(LINUX)
+    if not ll["jobs"]:
+        return []
+    g = ll["groups"]
+
+    def grp(p, t, c):
+        return next((x for x in g if x["policy"] == p and x["tenant"] == t and x["job_class"] == c), None)
+
+    rows = []
+    for p in ll["per_policy"]:
+        ls = grp(p["policy"], "light1", "short")
+        hs = grp(p["policy"], "heavy", "short")
+        rows.append([p["policy"], p["runs"], p["arrivals"], f"{p['rejected']} ({cnt(p['rejected_by_tenant'])})",
+                     p["succeeded"], f"{p['timed_out']} ({cnt(p['timed_out_by_tenant'])})", fmt(p["throughput"], 3),
+                     f"{p['slot_utilization_burst']:.1%}",
+                     f"{fmt(ls['p95'])} (N = {ls['n']})" if ls else "–", f"{fmt(hs['p95'])} (N = {hs['n']})" if hs else "–",
+                     " / ".join(f"{p['work_share_burst'][t]:.1%}" for t in TENANTS),
+                     f"{p['max_global_obs']} / {p['global_limit']}", f"{p['max_tenant_obs']} / {p['tenant_limit']}"])
+    return ["", "### Part 3 на Linux (Docker-контейнер, те же seed и поток заявок)", "",
+            f"Окружение: {_linux_env(ll['meta'])}; seeds {ll['seeds']}, по одному прогону каждой политики на seed, "
+            "масштаб времени 0.1. Сырые данные отдельно — `results/raw_linux/load_*`; с Windows-прогоном не смешиваются.", "",
+            table(["политика", "прогонов", "заявок", "отклонено (по user)", "SUCCEEDED", "TIMED_OUT (по user)",
+                   "jobs/s", "загрузка слотов в burst", "p95 ожидания light1 short, с", "p95 ожидания heavy short, с",
+                   "доля работы в burst heavy / light1 / light2", "max global / лимит", "max на tenant / лимит"], rows), "",
+            "Выводы Part 3 на Linux те же: DRR снижает p95 ожидания лёгких пользователей до единиц секунд, перегрузка "
+            "(отказы и истечения) концентрируется у `heavy`, лимиты параллельности не превышаются, `drr_iso` "
+            "жертвует загрузкой слотов ради изоляции."]
 
 
 def _real_rows(s, recovery_rows, cost_text):
@@ -472,7 +560,15 @@ def section_tests():
     if not ps:
         return "_`results/pytest_output.txt` отсутствует — запустите `make test`._"
     lines = "\n".join(ps["tests"])
-    return f"Итог: **{ps['last']}** (полный вывод `pytest -v`: `results/pytest_output.txt`).\n\n```\n{lines}\n```"
+    linux = ""
+    lp = os.path.join(LINUX, "pytest_output.txt")
+    if os.path.exists(lp):
+        tail = [ln.strip("= \n") for ln in open(lp, encoding="utf-8", errors="replace") if ln.strip()]
+        if tail:
+            linux = (f"\n\nТот же набор в Linux-контейнере (`Dockerfile`, POSIX SIGKILL в тестах восстановления): "
+                     f"**{tail[-1]}** (`results/raw_linux/pytest_output.txt`).")
+    return (f"Итог (Windows): **{ps['last']}** (полный вывод `pytest -v`: `results/pytest_output.txt`).{linux}"
+            f"\n\n```\n{lines}\n```")
 
 
 ANSWERS = """
@@ -529,10 +625,10 @@ LIMITS = """
 * **Один узел, один писатель.** SQLite сериализует все записи; масштабирование — несколько процессов на одной
   машине (лимиты проверяются в транзакции и для них верны), но не кластер. Узкое место — частота транзакций
   (claim + complete на каждый шаг + heartbeats).
-* **Основная ОС — Windows.** Отчётные эксперименты Part 1–3 выполнены на Windows 10: «SIGKILL» там — `Popen.kill()` →
-  `TerminateProcess` (без обработчиков/`finally`). В Linux-контейнере (Docker Desktop, ядро WSL2 на той же машине,
-  не отдельный Linux-сервер) повторены только Part 1 с настоящим POSIX SIGKILL (`results/raw_linux/`) и все 56
-  автотестов (passed); Part 2 и Part 3 на Linux не прогонялись.
+* **Основная ОС — Windows, Linux — контейнер на той же машине.** Основные таблицы Part 1–3 получены на Windows 10
+  («SIGKILL» там — `Popen.kill()` → `TerminateProcess`, без обработчиков/`finally`). Все три части и автотесты
+  повторены в Linux-контейнере с настоящим POSIX SIGKILL (`results/raw_linux/`, отдельные блоки «на Linux»), но это
+  Docker Desktop с ядром WSL2 на том же железе, а не отдельный Linux-сервер; на другой машине не проверялось.
 * **`synchronous=NORMAL`**: гарантия durable — против падения процесса (это и проверялось), но не против
   потери питания/краха ОС для последних транзакций (`AGENTRT_SYNC=FULL` закрывает это ценой латентности; не измерялось).
 * **Масштабированное время** в Part 3 (1 вирт. с = 0.1 с): накладные расходы рантайма (транзакции, поллинг)

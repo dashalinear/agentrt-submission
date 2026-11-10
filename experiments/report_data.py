@@ -90,24 +90,26 @@ def recovery(base: str = RAW):
 
 
 # ----------------------------------------------------------------------------- Part 2
-def events():
-    s = load_json("events_summary.json") or {}
-    return {"summary": s, "e1": load_csv("events_e1_approval.csv"), "e2": load_csv("events_e2_timeout.csv"),
-            "e3": load_csv("events_e3_duplicates.csv"), "e4": load_csv("events_e4_late.csv"),
-            "e5": load_csv("events_e5_races.csv"), "e6": load_csv("events_e6_restart_wait.csv"),
-            "e7": load_csv("events_e7_cancel_stop.csv")}
+def events(base: str = RAW):
+    s = load_json("events_summary.json", base) or {}
+    return {"summary": s, "e1": load_csv("events_e1_approval.csv", base), "e2": load_csv("events_e2_timeout.csv", base),
+            "e3": load_csv("events_e3_duplicates.csv", base), "e4": load_csv("events_e4_late.csv", base),
+            "e5": load_csv("events_e5_races.csv", base), "e6": load_csv("events_e6_restart_wait.csv", base),
+            "e7": load_csv("events_e7_cancel_stop.csv", base)}
 
 
 # ----------------------------------------------------------------------------- Part 3
 TENANTS = ("heavy", "light1", "light2")
 
 
-def load():
-    meta = load_json("load_meta.json") or {}
-    jobs = load_csv("load_jobs.csv")
-    runs = load_csv("load_step_runs.csv")
-    ts = load_csv("load_timeseries.csv")
-    rej = load_csv("load_rejections.csv")
+def load(base: str = RAW):
+    meta = load_json("load_meta.json", base) or {}
+    jobs = load_csv("load_jobs.csv", base)
+    if not jobs:
+        return {"meta": meta, "jobs": [], "groups": [], "per_policy": [], "policies": [], "seeds": []}
+    runs = load_csv("load_step_runs.csv", base)
+    ts = load_csv("load_timeseries.csv", base)
+    rej = load_csv("load_rejections.csv", base)
     policies = list(dict.fromkeys(r["policy"] for r in jobs))
     seeds = sorted({r["seed"] for r in jobs})
     groups = []
@@ -169,7 +171,7 @@ def load():
     nominal = meta.get("nominal_work_v", {"short": 1.0, "long": 9.5})
     demand = Counter()
     for s in seeds:
-        for a in load_csv(f"load_arrivals_seed{s}.csv"):
+        for a in load_csv(f"load_arrivals_seed{s}.csv", base):
             if b0 <= a["t_v"] < b1:
                 demand[a["tenant"]] += nominal[a["job_class"]]
     dtot = sum(demand.values()) or 1.0

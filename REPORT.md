@@ -33,7 +33,9 @@
 
 ## 2. Автотесты
 
-Итог: **56 passed, 1 warning in 26.06s** (полный вывод `pytest -v`: `results/pytest_output.txt`).
+Итог (Windows): **56 passed, 1 warning in 26.06s** (полный вывод `pytest -v`: `results/pytest_output.txt`).
+
+Тот же набор в Linux-контейнере (`Dockerfile`, POSIX SIGKILL в тестах восстановления): **56 passed, 1 warning in 24.87s** (`results/raw_linux/pytest_output.txt`).
 
 ```
 tests/test_cancel.py::test_cancel_queued PASSED                          [  1%]
@@ -144,7 +146,7 @@ tests/test_timers_and_slots.py::test_waiting_job_does_not_occupy_execution_slot 
 
 ### Part 1 на Linux: тот же эксперимент в Docker-контейнере (настоящий SIGKILL)
 
-Окружение: Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.41, Python 3.13.18 (образ из `Dockerfile`, Docker Desktop на этой же машине, ядро WSL2). Код и параметры те же (`python -m experiments.exp_recovery --reps 5`), но `Popen.kill()` здесь посылает POSIX SIGKILL. Сырые данные — отдельно, в `results/raw_linux/`; с Windows-прогоном выше не смешиваются. Команда: `.\scripts\exp_recovery_linux.ps1`.
+Окружение: Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.41, Python 3.13.18 (образ из `Dockerfile`, Docker Desktop на этой же машине, ядро WSL2). Код и параметры те же (`python -m experiments.exp_recovery --reps 5`), но `Popen.kill()` здесь посылает POSIX SIGKILL. Сырые данные — отдельно, в `results/raw_linux/`; с Windows-прогоном выше не смешиваются. Команда: `.\scripts\run_linux.ps1 -Parts recovery`.
 
 | сценарий | N | итог | время job p50 [min–max], с | воркер готов → возобновление p50, с | повторных LLM | перевыполнено шагов с чекпоинтом | publish физ. / лог. | дублей лог. публикаций |
 |---|---|---|---|---|---|---|---|---|
@@ -168,9 +170,9 @@ tests/test_timers_and_slots.py::test_waiting_job_does_not_occupy_execution_slot 
 
 | метрика | N | p50, мс | p95, мс | max, мс |
 |---|---|---|---|---|
-| event_to_transition_ms | 100 | 0.12 | 27.06 | 51.10 |
-| client_roundtrip_ms | 100 | 0.48 | 27.35 | 51.50 |
-| event_to_next_step_start_ms | 100 | 9.98 | 56.99 | 99.49 |
+| event_to_transition_ms | 100 | 0.12 | 22.29 | 46.26 |
+| client_roundtrip_ms | 100 | 0.61 | 25.63 | 47.05 |
+| event_to_next_step_start_ms | 100 | 11.01 | 68.37 | 117.05 |
 
 «event → state transition» — от приёма события до коммита перехода `WAITING_EVENT → QUEUED` (inbox и переход в одной транзакции). «event → next step started» дополнительно включает ожидание цикла планировщика (поллинг `poll_interval_s = 3 мс`, межпроцессного уведомления нет). Медиана — доли миллисекунды, а хвост (p95/max) — по всей видимости ожидание блокировки записи: если в этот момент транзакцию держит воркер, `BEGIN IMMEDIATE` отправителя попадает в busy-handler SQLite, который ждёт ступенями (1, 2, 5, 10, 15, 20, 25… мс). Это плата за single-writer хранилище.
 
@@ -178,7 +180,7 @@ tests/test_timers_and_slots.py::test_waiting_job_does_not_occupy_execution_slot 
 
 ### E2. Approval не пришёл → TIMED_OUT
 
-40 job с дедлайном 0.5 с: итог TIMED_OUT: 40. Запаздывание перехода относительно дедлайна: p50 = 3.996 мс, p95 = 6.581 мс, max = 6.909 мс (N = 40). Шагов, исполнявшихся во время ожидания: 0.
+40 job с дедлайном 0.5 с: итог TIMED_OUT: 40. Запаздывание перехода относительно дедлайна: p50 = 2.892 мс, p95 = 6.773 мс, max = 7.391 мс (N = 40). Шагов, исполнявшихся во время ожидания: 0.
 
 ### E3. Дубли события
 
@@ -194,39 +196,41 @@ tests/test_timers_and_slots.py::test_waiting_job_does_not_occupy_execution_slot 
 
 | итоговое состояние | N |
 |---|---|
-| CANCELLED | 123 |
-| SUCCEEDED | 99 |
-| TIMED_OUT | 78 |
+| CANCELLED | 130 |
+| SUCCEEDED | 80 |
+| TIMED_OUT | 90 |
 
-Откуда пришли в терминал: QUEUED->CANCELLED: 18, QUEUED->TIMED_OUT: 9, RUNNING->CANCELLED: 66, RUNNING->SUCCEEDED: 99, RUNNING->TIMED_OUT: 48, WAITING_EVENT->CANCELLED: 39, WAITING_EVENT->TIMED_OUT: 21. Исходы approval: applied: 240, deadline_won: 12, ignored_terminal: 48. Исходы cancel: already_terminal: 177, cancelled: 123. Счётчики рантайма: cancel_after_terminal: 177, events_late: 48, late_results_discarded: 62.
+Откуда пришли в терминал: QUEUED->CANCELLED: 18, QUEUED->TIMED_OUT: 16, RUNNING->CANCELLED: 71, RUNNING->SUCCEEDED: 80, RUNNING->TIMED_OUT: 51, WAITING_EVENT->CANCELLED: 41, WAITING_EVENT->TIMED_OUT: 23. Исходы approval: applied: 236, deadline_won: 12, ignored_terminal: 52. Исходы cancel: already_terminal: 170, cancelled: 130. Счётчики рантайма: cancel_after_terminal: 170, events_late: 52, late_results_discarded: 63.
 
-Инварианты: job с ≠1 терминальным переходом — 0; публикаций, принадлежащих не-SUCCEEDED job и не отозванных — 0; SUCCEEDED без живой публикации — 0; публикаций, отозванных компенсацией — 54; попыток недопустимого перехода, отклонённых триггером — 0.
+Инварианты: job с ≠1 терминальным переходом — 0; публикаций, принадлежащих не-SUCCEEDED job и не отозванных — 0; SUCCEEDED без живой публикации — 0; публикаций, отозванных компенсацией — 55; попыток недопустимого перехода, отклонённых триггером — 0.
 
 ![races](results/figures/events_race_outcomes.png)
 
 Картина соответствует правилу: cancel, закоммиченный раньше дедлайна и раньше завершения `publish`, даёт CANCELLED; если approval пришёл достаточно рано, шаги успевают закоммитить SUCCEEDED, и более поздние cancel получают `already_terminal`; если к моменту approval или коммита шага дедлайн уже прошёл, побеждает TIMED_OUT (`deadline_won`, `aborted_deadline`, `late_results_discarded`).
 
-**Воспроизводимость E5.** Seed фиксирует только *плановые* моменты отправки; фактический порядок коммитов зависит от планирования потоков ОС и ожидания блокировки записи, поэтому распределение итоговых состояний (CANCELLED / SUCCEEDED / TIMED_OUT) при повторном запуске заметно меняется — это наблюдалось при контрольном полном перезапуске всех экспериментов из чистого клона (его сырые данные в репозиторий не входят). Воспроизводимым результатом E5 являются инварианты (0 нарушений в обоих прогонах) и соответствие каждого исхода правилу гонок, а не доли исходов.
+**Воспроизводимость E5.** Seed фиксирует только *плановые* моменты отправки; фактический порядок коммитов зависит от планирования потоков ОС и ожидания блокировки записи, поэтому распределение итоговых состояний (CANCELLED / SUCCEEDED / TIMED_OUT) от запуска к запуску заметно меняется (наблюдалось при контрольных перезапусках; их сырые данные в репозиторий не входят). Воспроизводимым результатом E5 являются инварианты (0 нарушений во всех прогонах) и соответствие каждого исхода правилу гонок, а не доли исходов.
+
+**Исправление стенда E5 (найдено при прогоне на Linux).** В первой версии каждый из 20 потоков-отправителей сам опрашивал БД каждые 3 мс в том же процессе, что и воркер. На Windows это почти не влияло, а в Linux-контейнере из-за конкуренции за GIL воркер вытеснялся (замер: путь job до `WAITING_EVENT` 5.05 с против 0.10 с без опроса), job не успевали дойти до ожидания за 0.6 с, и все 300 повторов заканчивались TIMED_OUT — гонки не было. Сейчас состояние опрашивает один поток-монитор, отправители ждут его сигнала; E5 (и весь Part 2) перезапущен этим кодом на обеих ОС, данные выше и в блоке «на Linux» — уже с исправленным стендом. Рантайм при этом не менялся: это свойство стенда, где воркер и отправители живут в одном процессе.
 
 ### E6. Рестарт воркера во время ожидания
 
 | вариант | повтор | итог | открытых step_runs в ожидании | состояние пока воркер мёртв | исход события | готов → первый шаг, мс | готов → терминал, мс | опоздание таймаута, мс |
 |---|---|---|---|---|---|---|---|---|
-| approval_while_down | 0 | SUCCEEDED | 0 | QUEUED | applied | 0.33 | 66.28 | – |
-| deadline_while_down | 0 | TIMED_OUT | 0 | WAITING_EVENT | – | – | -1.03 | 1295.30 |
-| approval_after_restart | 0 | SUCCEEDED | 0 | WAITING_EVENT | applied | 22.17 | 70.87 | – |
-| approval_while_down | 1 | SUCCEEDED | 0 | QUEUED | applied | 0.19 | 56.63 | – |
-| deadline_while_down | 1 | TIMED_OUT | 0 | WAITING_EVENT | – | – | -0.86 | 1802.92 |
-| approval_after_restart | 1 | SUCCEEDED | 0 | WAITING_EVENT | applied | 9.05 | 56.65 | – |
-| approval_while_down | 2 | SUCCEEDED | 0 | QUEUED | applied | 0.19 | 55.28 | – |
-| deadline_while_down | 2 | TIMED_OUT | 0 | WAITING_EVENT | – | – | -1.07 | 1324.87 |
-| approval_after_restart | 2 | SUCCEEDED | 0 | WAITING_EVENT | applied | 8.34 | 64.90 | – |
-| approval_while_down | 3 | SUCCEEDED | 0 | QUEUED | applied | 0.19 | 53.97 | – |
-| deadline_while_down | 3 | TIMED_OUT | 0 | WAITING_EVENT | – | – | -0.86 | 1282.92 |
-| approval_after_restart | 3 | SUCCEEDED | 0 | WAITING_EVENT | applied | 13.42 | 70.13 | – |
-| approval_while_down | 4 | SUCCEEDED | 0 | QUEUED | applied | 0.20 | 64.49 | – |
-| deadline_while_down | 4 | TIMED_OUT | 0 | WAITING_EVENT | – | – | -1.07 | 1299.92 |
-| approval_after_restart | 4 | SUCCEEDED | 0 | WAITING_EVENT | applied | 15.86 | 64.69 | – |
+| approval_while_down | 0 | SUCCEEDED | 0 | QUEUED | applied | 0.52 | 56.69 | – |
+| deadline_while_down | 0 | TIMED_OUT | 0 | WAITING_EVENT | – | – | -1.12 | 1102.42 |
+| approval_after_restart | 0 | SUCCEEDED | 0 | WAITING_EVENT | applied | 35.42 | 84.05 | – |
+| approval_while_down | 1 | SUCCEEDED | 0 | QUEUED | applied | 0.58 | 58.91 | – |
+| deadline_while_down | 1 | TIMED_OUT | 0 | WAITING_EVENT | – | – | -0.79 | 1087.58 |
+| approval_after_restart | 1 | SUCCEEDED | 0 | WAITING_EVENT | applied | 18.38 | 69.19 | – |
+| approval_while_down | 2 | SUCCEEDED | 0 | QUEUED | applied | 0.57 | 57.15 | – |
+| deadline_while_down | 2 | TIMED_OUT | 0 | WAITING_EVENT | – | – | -1.19 | 1111.24 |
+| approval_after_restart | 2 | SUCCEEDED | 0 | WAITING_EVENT | applied | 7.80 | 54.00 | – |
+| approval_while_down | 3 | SUCCEEDED | 0 | QUEUED | applied | 0.61 | 55.44 | – |
+| deadline_while_down | 3 | TIMED_OUT | 0 | WAITING_EVENT | – | – | -1.17 | 1118.77 |
+| approval_after_restart | 3 | SUCCEEDED | 0 | WAITING_EVENT | applied | 24.76 | 74.14 | – |
+| approval_while_down | 4 | SUCCEEDED | 0 | QUEUED | applied | 0.39 | 60.32 | – |
+| deadline_while_down | 4 | TIMED_OUT | 0 | WAITING_EVENT | – | – | -1.06 | 1115.34 |
+| approval_after_restart | 4 | SUCCEEDED | 0 | WAITING_EVENT | applied | 8.37 | 61.21 | – |
 
 Ожидание не держит слот (0 открытых `step_runs`), событие принимается и применяется даже когда воркер мёртв (inbox в БД), а дедлайн, истёкший во время простоя, срабатывает при старте нового воркера (таймер хранится в БД). Для `deadline_while_down` «опоздание таймаута» ≈ длительность простоя — таймер не может сработать, пока нет ни одного живого воркера; отрицательное «готов → терминал» означает, что просроченный таймер сработал в процедуре старта воркера ещё до отметки готовности.
 
@@ -235,7 +239,7 @@ tests/test_timers_and_slots.py::test_waiting_job_does_not_occupy_execution_slot 
 | отмена в состоянии | N | p50, мс | p95, мс | max, мс (QUEUED/WAITING: 0 по определению) |
 |---|---|---|---|---|
 | QUEUED | 15 | 0.00 | 0.00 | 0.00 |
-| RUNNING | 15 | 67.29 | 107.00 | 109.67 |
+| RUNNING | 15 | 72.92 | 101.75 | 105.00 |
 | WAITING_EVENT | 15 | 0.00 | 0.00 | 0.00 |
 
 Исходы LLM-вызовов в E7: cancelled: 15, ok: 15. В `RUNNING` остановка ограничена интервалом heartbeat (0.1 с в E7): шаг узнаёт об отмене на следующем heartbeat и прерывает LLM-вызов; в `QUEUED` и `WAITING_EVENT` исполняемой работы нет — остановка мгновенная (коммит перехода).
@@ -248,8 +252,25 @@ tests/test_timers_and_slots.py::test_waiting_job_does_not_occupy_execution_slot 
 | E2 | 400 | 0 | 0 | 0 | 0 | 0 |
 | E3 | 700 | 0 | 0 | 0 | 0 | 0 |
 | E4 | 400 | 0 | 0 | 0 | 0 | 0 |
-| E5 | 3787 | 0 | 0 | 0 | 0 | 0 |
+| E5 | 3752 | 0 | 0 | 0 | 0 | 0 |
 | E7 | 285 | 0 | 0 | 0 | 0 | 0 |
+
+### Part 2 на Linux (Docker-контейнер)
+
+Окружение: Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.41, Python 3.13.18; те же скрипт и параметры (`exp_events --race-reps 300`, seed 7). Сырые данные отдельно — `results/raw_linux/events_*`; с Windows-прогоном выше не смешиваются (команда: `.\scripts\run_linux.ps1`).
+
+| эксперимент | результат на Linux |
+|---|---|
+| E1 approval вовремя | SUCCEEDED: 100; event → transition p50 0.128 / p95 3.266 мс (N = 100) |
+| E2 approval не пришёл | TIMED_OUT: 40; опоздание таймаута p50 3.363 / p95 7.965 мс (N = 40); шагов во время ожидания: 0 |
+| E3 дубли события | отправлено 250, применено 50, дублей 200; job с >1 переходом: 0 |
+| E4 approval после терминала | 40 поздних: ignored_terminal: 40; изменений состояния: 0 |
+| E5 гонки | CANCELLED: 57, SUCCEEDED: 188, TIMED_OUT: 55; job с ≠1 терминальным переходом: 0; неотозванных публикаций не-SUCCEEDED job: 0 |
+| E6 рестарт во время ожидания | 15 из 15 прогонов с ожидаемым итогом и 0 открытых step_runs |
+| E7 остановка после cancel в RUNNING | p50 52.73 / p95 74.168 мс (N = 15) |
+| инварианты E1–E5, E7 | проверено переходов 7092, нарушений 0 |
+
+Поведение совпадает с Windows по всем проверкам (итоги E1–E4, E6, нулевые нарушения инвариантов). Латентности и доли исходов E5 различаются — они зависят от планировщика ОС и файловой системы тома (см. «Воспроизводимость E5»).
 
 ## 5. Part 3 — backpressure и честное планирование (Simulated)
 
@@ -347,6 +368,18 @@ tests/test_timers_and_slots.py::test_waiting_job_does_not_occupy_execution_slot 
 * **Aging.** Внутри tenant priority = 1 обгоняет priority = 0, но задача с низким приоритетом, прождавшая 10 с, получает +1 и не голодает (`tests/test_scheduling.py::test_aging_lets_old_low_priority_job_overtake`; измерения под нагрузкой — таблица «Ожидание по приоритету» выше).
 * **Лимиты.** По трассе `step_runs` (интервалы исполнения) максимальная одновременность ни разу не превысила global/per-tenant лимит (столбцы «max … / лимит»; то же проверяют автотесты).
 * **Ожидание approval не занимает слоты** — подтверждено автотестом `tests/test_timers_and_slots.py::test_waiting_job_does_not_occupy_execution_slot` (при `global_concurrency=1` вторая job полностью выполняется, пока первая ждёт approval) и E2/E6 (0 открытых `step_runs` в ожидании).
+
+### Part 3 на Linux (Docker-контейнер, те же seed и поток заявок)
+
+Окружение: Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.41, Python 3.13.18; seeds [11, 12, 13], по одному прогону каждой политики на seed, масштаб времени 0.1. Сырые данные отдельно — `results/raw_linux/load_*`; с Windows-прогоном не смешиваются.
+
+| политика | прогонов | заявок | отклонено (по user) | SUCCEEDED | TIMED_OUT (по user) | jobs/s | загрузка слотов в burst | p95 ожидания light1 short, с | p95 ожидания heavy short, с | доля работы в burst heavy / light1 / light2 | max global / лимит | max на tenant / лимит |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| fifo | 3 | 1811 | 209 (heavy: 179, light1: 15, light2: 15) | 1245 | 357 (heavy: 305, light1: 26, light2: 26) | 0.859 | 98.9% | 59.07 (N = 187) | 59.19 (N = 720) | 87.8% / 5.6% / 6.7% | 6 / 6 | 6 / 6 |
+| drr | 3 | 1811 | 142 (heavy: 120, light1: 10, light2: 12) | 1281 | 388 (heavy: 388) | 0.884 | 98.9% | 1.10 (N = 191) | 59.67 (N = 761) | 79.7% / 9.8% / 10.5% | 6 / 6 | 6 / 6 |
+| drr_iso | 3 | 1811 | 311 (heavy: 311) | 1121 | 379 (heavy: 379) | 0.774 | 74.2% | 1.31 (N = 200) | 59.68 (N = 617) | 66.7% / 14.6% / 18.7% | 6 / 6 | 3 / 3 |
+
+Выводы Part 3 на Linux те же: DRR снижает p95 ожидания лёгких пользователей до единиц секунд, перегрузка (отказы и истечения) концентрируется у `heavy`, лимиты параллельности не превышаются, `drr_iso` жертвует загрузкой слотов ради изоляции.
 
 ## 6. Real LLM vs Simulated
 
@@ -457,10 +490,10 @@ Throughput в job/с не равен номинальной ёмкости из 
 * **Один узел, один писатель.** SQLite сериализует все записи; масштабирование — несколько процессов на одной
   машине (лимиты проверяются в транзакции и для них верны), но не кластер. Узкое место — частота транзакций
   (claim + complete на каждый шаг + heartbeats).
-* **Основная ОС — Windows.** Отчётные эксперименты Part 1–3 выполнены на Windows 10: «SIGKILL» там — `Popen.kill()` →
-  `TerminateProcess` (без обработчиков/`finally`). В Linux-контейнере (Docker Desktop, ядро WSL2 на той же машине,
-  не отдельный Linux-сервер) повторены только Part 1 с настоящим POSIX SIGKILL (`results/raw_linux/`) и все 56
-  автотестов (passed); Part 2 и Part 3 на Linux не прогонялись.
+* **Основная ОС — Windows, Linux — контейнер на той же машине.** Основные таблицы Part 1–3 получены на Windows 10
+  («SIGKILL» там — `Popen.kill()` → `TerminateProcess`, без обработчиков/`finally`). Все три части и автотесты
+  повторены в Linux-контейнере с настоящим POSIX SIGKILL (`results/raw_linux/`, отдельные блоки «на Linux»), но это
+  Docker Desktop с ядром WSL2 на том же железе, а не отдельный Linux-сервер; на другой машине не проверялось.
 * **`synchronous=NORMAL`**: гарантия durable — против падения процесса (это и проверялось), но не против
   потери питания/краха ОС для последних транзакций (`AGENTRT_SYNC=FULL` закрывает это ценой латентности; не измерялось).
 * **Масштабированное время** в Part 3 (1 вирт. с = 0.1 с): накладные расходы рантайма (транзакции, поллинг)

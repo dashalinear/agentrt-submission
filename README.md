@@ -11,18 +11,19 @@ HTTP API на **FastAPI** и CLI-обёрткой. Агент: `register job →
 ## Быстрый старт
 
 Проверено: Windows 10 (PowerShell / Git Bash), Python 3.13.7 (`.python-version`); код требует ≥ 3.11.
-Также проверено в Linux-контейнере (`Dockerfile`, Python 3.13.18): все тесты, Part 1 и `docker-compose.yml`.
-Docker не обязателен.
+Также проверено в Linux-контейнере (`Dockerfile`, Python 3.13.18): все тесты, эксперименты Part 1–3
+(`results/raw_linux/`, отдельный блок в отчёте) и `docker-compose.yml`. Docker не обязателен.
 
 ### Docker (опционально)
 
 ```powershell
 docker compose -p agentrt up -d --build      # publisher :8765, api :8000, worker (SQLite в именованном томе)
 .\scripts\demo_docker.ps1                    # сквозная проверка compose через HTTP API (см. ниже), затем down -v
-.\scripts\exp_recovery_linux.ps1             # Part 1 в Linux-контейнере с POSIX SIGKILL -> results/raw_linux/
-docker build -t agentrt:local .              # образ для запуска тестов в Linux:
-docker run --rm -v "${PWD}:/w:ro" -w /w -e PYTHONDONTWRITEBYTECODE=1 agentrt:local python -m pytest -q -p no:cacheprovider
+.\scripts\run_linux.ps1                      # тесты + Part 1/2/3 в Linux-контейнере (POSIX SIGKILL) -> results/raw_linux/
+.\scripts\run_linux.ps1 -Parts tests         # только тесты (вывод: results/raw_linux/pytest_output.txt)
 ```
+Linux/macOS с Docker: `bash scripts/run_linux.sh [tests,recovery,events,load]`. Репозиторий монтируется в контейнер
+только для чтения, писать можно лишь в `results/raw_linux/`; полный прогон ≈ 15 мин.
 `demo_docker.ps1` проверяет: два `POST /jobs` с одним `Idempotency-Key` → 201 и 200 с тем же `job_id`;
 `docker compose kill -s SIGKILL worker` посреди job → после `start` job продолжается сама (шаги с чекпоинтом не
 повторяются, прерванный — вторая попытка); дубль approval с тем же `event_id` → `duplicate`; cancel после
@@ -30,6 +31,8 @@ docker run --rm -v "${PWD}:/w:ro" -w /w -e PYTHONDONTWRITEBYTECODE=1 agentrt:loc
 `approval_id` сохранены, approval применяется; у FakePublisherService 2 логические публикации на 2 job.
 Воркер в compose подхватывает `.env`, если он есть (в образ он не попадает — см. `.dockerignore`); ключи нужны
 только при `LLM=real`, по умолчанию `LLM=sim`.
+
+### Локально, без Docker (основной способ; так получены основные результаты отчёта)
 
 ```bash
 python -m venv .venv
@@ -335,5 +338,5 @@ results/raw/      сырые CSV/JSONL/JSON всех симулированны�
 results/figures/  PNG
 results/real_llm/         реальная LLM, Ollama локально (scripts/run_real_llm.*)
 results/real_llm_server/  реальная LLM, сервер университета (scripts/run_real_llm.* --out results/real_llm_server)
-results/raw_linux/        Part 1 в Linux-контейнере с POSIX SIGKILL (scripts/exp_recovery_linux.*)
+results/raw_linux/        тесты и Part 1–3 в Linux-контейнере с POSIX SIGKILL (scripts/run_linux.*)
 ```

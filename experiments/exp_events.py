@@ -196,15 +196,29 @@ def e5_races(reps, rng, batch=10):
                 plan.append({"i": i, "job_id": jid, "approve_off": rng.uniform(-0.15, 0.02),
                              "cancel_off": rng.uniform(-0.05, 0.05)})
             results = {}
+            # One monitor thread polls the batch and signals the actors. (Earlier every actor polled the DB itself
+            # every 3 ms: 20 pollers in the worker's process starved the worker thread through GIL contention on
+            # Linux, so jobs never reached WAITING_EVENT before the deadline and no race happened.)
+            ready = {p["job_id"]: threading.Event() for p in plan}
+            stop_mon = threading.Event()
+
+            def monitor():
+                s3 = Store(db, cfg, init=False)
+                t_end = time.time() + 10
+                while not stop_mon.is_set() and time.time() < t_end and not all(e.is_set() for e in ready.values()):
+                    for jid, ev in ready.items():
+                        if not ev.is_set() and s3.get_job(jid)["state"] in ("WAITING_EVENT",) + TERMINAL:
+                            ev.set()
+                    time.sleep(0.003)
+
+            mon = threading.Thread(target=monitor)
+            mon.start()
 
             def actor(p, kind):
                 s2 = Store(db, cfg, init=False)
                 jid = p["job_id"]
                 dl = s2.get_job(jid)["deadline"]
-                try:
-                    wait_for(lambda: s2.get_job(jid)["state"] in ("WAITING_EVENT",) + TERMINAL, timeout=10, interval=0.003)
-                except TimeoutError:
-                    pass
+                ready[jid].wait(timeout=10)
                 t_target = dl + p[f"{kind}_off"]
                 if t_target - time.time() > 0.003:
                     time.sleep(t_target - time.time() - 0.002)
@@ -222,6 +236,8 @@ def e5_races(reps, rng, batch=10):
             ths = [threading.Thread(target=actor, args=(p, k)) for p in plan for k in ("approve", "cancel")]
             [t.start() for t in ths]
             [t.join() for t in ths]
+            stop_mon.set()
+            mon.join()
             for p in plan:
                 wait_state(store, p["job_id"], TERMINAL)
             for p in plan:
