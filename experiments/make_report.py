@@ -11,6 +11,7 @@ import os
 import shutil
 import subprocess
 import sys
+from collections import Counter
 
 from experiments import plots
 from experiments.common import ROOT, WORK
@@ -673,6 +674,41 @@ def _real_rows(s, recovery_rows, cost_text):
     return rows
 
 
+def _real_llm_notes(s):
+    """Data-driven notes on the local real-LLM run: transient errors seen for real, and the agent's decisions."""
+    import json as _json
+    notes = []
+    p = os.path.join(ROOT, "results", "real_llm", "recovery_calls_real.jsonl")
+    if os.path.exists(p):
+        calls = [_json.loads(x) for x in open(p, encoding="utf-8") if x.strip()]
+        tr = [c for c in calls if c.get("provider") == "llm" and c.get("outcome") == "TransientError"]
+        if tr:
+            sp = os.path.join(ROOT, "results", "real_llm", "recovery_step_runs_real.jsonl")
+            details = [_json.loads(x).get("detail") or "" for x in open(sp, encoding="utf-8")
+                       if '"transient_error"' in x] if os.path.exists(sp) else []
+            why = ""
+            if any("model runner has unexpectedly stopped" in d for d in details):
+                why = (" — Ollama вернула HTTP 500 «model runner has unexpectedly stopped» (процесс модели упал, "
+                       "по-видимому, из-за нехватки памяти)")
+            n_txt = "1 вызов LLM завершился" if len(tr) == 1 else f"{len(tr)} вызова(ов) LLM завершились"
+            notes.append(f"**Настоящая transient-ошибка.** В сценариях восстановления {n_txt} "
+                         f"ошибкой провайдера{why}; рантайм классифицировал её как transient, повторил шаг по политике "
+                         "ретраев (backoff, та же попытка шага +1), и job завершилась SUCCEEDED. Поэтому в baseline, где "
+                         "мы ничего не ломали, есть повторный вызов — это ретрай реальной ошибки, а не след восстановления.")
+    decs = [d for j in s.get("jobs", []) for d in j.get("decisions", [])]
+    if decs and s.get("decide_mode") == "llm":
+        by = Counter(f"{d.get('action')} ({d.get('decision_source')})" for d in decs)
+        low = sum(1 for d in decs if d.get("action") == "request_approval" and (d.get("n_docs") or 0) < 5)
+        notes.append(f"**Решения модели.** В шаге `decide` модель выбирала: {cnt(dict(by))}. Политика по правилам при "
+                     f"`min_docs = 5` и {decs[0].get('n_docs')} прочитанных документах дозапросила бы документы "
+                     f"(`call_tool`); модель в {low} из {len(decs)} случаев вместо этого сразу отдала черновик человеку "
+                     "(`request_approval`). Это допустимое действие (эскалация к человеку разрешена всегда), поэтому "
+                     "ограничения не вмешались; качество такого выбора задание не оценивает. Ни одного нераспознанного "
+                     "ответа не было." if not any(d.get("decision_source", "").startswith("fallback") for d in decs) else
+                     f"**Решения модели.** В шаге `decide`: {cnt(dict(by))}.")
+    return ["", *[x for n in notes for x in (n, "")]][:-1] if notes else []
+
+
 def _server_block():
     from experiments.report_data import real_llm as _load
     r = _load(os.path.join(ROOT, "results", "real_llm_server"))
@@ -721,14 +757,14 @@ def section_real(rec, rl):
                 "В основном прогоне 3 job стартуют одновременно, а локальная Ollama на CPU обрабатывает запросы по "
                 "очереди (в `results/real_llm/calls.jsonl` каждый следующий вызов завершается вплотную к предыдущему), "
                 "поэтому латентность вызова и время job включают ожидание в очереди модели; в сценариях восстановления "
-                "job одна, отсюда меньшее время baseline."]
+                "job одна, отсюда меньшее время baseline.", *_real_llm_notes(s)]
     out += ["", "Чем реальная LLM отличается от симулятора (ожидаемо, проверить по таблице): латентность не "
             "детерминирована; ошибки 429/5xx/таймауты классифицируются как transient и ретраятся; прерванный крэшем "
             "вызов почти наверняка оплачен провайдером (верхняя граница доп. токенов становится реальной ценой); "
             "текст черновика при повторе может отличаться, но это не ломает идемпотентность публикации — тело "
             "собирается из *сохранённых* результатов шагов, а повтор `draft` после чекпоинта невозможен.", "",
             "Запросы к реальной LLM идут с `temperature = 0` (`src/agentrt/llm.py`), поэтому в сценариях восстановления "
-            "одного прогона (одинаковые документы и промпты) число completion-токенов совпадает между сценариями "
+            "с одним номером повтора (одинаковые документы и промпты) число completion-токенов совпадает между сценариями "
             "(см. `recovery_calls_real.jsonl`); между тремя job основного прогона промпты различаются, и токены разные "
             "(`calls.jsonl`). Для прерванного вызова в журнале записан только prompt (ответа не было)."]
     out += _server_block()
@@ -842,7 +878,10 @@ def _limits_text():
         "публикации). Таймаут ожидания воркера в сценарии восстановления 300 с из-за медленной локальной модели. Две "
         "самые первые попытки завершились HTTP 503 (неверное имя модели в `.env`; затем 503 до отключения рассуждения) "
         "и в отчёт не включены. "
-        + ("" if llm_decide else
+        + ("Ещё одна попытка этого прогона (перед показанным) не состоялась: все вызовы модели завершились HTTP 500, "
+           "локальной Ollama не хватило памяти для загрузки модели (`out-of-memory` при старте `llama-server`, пока на "
+           "машине работали Docker и другие программы); её данные не включены, прогон повторён после освобождения "
+           "памяти. " if llm_decide else
            "Повторный прогон с решением через LLM и 5 повторами на сценарий запускался, но все вызовы модели "
            "завершились HTTP 500: локальной Ollama не хватило памяти для загрузки модели на этой машине (`out-of-memory` "
            "при старте `llama-server`); его данные в отчёт не включены, сохранён предыдущий успешный прогон. ") +

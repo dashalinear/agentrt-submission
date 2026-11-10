@@ -1,6 +1,8 @@
 {
   "kind": "REAL LLM RUN",
   "model": "qwen3.5:4b",
+  "decide_mode": "llm",
+  "recovery_reps": 5,
   "base_url": "http://localhost:11434/v1",
   "env": {
     "os": "Windows-10-10.0.19045-SP0",
@@ -22,11 +24,11 @@
   },
   "jobs": [
     {
-      "job_id": "job-a7d3b289b78142ea",
+      "job_id": "job-30bf080f8b4e4dd1",
       "state": "SUCCEEDED",
       "error": null,
-      "tokens_used": 604,
-      "e2e_s": 77.442,
+      "tokens_used": 836,
+      "e2e_s": 91.762,
       "steps": [
         "fetch_documents#0",
         "extract#0",
@@ -35,14 +37,23 @@
         "decide#0",
         "save_report#0",
         "publish#0"
+      ],
+      "decisions": [
+        {
+          "action": "request_approval",
+          "decision_source": "llm",
+          "llm_choice": "request_approval",
+          "llm_raw": "REQUEST_APPROVAL",
+          "n_docs": 3
+        }
       ]
     },
     {
-      "job_id": "job-de5e0a57fb83458e",
+      "job_id": "job-eb65928abab44337",
       "state": "SUCCEEDED",
       "error": null,
-      "tokens_used": 531,
-      "e2e_s": 77.336,
+      "tokens_used": 769,
+      "e2e_s": 91.871,
       "steps": [
         "fetch_documents#0",
         "extract#0",
@@ -51,14 +62,23 @@
         "decide#0",
         "save_report#0",
         "publish#0"
+      ],
+      "decisions": [
+        {
+          "action": "request_approval",
+          "decision_source": "llm",
+          "llm_choice": "request_approval",
+          "llm_raw": "REQUEST_APPROVAL",
+          "n_docs": 3
+        }
       ]
     },
     {
-      "job_id": "job-60c01656c78d4040",
+      "job_id": "job-07077adeeb71413d",
       "state": "SUCCEEDED",
       "error": null,
-      "tokens_used": 486,
-      "e2e_s": 88.499,
+      "tokens_used": 708,
+      "e2e_s": 95.393,
       "steps": [
         "fetch_documents#0",
         "extract#0",
@@ -67,19 +87,28 @@
         "decide#0",
         "save_report#0",
         "publish#0"
+      ],
+      "decisions": [
+        {
+          "action": "request_approval",
+          "decision_source": "llm",
+          "llm_choice": "request_approval",
+          "llm_raw": "REQUEST_APPROVAL",
+          "n_docs": 3
+        }
       ]
     }
   ],
-  "llm_calls": 6,
-  "llm_calls_ok": 6,
+  "llm_calls": 9,
+  "llm_calls_ok": 9,
   "llm_latency_s": {
-    "n": 6,
-    "p50": 27.875741243362427,
-    "max": 33.38719868659973
+    "n": 9,
+    "p50": 21.080333471298218,
+    "max": 35.06983160972595
   },
-  "prompt_tokens": 702,
-  "completion_tokens": 919,
-  "cost_usd": 0.000657,
+  "prompt_tokens": 1382,
+  "completion_tokens": 931,
+  "cost_usd": 0.000766,
   "price_per_1k": [
     0.00015,
     0.0006
