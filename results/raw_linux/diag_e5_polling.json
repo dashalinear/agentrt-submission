@@ -20,13 +20,13 @@
   "without_pollers": {
     "pollers": 0,
     "n_jobs": 10,
-    "create_to_waiting_p50_s": 0.0907,
-    "create_to_waiting_max_s": 0.0999
+    "create_to_waiting_p50_s": 0.1442,
+    "create_to_waiting_max_s": 0.1458
   },
   "with_20_pollers": {
     "pollers": 20,
     "n_jobs": 10,
-    "create_to_waiting_p50_s": 5.035,
-    "create_to_waiting_max_s": 5.3148
+    "create_to_waiting_p50_s": 7.2097,
+    "create_to_waiting_max_s": 7.4489
   }
 }

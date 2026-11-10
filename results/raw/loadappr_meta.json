@@ -1,0 +1,242 @@
+{
+  "env": {
+    "os": "Windows-10-10.0.19045-SP0",
+    "python": "3.13.7",
+    "machine": "AMD64",
+    "processor": "AMD64 Family 25 Model 116 Stepping 1, AuthenticAMD",
+    "cpu_count": 16,
+    "sqlite": "3.50.4",
+    "ram_gb": 15.2,
+    "fastapi": "0.162.0",
+    "uvicorn": "0.54.0",
+    "httpx": "0.28.1",
+    "pydantic": "2.14.3",
+    "starlette": "1.10.0",
+    "pytest": "9.2.0",
+    "matplotlib": "3.11.2",
+    "numpy": "2.5.4",
+    "Markdown": "3.11.3"
+  },
+  "time_scale": 0.1,
+  "time_scale_note": "1 virtual second = 0.1 real seconds",
+  "seeds": [
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "phases": [
+    [
+      "P1_below",
+      0,
+      150,
+      {
+        "heavy": 0.5,
+        "light1": 0.2,
+        "light2": 0.2
+      }
+    ],
+    [
+      "P2_burst",
+      150,
+      240,
+      {
+        "heavy": 3.0,
+        "light1": 0.2,
+        "light2": 0.2
+      }
+    ],
+    [
+      "P3_recovery",
+      240,
+      480,
+      {
+        "heavy": 0.3,
+        "light1": 0.2,
+        "light2": 0.2
+      }
+    ]
+  ],
+  "long_share": 0.3,
+  "priority_share": 0.1,
+  "deadlines_v": {
+    "short": 60.0,
+    "long": 200.0
+  },
+  "policies": {
+    "fifo": {
+      "policy": "fifo",
+      "per_tenant_concurrency": 6
+    },
+    "drr": {
+      "policy": "drr",
+      "per_tenant_concurrency": 6
+    },
+    "drr_iso": {
+      "policy": "drr",
+      "per_tenant_concurrency": 3,
+      "max_queue_per_tenant": 100
+    }
+  },
+  "global_concurrency": 6,
+  "approval_share": 0.5,
+  "approval_delay_v": 20.0,
+  "nominal_work_v": {
+    "short": 1.0000000000000002,
+    "long": 9.5
+  },
+  "config_example": {
+    "time_scale": 0.1,
+    "global_concurrency": 6,
+    "per_tenant_concurrency": 6,
+    "worker_concurrency": null,
+    "max_queue_size": 150,
+    "max_queue_per_tenant": null,
+    "policy": "drr",
+    "tenant_weights": {},
+    "drr_quantum_s": 1.0,
+    "aging_interval_s": 10.0,
+    "lease_timeout_s": 10.0,
+    "heartbeat_interval_s": 1.0,
+    "poll_interval_s": 0.002,
+    "reaper_interval_s": 5.0,
+    "backoff_base_s": 0.5,
+    "backoff_cap_s": 8.0,
+    "price_per_1k_prompt": 0.00015,
+    "price_per_1k_completion": 0.0006,
+    "sim": {
+      "llm_jitter": 0.1
+    },
+    "faults": {},
+    "seed": 11,
+    "decide_mode": "rules"
+  },
+  "runs": [
+    {
+      "policy": "drr",
+      "seed": 11,
+      "arrivals": 607,
+      "admitted": 546,
+      "rejected": 61,
+      "makespan_v": 500.179,
+      "real_seconds": 50.25,
+      "max_global_concurrency_observed": 6,
+      "global_limit": 6,
+      "max_per_tenant_observed": {
+        "heavy": 6,
+        "light1": 5,
+        "light2": 5
+      },
+      "per_tenant_limit": 6,
+      "counters": {
+        "rejected_queue_full": 61
+      },
+      "approval_share": 0.5,
+      "approval_delay_v": 20.0,
+      "approval_outcomes": {
+        "applied": 192
+      }
+    },
+    {
+      "policy": "drr",
+      "seed": 12,
+      "arrivals": 605,
+      "admitted": 552,
+      "rejected": 53,
+      "makespan_v": 510.942,
+      "real_seconds": 51.25,
+      "max_global_concurrency_observed": 6,
+      "global_limit": 6,
+      "max_per_tenant_observed": {
+        "heavy": 6,
+        "light1": 5,
+        "light2": 4
+      },
+      "per_tenant_limit": 6,
+      "counters": {
+        "rejected_queue_full": 53
+      },
+      "approval_share": 0.5,
+      "approval_delay_v": 20.0,
+      "approval_outcomes": {
+        "applied": 215
+      }
+    },
+    {
+      "policy": "drr",
+      "seed": 13,
+      "arrivals": 599,
+      "admitted": 559,
+      "rejected": 40,
+      "makespan_v": 498.272,
+      "real_seconds": 49.92,
+      "max_global_concurrency_observed": 6,
+      "global_limit": 6,
+      "max_per_tenant_observed": {
+        "heavy": 6,
+        "light1": 3,
+        "light2": 4
+      },
+      "per_tenant_limit": 6,
+      "counters": {
+        "rejected_queue_full": 40
+      },
+      "approval_share": 0.5,
+      "approval_delay_v": 20.0,
+      "approval_outcomes": {
+        "applied": 217
+      }
+    },
+    {
+      "policy": "drr",
+      "seed": 14,
+      "arrivals": 639,
+      "admitted": 553,
+      "rejected": 86,
+      "makespan_v": 501.223,
+      "real_seconds": 50.22,
+      "max_global_concurrency_observed": 6,
+      "global_limit": 6,
+      "max_per_tenant_observed": {
+        "heavy": 6,
+        "light1": 4,
+        "light2": 4
+      },
+      "per_tenant_limit": 6,
+      "counters": {
+        "rejected_queue_full": 86
+      },
+      "approval_share": 0.5,
+      "approval_delay_v": 20.0,
+      "approval_outcomes": {
+        "applied": 223
+      }
+    },
+    {
+      "policy": "drr",
+      "seed": 15,
+      "arrivals": 544,
+      "admitted": 533,
+      "rejected": 11,
+      "makespan_v": 508.934,
+      "real_seconds": 51.01,
+      "max_global_concurrency_observed": 6,
+      "global_limit": 6,
+      "max_per_tenant_observed": {
+        "heavy": 6,
+        "light1": 4,
+        "light2": 5
+      },
+      "per_tenant_limit": 6,
+      "counters": {
+        "rejected_queue_full": 11
+      },
+      "approval_share": 0.5,
+      "approval_delay_v": 20.0,
+      "approval_outcomes": {
+        "applied": 206
+      }
+    }
+  ]
+}

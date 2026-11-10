@@ -31,23 +31,23 @@
       {
         "metric": "event_to_transition_ms",
         "n": 100,
-        "p50": 0.119,
-        "p95": 3.75,
-        "max": 18.605
+        "p50": 0.43,
+        "p95": 8.981,
+        "max": 54.027
       },
       {
         "metric": "client_roundtrip_ms",
         "n": 100,
-        "p50": 0.566,
-        "p95": 4.19,
-        "max": 19.061
+        "p50": 1.051,
+        "p95": 9.64,
+        "max": 54.714
       },
       {
         "metric": "event_to_next_step_start_ms",
         "n": 100,
-        "p50": 2.153,
-        "p95": 11.562,
-        "max": 59.538
+        "p50": 3.065,
+        "p95": 57.154,
+        "max": 96.39
       }
     ],
     "invariants": {
@@ -66,9 +66,9 @@
     "lateness": {
       "metric": "timeout_lateness_ms",
       "n": 40,
-      "p50": 3.025,
-      "p95": 4.716,
-      "max": 5.114
+      "p50": 3.54,
+      "p95": 6.789,
+      "max": 7.3
     },
     "step_runs_during_wait_total": 0,
     "invariants": {
@@ -119,41 +119,41 @@
   "e5": {
     "reps": 300,
     "final": {
-      "SUCCEEDED": 185,
-      "CANCELLED": 61,
-      "TIMED_OUT": 54
+      "SUCCEEDED": 175,
+      "CANCELLED": 63,
+      "TIMED_OUT": 62
     },
     "terminal_from": {
-      "RUNNING->SUCCEEDED": 185,
-      "RUNNING->CANCELLED": 22,
-      "WAITING_EVENT->TIMED_OUT": 26,
-      "WAITING_EVENT->CANCELLED": 33,
-      "RUNNING->TIMED_OUT": 27,
-      "QUEUED->CANCELLED": 6,
-      "QUEUED->TIMED_OUT": 1
+      "RUNNING->SUCCEEDED": 175,
+      "RUNNING->CANCELLED": 26,
+      "WAITING_EVENT->TIMED_OUT": 29,
+      "WAITING_EVENT->CANCELLED": 32,
+      "QUEUED->TIMED_OUT": 2,
+      "RUNNING->TIMED_OUT": 31,
+      "QUEUED->CANCELLED": 5
     },
     "approval_outcomes": {
-      "applied": 241,
-      "ignored_terminal": 55,
+      "applied": 239,
+      "ignored_terminal": 57,
       "deadline_won": 4
     },
     "cancel_outcomes": {
-      "already_terminal": 239,
-      "cancelled": 61
+      "already_terminal": 237,
+      "cancelled": 63
     },
     "multi_terminal_jobs": 0,
     "orphan_publications": 0,
     "succeeded_without_publication": 0,
-    "published_then_retracted": 13,
+    "published_then_retracted": 19,
     "cancel_stop": {
       "metric": "cancel_stop_ms",
-      "n": 22,
-      "p50": 7.58,
-      "p95": 21.614,
-      "max": 22.95
+      "n": 26,
+      "p50": 10.42,
+      "p95": 24.363,
+      "max": 31.86
     },
     "invariants": {
-      "transitions_checked": 3903,
+      "transitions_checked": 3887,
       "invalid_transitions": 0,
       "terminal_changes": 0,
       "version_gaps": 0,
@@ -161,9 +161,9 @@
       "log_state_mismatch": 0,
       "invalid_transition_attempts_counter": 0,
       "counters": {
-        "events_late": 55,
-        "cancel_after_terminal": 239,
-        "late_results_discarded": 25
+        "events_late": 57,
+        "cancel_after_terminal": 237,
+        "late_results_discarded": 27
       }
     }
   },
@@ -173,41 +173,41 @@
         "exp": "e6",
         "rep": 0,
         "variant": "approval_while_down",
-        "job_id": "job-4516efdf19154293",
+        "job_id": "job-1e1daa5e1676437b",
         "final": "SUCCEEDED",
         "open_step_runs_while_waiting": 0,
         "state_while_worker_down": "QUEUED",
         "event_outcome": "applied",
-        "worker_ready_to_first_step_ms": 0.65,
-        "worker_ready_to_terminal_ms": 41.62,
+        "worker_ready_to_first_step_ms": 0.36,
+        "worker_ready_to_terminal_ms": 44.34,
         "timeout_lateness_ms": null,
-        "downtime_s": 0.504
+        "downtime_s": 0.505
       },
       {
         "exp": "e6",
         "rep": 0,
         "variant": "deadline_while_down",
-        "job_id": "job-0b60c2921230478d",
+        "job_id": "job-e624d150ae59484f",
         "final": "TIMED_OUT",
         "open_step_runs_while_waiting": 0,
         "state_while_worker_down": "WAITING_EVENT",
         "event_outcome": null,
         "worker_ready_to_first_step_ms": null,
-        "worker_ready_to_terminal_ms": -0.62,
-        "timeout_lateness_ms": 1197.31,
-        "downtime_s": 2.32
+        "worker_ready_to_terminal_ms": -0.77,
+        "timeout_lateness_ms": 1378.52,
+        "downtime_s": 2.143
       },
       {
         "exp": "e6",
         "rep": 0,
         "variant": "approval_after_restart",
-        "job_id": "job-d89431f9da704c07",
+        "job_id": "job-92c7e0e177ed40bb",
         "final": "SUCCEEDED",
         "open_step_runs_while_waiting": 0,
         "state_while_worker_down": "WAITING_EVENT",
         "event_outcome": "applied",
-        "worker_ready_to_first_step_ms": 4.8,
-        "worker_ready_to_terminal_ms": 40.26,
+        "worker_ready_to_first_step_ms": 7.36,
+        "worker_ready_to_terminal_ms": 43.04,
         "timeout_lateness_ms": null,
         "downtime_s": 0.504
       },
@@ -215,41 +215,41 @@
         "exp": "e6",
         "rep": 1,
         "variant": "approval_while_down",
-        "job_id": "job-6ff080c706344de8",
+        "job_id": "job-3e990f4f143d4e2e",
         "final": "SUCCEEDED",
         "open_step_runs_while_waiting": 0,
         "state_while_worker_down": "QUEUED",
         "event_outcome": "applied",
-        "worker_ready_to_first_step_ms": 0.21,
-        "worker_ready_to_terminal_ms": 38.21,
+        "worker_ready_to_first_step_ms": 0.32,
+        "worker_ready_to_terminal_ms": 45.62,
         "timeout_lateness_ms": null,
-        "downtime_s": 0.504
+        "downtime_s": 0.505
       },
       {
         "exp": "e6",
         "rep": 1,
         "variant": "deadline_while_down",
-        "job_id": "job-302e74c01067436d",
+        "job_id": "job-a8b987d9285b4a2a",
         "final": "TIMED_OUT",
         "open_step_runs_while_waiting": 0,
         "state_while_worker_down": "WAITING_EVENT",
         "event_outcome": null,
         "worker_ready_to_first_step_ms": null,
-        "worker_ready_to_terminal_ms": -0.52,
-        "timeout_lateness_ms": 1192.62,
-        "downtime_s": 2.332
+        "worker_ready_to_terminal_ms": -0.73,
+        "timeout_lateness_ms": 1381.49,
+        "downtime_s": 2.165
       },
       {
         "exp": "e6",
         "rep": 1,
         "variant": "approval_after_restart",
-        "job_id": "job-152bca9eab6e4a22",
+        "job_id": "job-b667e76c31e8436a",
         "final": "SUCCEEDED",
         "open_step_runs_while_waiting": 0,
         "state_while_worker_down": "WAITING_EVENT",
         "event_outcome": "applied",
-        "worker_ready_to_first_step_ms": 4.98,
-        "worker_ready_to_terminal_ms": 39.94,
+        "worker_ready_to_first_step_ms": 9.65,
+        "worker_ready_to_terminal_ms": 45.96,
         "timeout_lateness_ms": null,
         "downtime_s": 0.504
       },
@@ -257,41 +257,41 @@
         "exp": "e6",
         "rep": 2,
         "variant": "approval_while_down",
-        "job_id": "job-dc1a7193f75c4675",
+        "job_id": "job-73ed23fc7a2d457a",
         "final": "SUCCEEDED",
         "open_step_runs_while_waiting": 0,
         "state_while_worker_down": "QUEUED",
         "event_outcome": "applied",
-        "worker_ready_to_first_step_ms": 0.24,
-        "worker_ready_to_terminal_ms": 39.99,
+        "worker_ready_to_first_step_ms": 0.26,
+        "worker_ready_to_terminal_ms": 45.71,
         "timeout_lateness_ms": null,
-        "downtime_s": 0.504
+        "downtime_s": 0.505
       },
       {
         "exp": "e6",
         "rep": 2,
         "variant": "deadline_while_down",
-        "job_id": "job-f68aff197cd9426d",
+        "job_id": "job-e32a4fb5897b4b1f",
         "final": "TIMED_OUT",
         "open_step_runs_while_waiting": 0,
         "state_while_worker_down": "WAITING_EVENT",
         "event_outcome": null,
         "worker_ready_to_first_step_ms": null,
-        "worker_ready_to_terminal_ms": -0.65,
-        "timeout_lateness_ms": 1181.72,
-        "downtime_s": 2.336
+        "worker_ready_to_terminal_ms": -0.79,
+        "timeout_lateness_ms": 1382.93,
+        "downtime_s": 2.149
       },
       {
         "exp": "e6",
         "rep": 2,
         "variant": "approval_after_restart",
-        "job_id": "job-18cf4983495d4e2d",
+        "job_id": "job-d6391c1d71894fcc",
         "final": "SUCCEEDED",
         "open_step_runs_while_waiting": 0,
         "state_while_worker_down": "WAITING_EVENT",
         "event_outcome": "applied",
-        "worker_ready_to_first_step_ms": 5.36,
-        "worker_ready_to_terminal_ms": 40.54,
+        "worker_ready_to_first_step_ms": 9.33,
+        "worker_ready_to_terminal_ms": 47.76,
         "timeout_lateness_ms": null,
         "downtime_s": 0.504
       },
@@ -299,41 +299,41 @@
         "exp": "e6",
         "rep": 3,
         "variant": "approval_while_down",
-        "job_id": "job-fefe149ac4be4c5d",
+        "job_id": "job-c99fc5b484984b90",
         "final": "SUCCEEDED",
         "open_step_runs_while_waiting": 0,
         "state_while_worker_down": "QUEUED",
         "event_outcome": "applied",
-        "worker_ready_to_first_step_ms": 0.35,
-        "worker_ready_to_terminal_ms": 45.17,
+        "worker_ready_to_first_step_ms": 0.27,
+        "worker_ready_to_terminal_ms": 46.55,
         "timeout_lateness_ms": null,
-        "downtime_s": 0.504
+        "downtime_s": 0.505
       },
       {
         "exp": "e6",
         "rep": 3,
         "variant": "deadline_while_down",
-        "job_id": "job-cb5da0d4d6c04886",
+        "job_id": "job-a7f5b2b391bf406d",
         "final": "TIMED_OUT",
         "open_step_runs_while_waiting": 0,
         "state_while_worker_down": "WAITING_EVENT",
         "event_outcome": null,
         "worker_ready_to_first_step_ms": null,
-        "worker_ready_to_terminal_ms": -0.54,
-        "timeout_lateness_ms": 1182.02,
-        "downtime_s": 2.307
+        "worker_ready_to_terminal_ms": -0.83,
+        "timeout_lateness_ms": 1356.3,
+        "downtime_s": 2.164
       },
       {
         "exp": "e6",
         "rep": 3,
         "variant": "approval_after_restart",
-        "job_id": "job-7641630566a841f5",
+        "job_id": "job-d6e25327c9f94e48",
         "final": "SUCCEEDED",
         "open_step_runs_while_waiting": 0,
         "state_while_worker_down": "WAITING_EVENT",
         "event_outcome": "applied",
-        "worker_ready_to_first_step_ms": 5.09,
-        "worker_ready_to_terminal_ms": 39.75,
+        "worker_ready_to_first_step_ms": 9.22,
+        "worker_ready_to_terminal_ms": 47.03,
         "timeout_lateness_ms": null,
         "downtime_s": 0.504
       },
@@ -341,13 +341,13 @@
         "exp": "e6",
         "rep": 4,
         "variant": "approval_while_down",
-        "job_id": "job-59ff815f21ec4974",
+        "job_id": "job-92ed6b41df4a44c6",
         "final": "SUCCEEDED",
         "open_step_runs_while_waiting": 0,
         "state_while_worker_down": "QUEUED",
         "event_outcome": "applied",
-        "worker_ready_to_first_step_ms": 0.21,
-        "worker_ready_to_terminal_ms": 38.91,
+        "worker_ready_to_first_step_ms": 0.56,
+        "worker_ready_to_terminal_ms": 43.89,
         "timeout_lateness_ms": null,
         "downtime_s": 0.505
       },
@@ -355,27 +355,27 @@
         "exp": "e6",
         "rep": 4,
         "variant": "deadline_while_down",
-        "job_id": "job-7248ffa2c75e4cf6",
+        "job_id": "job-d712c0f646ec4877",
         "final": "TIMED_OUT",
         "open_step_runs_while_waiting": 0,
         "state_while_worker_down": "WAITING_EVENT",
         "event_outcome": null,
         "worker_ready_to_first_step_ms": null,
-        "worker_ready_to_terminal_ms": -0.53,
-        "timeout_lateness_ms": 1192.05,
-        "downtime_s": 2.318
+        "worker_ready_to_terminal_ms": -1.16,
+        "timeout_lateness_ms": 1366.86,
+        "downtime_s": 2.149
       },
       {
         "exp": "e6",
         "rep": 4,
         "variant": "approval_after_restart",
-        "job_id": "job-03248fbe5da94fd9",
+        "job_id": "job-79bc8a013cf84e12",
         "final": "SUCCEEDED",
         "open_step_runs_while_waiting": 0,
         "state_while_worker_down": "WAITING_EVENT",
         "event_outcome": "applied",
-        "worker_ready_to_first_step_ms": 7.91,
-        "worker_ready_to_terminal_ms": 42.96,
+        "worker_ready_to_first_step_ms": 7.56,
+        "worker_ready_to_terminal_ms": 42.55,
         "timeout_lateness_ms": null,
         "downtime_s": 0.504
       }
@@ -393,9 +393,9 @@
       "RUNNING": {
         "metric": "stop_latency_ms[RUNNING]",
         "n": 15,
-        "p50": 53.29,
-        "p95": 73.566,
-        "max": 84.01
+        "p50": 55.16,
+        "p95": 76.224,
+        "max": 87.69
       },
       "WAITING_EVENT": {
         "metric": "stop_latency_ms[WAITING_EVENT]",

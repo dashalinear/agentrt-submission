@@ -31,23 +31,23 @@
       {
         "metric": "event_to_transition_ms",
         "n": 100,
-        "p50": 0.118,
-        "p95": 14.588,
-        "max": 57.801
+        "p50": 0.157,
+        "p95": 32.009,
+        "max": 45.894
       },
       {
         "metric": "client_roundtrip_ms",
         "n": 100,
-        "p50": 0.658,
-        "p95": 15.143,
-        "max": 58.411
+        "p50": 0.898,
+        "p95": 32.526,
+        "max": 46.739
       },
       {
         "metric": "event_to_next_step_start_ms",
         "n": 100,
-        "p50": 11.831,
-        "p95": 43.278,
-        "max": 114.779
+        "p50": 12.816,
+        "p95": 48.497,
+        "max": 90.181
       }
     ],
     "invariants": {
@@ -66,9 +66,9 @@
     "lateness": {
       "metric": "timeout_lateness_ms",
       "n": 40,
-      "p50": 4.147,
-      "p95": 8.301,
-      "max": 8.886
+      "p50": 4.074,
+      "p95": 13.33,
+      "max": 14.136
     },
     "step_runs_during_wait_total": 0,
     "invariants": {
@@ -119,23 +119,23 @@
   "e5": {
     "reps": 300,
     "final": {
-      "SUCCEEDED": 84,
+      "SUCCEEDED": 83,
       "CANCELLED": 128,
-      "TIMED_OUT": 88
+      "TIMED_OUT": 89
     },
     "terminal_from": {
-      "RUNNING->SUCCEEDED": 84,
-      "RUNNING->CANCELLED": 72,
-      "WAITING_EVENT->TIMED_OUT": 27,
-      "WAITING_EVENT->CANCELLED": 36,
-      "QUEUED->CANCELLED": 20,
-      "QUEUED->TIMED_OUT": 11,
-      "RUNNING->TIMED_OUT": 50
+      "RUNNING->SUCCEEDED": 83,
+      "RUNNING->CANCELLED": 82,
+      "WAITING_EVENT->TIMED_OUT": 29,
+      "WAITING_EVENT->CANCELLED": 38,
+      "QUEUED->TIMED_OUT": 14,
+      "RUNNING->TIMED_OUT": 46,
+      "QUEUED->CANCELLED": 8
     },
     "approval_outcomes": {
-      "applied": 237,
-      "deadline_won": 15,
-      "ignored_terminal": 48
+      "applied": 233,
+      "deadline_won": 12,
+      "ignored_terminal": 55
     },
     "cancel_outcomes": {
       "already_terminal": 172,
@@ -144,16 +144,16 @@
     "multi_terminal_jobs": 0,
     "orphan_publications": 0,
     "succeeded_without_publication": 0,
-    "published_then_retracted": 46,
+    "published_then_retracted": 64,
     "cancel_stop": {
       "metric": "cancel_stop_ms",
-      "n": 58,
-      "p50": 20.565,
-      "p95": 63.43,
-      "max": 75.76
+      "n": 75,
+      "p50": 31.14,
+      "p95": 81.253,
+      "max": 92.65
     },
     "invariants": {
-      "transitions_checked": 3749,
+      "transitions_checked": 3778,
       "invalid_transitions": 0,
       "terminal_changes": 0,
       "version_gaps": 0,
@@ -161,9 +161,9 @@
       "log_state_mismatch": 0,
       "invalid_transition_attempts_counter": 0,
       "counters": {
-        "events_late": 48,
+        "events_late": 55,
         "cancel_after_terminal": 172,
-        "late_results_discarded": 49
+        "late_results_discarded": 55
       }
     }
   },
@@ -173,41 +173,41 @@
         "exp": "e6",
         "rep": 0,
         "variant": "approval_while_down",
-        "job_id": "job-125c2e16374d4ec3",
+        "job_id": "job-8873bce339394259",
         "final": "SUCCEEDED",
         "open_step_runs_while_waiting": 0,
         "state_while_worker_down": "QUEUED",
         "event_outcome": "applied",
-        "worker_ready_to_first_step_ms": 0.36,
-        "worker_ready_to_terminal_ms": 59.79,
+        "worker_ready_to_first_step_ms": 0.49,
+        "worker_ready_to_terminal_ms": 66.53,
         "timeout_lateness_ms": null,
-        "downtime_s": 0.504
+        "downtime_s": 0.506
       },
       {
         "exp": "e6",
         "rep": 0,
         "variant": "deadline_while_down",
-        "job_id": "job-52fbf755b5bf49b8",
+        "job_id": "job-fc42651040cc4d50",
         "final": "TIMED_OUT",
         "open_step_runs_while_waiting": 0,
         "state_while_worker_down": "WAITING_EVENT",
         "event_outcome": null,
         "worker_ready_to_first_step_ms": null,
-        "worker_ready_to_terminal_ms": -0.78,
-        "timeout_lateness_ms": 1107.63,
-        "downtime_s": 2.349
+        "worker_ready_to_terminal_ms": -1.49,
+        "timeout_lateness_ms": 1217.56,
+        "downtime_s": 2.279
       },
       {
         "exp": "e6",
         "rep": 0,
         "variant": "approval_after_restart",
-        "job_id": "job-a297667360dd4824",
+        "job_id": "job-7a55946fb709401e",
         "final": "SUCCEEDED",
         "open_step_runs_while_waiting": 0,
         "state_while_worker_down": "WAITING_EVENT",
         "event_outcome": "applied",
-        "worker_ready_to_first_step_ms": 37.36,
-        "worker_ready_to_terminal_ms": 85.1,
+        "worker_ready_to_first_step_ms": 7.82,
+        "worker_ready_to_terminal_ms": 66.06,
         "timeout_lateness_ms": null,
         "downtime_s": 0.502
       },
@@ -215,169 +215,169 @@
         "exp": "e6",
         "rep": 1,
         "variant": "approval_while_down",
-        "job_id": "job-124a38a990324f86",
+        "job_id": "job-42fb9212cf684986",
         "final": "SUCCEEDED",
         "open_step_runs_while_waiting": 0,
         "state_while_worker_down": "QUEUED",
         "event_outcome": "applied",
-        "worker_ready_to_first_step_ms": 0.39,
-        "worker_ready_to_terminal_ms": 58.19,
+        "worker_ready_to_first_step_ms": 0.49,
+        "worker_ready_to_terminal_ms": 52.69,
+        "timeout_lateness_ms": null,
+        "downtime_s": 0.506
+      },
+      {
+        "exp": "e6",
+        "rep": 1,
+        "variant": "deadline_while_down",
+        "job_id": "job-ba7d6f1e908f4228",
+        "final": "TIMED_OUT",
+        "open_step_runs_while_waiting": 0,
+        "state_while_worker_down": "WAITING_EVENT",
+        "event_outcome": null,
+        "worker_ready_to_first_step_ms": null,
+        "worker_ready_to_terminal_ms": -1.22,
+        "timeout_lateness_ms": 1218.91,
+        "downtime_s": 2.309
+      },
+      {
+        "exp": "e6",
+        "rep": 1,
+        "variant": "approval_after_restart",
+        "job_id": "job-cf88e285e5574adc",
+        "final": "SUCCEEDED",
+        "open_step_runs_while_waiting": 0,
+        "state_while_worker_down": "WAITING_EVENT",
+        "event_outcome": "applied",
+        "worker_ready_to_first_step_ms": 7.66,
+        "worker_ready_to_terminal_ms": 64.49,
+        "timeout_lateness_ms": null,
+        "downtime_s": 0.503
+      },
+      {
+        "exp": "e6",
+        "rep": 2,
+        "variant": "approval_while_down",
+        "job_id": "job-68e4b092711d49ff",
+        "final": "SUCCEEDED",
+        "open_step_runs_while_waiting": 0,
+        "state_while_worker_down": "QUEUED",
+        "event_outcome": "applied",
+        "worker_ready_to_first_step_ms": 0.6,
+        "worker_ready_to_terminal_ms": 58.76,
         "timeout_lateness_ms": null,
         "downtime_s": 0.504
       },
       {
         "exp": "e6",
-        "rep": 1,
+        "rep": 2,
         "variant": "deadline_while_down",
-        "job_id": "job-384595d48b7143e2",
+        "job_id": "job-3d0e1b18cc0c4bcd",
         "final": "TIMED_OUT",
         "open_step_runs_while_waiting": 0,
         "state_while_worker_down": "WAITING_EVENT",
         "event_outcome": null,
         "worker_ready_to_first_step_ms": null,
-        "worker_ready_to_terminal_ms": -1.4,
-        "timeout_lateness_ms": 1102.9,
-        "downtime_s": 2.385
-      },
-      {
-        "exp": "e6",
-        "rep": 1,
-        "variant": "approval_after_restart",
-        "job_id": "job-98160f4af755468a",
-        "final": "SUCCEEDED",
-        "open_step_runs_while_waiting": 0,
-        "state_while_worker_down": "WAITING_EVENT",
-        "event_outcome": "applied",
-        "worker_ready_to_first_step_ms": 22.64,
-        "worker_ready_to_terminal_ms": 75.47,
-        "timeout_lateness_ms": null,
-        "downtime_s": 0.503
+        "worker_ready_to_terminal_ms": -1.31,
+        "timeout_lateness_ms": 1210.25,
+        "downtime_s": 2.28
       },
       {
         "exp": "e6",
         "rep": 2,
+        "variant": "approval_after_restart",
+        "job_id": "job-103d033bc9bf4c90",
+        "final": "SUCCEEDED",
+        "open_step_runs_while_waiting": 0,
+        "state_while_worker_down": "WAITING_EVENT",
+        "event_outcome": "applied",
+        "worker_ready_to_first_step_ms": 8.34,
+        "worker_ready_to_terminal_ms": 59.58,
+        "timeout_lateness_ms": null,
+        "downtime_s": 0.502
+      },
+      {
+        "exp": "e6",
+        "rep": 3,
         "variant": "approval_while_down",
-        "job_id": "job-3d6b670eae7a496b",
+        "job_id": "job-89407071de23439d",
         "final": "SUCCEEDED",
         "open_step_runs_while_waiting": 0,
         "state_while_worker_down": "QUEUED",
         "event_outcome": "applied",
-        "worker_ready_to_first_step_ms": 0.45,
-        "worker_ready_to_terminal_ms": 52.96,
+        "worker_ready_to_first_step_ms": 0.53,
+        "worker_ready_to_terminal_ms": 58.02,
+        "timeout_lateness_ms": null,
+        "downtime_s": 0.506
+      },
+      {
+        "exp": "e6",
+        "rep": 3,
+        "variant": "deadline_while_down",
+        "job_id": "job-e5b6e67ff3584d7d",
+        "final": "TIMED_OUT",
+        "open_step_runs_while_waiting": 0,
+        "state_while_worker_down": "WAITING_EVENT",
+        "event_outcome": null,
+        "worker_ready_to_first_step_ms": null,
+        "worker_ready_to_terminal_ms": -1.26,
+        "timeout_lateness_ms": 1182.62,
+        "downtime_s": 2.276
+      },
+      {
+        "exp": "e6",
+        "rep": 3,
+        "variant": "approval_after_restart",
+        "job_id": "job-a886002ed2714ca3",
+        "final": "SUCCEEDED",
+        "open_step_runs_while_waiting": 0,
+        "state_while_worker_down": "WAITING_EVENT",
+        "event_outcome": "applied",
+        "worker_ready_to_first_step_ms": 21.54,
+        "worker_ready_to_terminal_ms": 71.75,
         "timeout_lateness_ms": null,
         "downtime_s": 0.504
       },
       {
         "exp": "e6",
-        "rep": 2,
-        "variant": "deadline_while_down",
-        "job_id": "job-13ea7bba70b845c2",
-        "final": "TIMED_OUT",
-        "open_step_runs_while_waiting": 0,
-        "state_while_worker_down": "WAITING_EVENT",
-        "event_outcome": null,
-        "worker_ready_to_first_step_ms": null,
-        "worker_ready_to_terminal_ms": -0.79,
-        "timeout_lateness_ms": 1109.12,
-        "downtime_s": 2.39
-      },
-      {
-        "exp": "e6",
-        "rep": 2,
-        "variant": "approval_after_restart",
-        "job_id": "job-282918c902544983",
-        "final": "SUCCEEDED",
-        "open_step_runs_while_waiting": 0,
-        "state_while_worker_down": "WAITING_EVENT",
-        "event_outcome": "applied",
-        "worker_ready_to_first_step_ms": 9.66,
-        "worker_ready_to_terminal_ms": 58.98,
-        "timeout_lateness_ms": null,
-        "downtime_s": 0.503
-      },
-      {
-        "exp": "e6",
-        "rep": 3,
+        "rep": 4,
         "variant": "approval_while_down",
-        "job_id": "job-79e34eb5713a40b1",
+        "job_id": "job-dca90a59c811416a",
         "final": "SUCCEEDED",
         "open_step_runs_while_waiting": 0,
         "state_while_worker_down": "QUEUED",
         "event_outcome": "applied",
-        "worker_ready_to_first_step_ms": 0.37,
-        "worker_ready_to_terminal_ms": 64.41,
+        "worker_ready_to_first_step_ms": 0.58,
+        "worker_ready_to_terminal_ms": 62.02,
         "timeout_lateness_ms": null,
-        "downtime_s": 0.503
-      },
-      {
-        "exp": "e6",
-        "rep": 3,
-        "variant": "deadline_while_down",
-        "job_id": "job-c414e3092dca425d",
-        "final": "TIMED_OUT",
-        "open_step_runs_while_waiting": 0,
-        "state_while_worker_down": "WAITING_EVENT",
-        "event_outcome": null,
-        "worker_ready_to_first_step_ms": null,
-        "worker_ready_to_terminal_ms": -1.68,
-        "timeout_lateness_ms": 1129.73,
-        "downtime_s": 2.387
-      },
-      {
-        "exp": "e6",
-        "rep": 3,
-        "variant": "approval_after_restart",
-        "job_id": "job-a6e2af06f3074dce",
-        "final": "SUCCEEDED",
-        "open_step_runs_while_waiting": 0,
-        "state_while_worker_down": "WAITING_EVENT",
-        "event_outcome": "applied",
-        "worker_ready_to_first_step_ms": 15.18,
-        "worker_ready_to_terminal_ms": 63.06,
-        "timeout_lateness_ms": null,
-        "downtime_s": 0.502
-      },
-      {
-        "exp": "e6",
-        "rep": 4,
-        "variant": "approval_while_down",
-        "job_id": "job-851dc68c7da5469c",
-        "final": "SUCCEEDED",
-        "open_step_runs_while_waiting": 0,
-        "state_while_worker_down": "QUEUED",
-        "event_outcome": "applied",
-        "worker_ready_to_first_step_ms": 0.5,
-        "worker_ready_to_terminal_ms": 50.95,
-        "timeout_lateness_ms": null,
-        "downtime_s": 0.503
+        "downtime_s": 0.509
       },
       {
         "exp": "e6",
         "rep": 4,
         "variant": "deadline_while_down",
-        "job_id": "job-82ec9c90850e409f",
+        "job_id": "job-cb399d7c6daf4490",
         "final": "TIMED_OUT",
         "open_step_runs_while_waiting": 0,
         "state_while_worker_down": "WAITING_EVENT",
         "event_outcome": null,
         "worker_ready_to_first_step_ms": null,
-        "worker_ready_to_terminal_ms": -0.95,
-        "timeout_lateness_ms": 1099.05,
-        "downtime_s": 2.384
+        "worker_ready_to_terminal_ms": -1.35,
+        "timeout_lateness_ms": 1209.58,
+        "downtime_s": 2.285
       },
       {
         "exp": "e6",
         "rep": 4,
         "variant": "approval_after_restart",
-        "job_id": "job-7a497d4f66144889",
+        "job_id": "job-b413a237bf89493e",
         "final": "SUCCEEDED",
         "open_step_runs_while_waiting": 0,
         "state_while_worker_down": "WAITING_EVENT",
         "event_outcome": "applied",
-        "worker_ready_to_first_step_ms": 5.48,
-        "worker_ready_to_terminal_ms": 56.83,
+        "worker_ready_to_first_step_ms": 13.94,
+        "worker_ready_to_terminal_ms": 63.5,
         "timeout_lateness_ms": null,
-        "downtime_s": 0.502
+        "downtime_s": 0.503
       }
     ]
   },
@@ -393,9 +393,9 @@
       "RUNNING": {
         "metric": "stop_latency_ms[RUNNING]",
         "n": 15,
-        "p50": 63.48,
-        "p95": 93.382,
-        "max": 100.83
+        "p50": 70.28,
+        "p95": 101.6,
+        "max": 107.27
       },
       "WAITING_EVENT": {
         "metric": "stop_latency_ms[WAITING_EVENT]",

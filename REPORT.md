@@ -26,72 +26,80 @@
 | Markdown | 3.11.3 |
 | Масштаб времени, Part 1/2 | 1.0 (реальные секунды) |
 | Масштаб времени, Part 3 | 0.1 → 1 virtual second = 0.1 real seconds |
-| Seeds | Part 1: [1000, 1001, 1002, 1003, 1004]; Part 2: 7; Part 3: [11, 12, 13] (одинаковые для всех политик) |
+| Seeds | Part 1: [1000, 1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008, 1009]; Part 2: 7; Part 3: [11, 12, 13, 14, 15] (одинаковые для всех политик) |
 | LLM в этих прогонах | **SimulatedLLM** (детерминированный); реальная LLM — раздел «Real LLM run» |
 
 ![states](results/figures/state_machine.png)
 
 ## 2. Автотесты
 
-Итог (Windows): **57 passed, 1 warning in 27.90s** (полный вывод `pytest -v`: `results/pytest_output.txt`).
+Итог (Windows): **65 passed, 1 warning in 31.25s** (полный вывод `pytest -v`: `results/pytest_output.txt`).
 
-Тот же набор в Linux-контейнере (`Dockerfile`, POSIX SIGKILL в тестах восстановления): **57 passed, 1 warning in 27.99s** (`results/raw_linux/pytest_output.txt`).
+Тот же набор в Linux-контейнере (`Dockerfile`, POSIX SIGKILL в тестах восстановления): **65 passed, 1 warning in 32.58s** (`results/raw_linux/pytest_output.txt`).
 
 ```
 tests/test_cancel.py::test_cancel_queued PASSED                          [  1%]
 tests/test_cancel.py::test_cancel_waiting PASSED                         [  3%]
-tests/test_cancel.py::test_cancel_running_stops_step_and_no_new_steps PASSED [  5%]
-tests/test_cancel.py::test_late_step_result_after_cancel_is_discarded PASSED [  7%]
-tests/test_events.py::test_duplicate_event_applied_once PASSED           [  8%]
-tests/test_events.py::test_event_in_wrong_state_is_ignored_and_logged PASSED [ 10%]
-tests/test_events.py::test_stale_approval_id_is_ignored PASSED           [ 12%]
-tests/test_events.py::test_approval_after_cancel_or_timeout_does_not_change_state PASSED [ 14%]
-tests/test_events.py::test_rejection_revises_then_fails PASSED           [ 15%]
-tests/test_events.py::test_outbox_notifies_approval_request_and_terminal_state PASSED [ 17%]
-tests/test_idempotency.py::test_create_job_same_key_returns_same_job PASSED [ 19%]
-tests/test_idempotency.py::test_unique_index_is_the_backstop PASSED      [ 21%]
-tests/test_idempotency.py::test_concurrent_creates_with_same_key_create_one_job PASSED [ 22%]
-tests/test_idempotency.py::test_publisher_dedups_by_idempotency_key PASSED [ 24%]
-tests/test_idempotency.py::test_publisher_ack_lost_then_retry_returns_previous_result PASSED [ 26%]
-tests/test_idempotency.py::test_http_api_create_idempotent_and_429 PASSED [ 28%]
-tests/test_idempotency.py::test_http_publisher_app PASSED                [ 29%]
-tests/test_llm.py::test_simulated_llm_is_deterministic PASSED            [ 31%]
-tests/test_llm.py::test_openai_compatible_success_and_usage PASSED       [ 33%]
-tests/test_llm.py::test_openai_compatible_error_classification[429-TransientError] PASSED [ 35%]
-tests/test_llm.py::test_openai_compatible_error_classification[503-TransientError] PASSED [ 36%]
-tests/test_llm.py::test_openai_compatible_error_classification[400-PermanentError] PASSED [ 38%]
-tests/test_llm.py::test_openai_compatible_error_classification[401-PermanentError] PASSED [ 40%]
-tests/test_llm.py::test_openai_compatible_transport_error_is_transient PASSED [ 42%]
-tests/test_races.py::test_deadline_beats_approval_when_timer_not_yet_fired PASSED [ 43%]
-tests/test_races.py::test_cancel_beats_deadline_when_timer_not_yet_fired PASSED [ 45%]
-tests/test_races.py::test_deadline_beats_step_completion PASSED          [ 47%]
-tests/test_races.py::test_randomized_races_preserve_invariants PASSED    [ 49%]
-tests/test_recovery.py::test_kill_between_steps_does_not_repeat_checkpointed_steps PASSED [ 50%]
-tests/test_recovery.py::test_kill_during_llm_call_is_retried_after_lease_expiry PASSED [ 52%]
-tests/test_recovery.py::test_publication_retracted_durably_when_job_cancelled_after_worker_crash PASSED [ 54%]
-tests/test_recovery.py::test_side_effect_without_ack_is_not_duplicated PASSED [ 56%]
-tests/test_retry.py::test_repeated_transient_error_bounded_then_failed PASSED [ 57%]
-tests/test_retry.py::test_transient_then_success PASSED                  [ 59%]
-tests/test_retry.py::test_permanent_error_fails_immediately PASSED       [ 61%]
-tests/test_retry.py::test_token_budget_and_max_steps PASSED              [ 63%]
-tests/test_retry.py::test_backoff_equal_jitter_bounds PASSED             [ 64%]
-tests/test_retry.py::test_lease_loss_counts_as_attempt_poison_pill PASSED [ 66%]
-tests/test_scheduling.py::test_global_and_per_tenant_limits_never_exceeded[fifo] PASSED [ 68%]
-tests/test_scheduling.py::test_global_and_per_tenant_limits_never_exceeded[drr] PASSED [ 70%]
-tests/test_scheduling.py::test_limits_hold_across_two_worker_processes_sharing_the_db PASSED [ 71%]
-tests/test_scheduling.py::test_admission_control_rejects_with_reason PASSED [ 73%]
-tests/test_scheduling.py::test_fifo_serves_heavy_backlog_first_drr_interleaves PASSED [ 75%]
-tests/test_scheduling.py::test_aging_lets_old_low_priority_job_overtake PASSED [ 77%]
-tests/test_smoke.py::test_happy_path_with_approval PASSED                [ 78%]
-tests/test_states.py::test_allowed_transitions_table_matches_code PASSED [ 80%]
-tests/test_states.py::test_terminal_row_cannot_be_updated_even_with_raw_sql[SUCCEEDED] PASSED [ 82%]
-tests/test_states.py::test_terminal_row_cannot_be_updated_even_with_raw_sql[FAILED] PASSED [ 84%]
-tests/test_states.py::test_terminal_row_cannot_be_updated_even_with_raw_sql[CANCELLED] PASSED [ 85%]
-tests/test_states.py::test_terminal_row_cannot_be_updated_even_with_raw_sql[TIMED_OUT] PASSED [ 87%]
-tests/test_states.py::test_invalid_transition_rejected_by_trigger PASSED [ 89%]
-tests/test_states.py::test_state_change_requires_version_bump PASSED     [ 91%]
-tests/test_states.py::test_cas_with_stale_version_fails PASSED           [ 92%]
-tests/test_states.py::test_transition_log_written_by_trigger PASSED      [ 94%]
+tests/test_cancel.py::test_cancel_running_stops_step_and_no_new_steps PASSED [  4%]
+tests/test_cancel.py::test_late_step_result_after_cancel_is_discarded PASSED [  6%]
+tests/test_decide.py::test_llm_choice_is_applied_when_allowed PASSED     [  7%]
+tests/test_decide.py::test_llm_cannot_skip_required_approval PASSED      [  9%]
+tests/test_decide.py::test_llm_finish_allowed_without_approval PASSED    [ 10%]
+tests/test_decide.py::test_llm_cannot_exceed_tool_budget PASSED          [ 12%]
+tests/test_decide.py::test_unparseable_answer_falls_back_to_rules PASSED [ 13%]
+tests/test_decide.py::test_rules_mode_does_not_call_llm PASSED           [ 15%]
+tests/test_decide.py::test_llm_decide_end_to_end_with_simulated_llm[False] PASSED [ 16%]
+tests/test_decide.py::test_llm_decide_end_to_end_with_simulated_llm[True] PASSED [ 18%]
+tests/test_events.py::test_duplicate_event_applied_once PASSED           [ 20%]
+tests/test_events.py::test_event_in_wrong_state_is_ignored_and_logged PASSED [ 21%]
+tests/test_events.py::test_stale_approval_id_is_ignored PASSED           [ 23%]
+tests/test_events.py::test_approval_after_cancel_or_timeout_does_not_change_state PASSED [ 24%]
+tests/test_events.py::test_rejection_revises_then_fails PASSED           [ 26%]
+tests/test_events.py::test_outbox_notifies_approval_request_and_terminal_state PASSED [ 27%]
+tests/test_idempotency.py::test_create_job_same_key_returns_same_job PASSED [ 29%]
+tests/test_idempotency.py::test_unique_index_is_the_backstop PASSED      [ 30%]
+tests/test_idempotency.py::test_concurrent_creates_with_same_key_create_one_job PASSED [ 32%]
+tests/test_idempotency.py::test_publisher_dedups_by_idempotency_key PASSED [ 33%]
+tests/test_idempotency.py::test_publisher_ack_lost_then_retry_returns_previous_result PASSED [ 35%]
+tests/test_idempotency.py::test_http_api_create_idempotent_and_429 PASSED [ 36%]
+tests/test_idempotency.py::test_http_publisher_app PASSED                [ 38%]
+tests/test_llm.py::test_simulated_llm_is_deterministic PASSED            [ 40%]
+tests/test_llm.py::test_openai_compatible_success_and_usage PASSED       [ 41%]
+tests/test_llm.py::test_openai_compatible_error_classification[429-TransientError] PASSED [ 43%]
+tests/test_llm.py::test_openai_compatible_error_classification[503-TransientError] PASSED [ 44%]
+tests/test_llm.py::test_openai_compatible_error_classification[400-PermanentError] PASSED [ 46%]
+tests/test_llm.py::test_openai_compatible_error_classification[401-PermanentError] PASSED [ 47%]
+tests/test_llm.py::test_openai_compatible_transport_error_is_transient PASSED [ 49%]
+tests/test_races.py::test_deadline_beats_approval_when_timer_not_yet_fired PASSED [ 50%]
+tests/test_races.py::test_cancel_beats_deadline_when_timer_not_yet_fired PASSED [ 52%]
+tests/test_races.py::test_deadline_beats_step_completion PASSED          [ 53%]
+tests/test_races.py::test_randomized_races_preserve_invariants PASSED    [ 55%]
+tests/test_recovery.py::test_kill_between_steps_does_not_repeat_checkpointed_steps PASSED [ 56%]
+tests/test_recovery.py::test_kill_during_llm_call_is_retried_after_lease_expiry PASSED [ 58%]
+tests/test_recovery.py::test_publication_retracted_durably_when_job_cancelled_after_worker_crash PASSED [ 60%]
+tests/test_recovery.py::test_side_effect_without_ack_is_not_duplicated PASSED [ 61%]
+tests/test_retry.py::test_repeated_transient_error_bounded_then_failed PASSED [ 63%]
+tests/test_retry.py::test_transient_then_success PASSED                  [ 64%]
+tests/test_retry.py::test_permanent_error_fails_immediately PASSED       [ 66%]
+tests/test_retry.py::test_token_budget_and_max_steps PASSED              [ 67%]
+tests/test_retry.py::test_backoff_equal_jitter_bounds PASSED             [ 69%]
+tests/test_retry.py::test_lease_loss_counts_as_attempt_poison_pill PASSED [ 70%]
+tests/test_scheduling.py::test_global_and_per_tenant_limits_never_exceeded[fifo] PASSED [ 72%]
+tests/test_scheduling.py::test_global_and_per_tenant_limits_never_exceeded[drr] PASSED [ 73%]
+tests/test_scheduling.py::test_limits_hold_across_two_worker_processes_sharing_the_db PASSED [ 75%]
+tests/test_scheduling.py::test_admission_control_rejects_with_reason PASSED [ 76%]
+tests/test_scheduling.py::test_fifo_serves_heavy_backlog_first_drr_interleaves PASSED [ 78%]
+tests/test_scheduling.py::test_aging_lets_old_low_priority_job_overtake PASSED [ 80%]
+tests/test_smoke.py::test_happy_path_with_approval PASSED                [ 81%]
+tests/test_states.py::test_allowed_transitions_table_matches_code PASSED [ 83%]
+tests/test_states.py::test_terminal_row_cannot_be_updated_even_with_raw_sql[SUCCEEDED] PASSED [ 84%]
+tests/test_states.py::test_terminal_row_cannot_be_updated_even_with_raw_sql[FAILED] PASSED [ 86%]
+tests/test_states.py::test_terminal_row_cannot_be_updated_even_with_raw_sql[CANCELLED] PASSED [ 87%]
+tests/test_states.py::test_terminal_row_cannot_be_updated_even_with_raw_sql[TIMED_OUT] PASSED [ 89%]
+tests/test_states.py::test_invalid_transition_rejected_by_trigger PASSED [ 90%]
+tests/test_states.py::test_state_change_requires_version_bump PASSED     [ 92%]
+tests/test_states.py::test_cas_with_stale_version_fails PASSED           [ 93%]
+tests/test_states.py::test_transition_log_written_by_trigger PASSED      [ 95%]
 tests/test_timers_and_slots.py::test_deadline_in_queue_fires_after_restart PASSED [ 96%]
 tests/test_timers_and_slots.py::test_deadline_while_waiting_survives_worker_restart PASSED [ 98%]
 tests/test_timers_and_slots.py::test_waiting_job_does_not_occupy_execution_slot PASSED [100%]
@@ -100,12 +108,12 @@ tests/test_timers_and_slots.py::test_waiting_job_does_not_occupy_execution_slot 
 **Структурированные логи.** Каждая запись — JSON с полями `job_id, step, attempt, event_id` (и `worker, tenant_id, state, data`). Пример (34 строк, один job с transient-ошибкой, дублем и поздним событием): `results/raw/sample_structured_log.jsonl`:
 
 ```
-{"ts": 1794312559.234067, "level": "INFO", "logger": "agentrt.worker", "msg": "step start", "job_id": "job-0d0be54488dd4a2d", "step": "fetch_documents#0", "attempt": 1, "event_id": null, "worker": "w1:8f096185", "tenant_id": "tenant-demo", "state": null}
-{"ts": 1794312559.247305, "level": "INFO", "logger": "agentrt.worker", "msg": "step start", "job_id": "job-0d0be54488dd4a2d", "step": "extract#0", "attempt": 1, "event_id": null, "worker": "w1:8f096185", "tenant_id": "tenant-demo", "state": null}
-{"ts": 1794312559.262911, "level": "INFO", "logger": "agentrt.worker", "msg": "step start", "job_id": "job-0d0be54488dd4a2d", "step": "draft#0.0", "attempt": 1, "event_id": null, "worker": "w1:8f096185", "tenant_id": "tenant-demo", "state": null}
-{"ts": 1794312559.293564, "level": "INFO", "logger": "agentrt.store", "msg": "transition", "job_id": "job-0d0be54488dd4a2d", "step": "draft#0.0", "attempt": 1, "event_id": null, "worker": null, "tenant_id": null, "state": "QUEUED", "data": {"src": "RUNNING", "dst": "QUEUED", "reason": "transient error at draft#0.0 (attempt 1): TransientError: simulated transient LLM error (503) on draft#0.0; retry in 0.017s"}}
-{"ts": 1794312559.293739, "level": "WARNING", "logger": "agentrt.worker", "msg": "step transient error -> retry", "job_id": "job-0d0be54488dd4a2d", "step": "draft#0.0", "attempt": 1, "event_id": null, "worker": null, "tenant_id": null, "state": null, "data": {"error": "simulated transient LLM error (503) on draft#0.0"}}
-{"ts": 1794312559.324831, "level": "INFO", "logger": "agentrt.worker", "msg": "step start", "job_id": "job-0d0be54488dd4a2d", "step": "draft#0.0", "attempt": 2, "event_id": null, "worker": "w1:8f096185", "tenant_id": "tenant-demo", "state": null}
+{"ts": 1794319839.33247, "level": "INFO", "logger": "agentrt.worker", "msg": "step start", "job_id": "job-41ee76c154704759", "step": "fetch_documents#0", "attempt": 1, "event_id": null, "worker": "w1:9b5cc863", "tenant_id": "tenant-demo", "state": null}
+{"ts": 1794319839.348225, "level": "INFO", "logger": "agentrt.worker", "msg": "step start", "job_id": "job-41ee76c154704759", "step": "extract#0", "attempt": 1, "event_id": null, "worker": "w1:9b5cc863", "tenant_id": "tenant-demo", "state": null}
+{"ts": 1794319839.364618, "level": "INFO", "logger": "agentrt.worker", "msg": "step start", "job_id": "job-41ee76c154704759", "step": "draft#0.0", "attempt": 1, "event_id": null, "worker": "w1:9b5cc863", "tenant_id": "tenant-demo", "state": null}
+{"ts": 1794319839.393738, "level": "INFO", "logger": "agentrt.store", "msg": "transition", "job_id": "job-41ee76c154704759", "step": "draft#0.0", "attempt": 1, "event_id": null, "worker": null, "tenant_id": null, "state": "QUEUED", "data": {"src": "RUNNING", "dst": "QUEUED", "reason": "transient error at draft#0.0 (attempt 1): TransientError: simulated transient LLM error (503) on draft#0.0; retry in 0.024s"}}
+{"ts": 1794319839.394028, "level": "WARNING", "logger": "agentrt.worker", "msg": "step transient error -> retry", "job_id": "job-41ee76c154704759", "step": "draft#0.0", "attempt": 1, "event_id": null, "worker": null, "tenant_id": null, "state": null, "data": {"error": "simulated transient LLM error (503) on draft#0.0"}}
+{"ts": 1794319839.425472, "level": "INFO", "logger": "agentrt.worker", "msg": "step start", "job_id": "job-41ee76c154704759", "step": "draft#0.0", "attempt": 2, "event_id": null, "worker": "w1:9b5cc863", "tenant_id": "tenant-demo", "state": null}
 ```
 
 ## 3. Part 1 — восстановление и идемпотентность (Simulated)
@@ -114,52 +122,52 @@ tests/test_timers_and_slots.py::test_waiting_job_does_not_occupy_execution_slot 
 
 | сценарий | N | итог | время job p50 [min–max] | + к baseline p50 | старт процесса → воркер готов p50 | воркер готов → возобновление p50 | старт процесса → возобновление p50 |
 |---|---|---|---|---|---|---|---|
-| без отказов (baseline) | 5 | SUCCEEDED: 5 | 2.83 [2.82–2.85] | – | – | – | – |
-| 1. kill между шагами (после extract) | 5 | SUCCEEDED: 5 | 4.20 [4.19–4.23] | 1.36 | 1.16 | 0.000 | 1.16 |
-| 2a. kill во время LLM, другой воркер ждёт lease | 5 | SUCCEEDED: 5 | 5.13 [5.12–5.16] | 2.30 | 1.17 | 0.832 | 2.00 |
-| 2b. kill во время LLM, рестарт того же воркера | 5 | SUCCEEDED: 5 | 4.34 [4.30–4.43] | 1.51 | 1.18 | 0.001 | 1.19 |
-| 3a. крэш после publish (ack не сохранён) | 5 | SUCCEEDED: 5 | 4.33 [4.25–4.38] | 1.49 | 1.31 | 0.001 | 1.32 |
-| 3b. ack потерян в сети (503 после коммита) | 5 | SUCCEEDED: 5 | 3.33 [3.21–3.42] | 0.50 | – | – | – |
-| 4. повторяющаяся transient-ошибка | 5 | FAILED: 5 | 7.06 [6.85–7.41] | 4.23 | – | – | – |
+| без отказов (baseline) | 10 | SUCCEEDED: 10 | 2.96 [2.89–3.00] | – | – | – | – |
+| 1. kill между шагами (после extract) | 10 | SUCCEEDED: 10 | 4.95 [4.85–5.00] | 1.99 | 1.77 | 0.001 | 1.77 |
+| 2a. kill во время LLM, другой воркер ждёт lease | 10 | SUCCEEDED: 10 | 5.35 [5.19–5.43] | 2.39 | 1.73 | 0.409 | 2.09 |
+| 2b. kill во время LLM, рестарт того же воркера | 10 | SUCCEEDED: 10 | 4.96 [4.87–5.11] | 2.00 | 1.71 | 0.022 | 1.71 |
+| 3a. крэш после publish (ack не сохранён) | 10 | SUCCEEDED: 10 | 5.00 [4.93–5.15] | 2.05 | 1.81 | 0.022 | 1.83 |
+| 3b. ack потерян в сети (503 после коммита) | 10 | SUCCEEDED: 10 | 3.41 [3.32–3.51] | 0.45 | – | – | – |
+| 4. повторяющаяся transient-ошибка | 10 | FAILED: 10 | 7.41 [6.72–7.99] | 4.45 | – | – | – |
 
 **Повторы и побочные эффекты** (суммы по N прогонам):
 
 | сценарий | LLM-вызовов | повторных LLM | повторных tool | вызовов с неизвестным исходом | перевыполнено шагов с чекпоинтом | publish физ. / лог. | дублей лог. публикаций | доп. токены прерванных вызовов: подтверждено / верхняя граница | доп. стоимость USD: подтверждено / верх. |
 |---|---|---|---|---|---|---|---|---|---|
-| без отказов (baseline) | 10 | 0 | 0 | 0 | 0 | 5 / 5 | 0 | 0 / ≤0 | 0.000000 / ≤0.000000 |
-| 1. kill между шагами (после extract) | 10 | 0 | 0 | 0 | 0 | 5 / 5 | 0 | 0 / ≤0 | 0.000000 / ≤0.000000 |
-| 2a. kill во время LLM, другой воркер ждёт lease | 15 | 5 | 0 | 5 | 0 | 5 / 5 | 0 | 0 / ≤1498 | 0.000000 / ≤0.000675 |
-| 2b. kill во время LLM, рестарт того же воркера | 15 | 5 | 0 | 5 | 0 | 5 / 5 | 0 | 0 / ≤1498 | 0.000000 / ≤0.000675 |
-| 3a. крэш после publish (ack не сохранён) | 10 | 0 | 0 | 0 | 0 | 10 / 5 | 0 | 0 / ≤0 | 0.000000 / ≤0.000000 |
-| 3b. ack потерян в сети (503 после коммита) | 10 | 0 | 0 | 0 | 0 | 10 / 5 | 0 | 0 / ≤0 | 0.000000 / ≤0.000000 |
-| 4. повторяющаяся transient-ошибка | 20 | 15 | 0 | 0 | 0 | 0 / 0 | 0 | 0 / ≤0 | 0.000000 / ≤0.000000 |
+| без отказов (baseline) | 20 | 0 | 0 | 0 | 0 | 10 / 10 | 0 | 0 / ≤0 | 0.000000 / ≤0.000000 |
+| 1. kill между шагами (после extract) | 20 | 0 | 0 | 0 | 0 | 10 / 10 | 0 | 0 / ≤0 | 0.000000 / ≤0.000000 |
+| 2a. kill во время LLM, другой воркер ждёт lease | 30 | 10 | 0 | 10 | 0 | 10 / 10 | 0 | 0 / ≤2994 | 0.000000 / ≤0.001349 |
+| 2b. kill во время LLM, рестарт того же воркера | 30 | 10 | 0 | 10 | 0 | 10 / 10 | 0 | 0 / ≤2994 | 0.000000 / ≤0.001349 |
+| 3a. крэш после publish (ack не сохранён) | 20 | 0 | 0 | 0 | 0 | 20 / 10 | 0 | 0 / ≤0 | 0.000000 / ≤0.000000 |
+| 3b. ack потерян в сети (503 после коммита) | 20 | 0 | 0 | 0 | 0 | 20 / 10 | 0 | 0 / ≤0 | 0.000000 / ≤0.000000 |
+| 4. повторяющаяся transient-ошибка | 40 | 30 | 0 | 0 | 0 | 0 / 0 | 0 | 0 / ≤0 | 0.000000 / ≤0.000000 |
 
-Конфигурация: lease_timeout = 2.0 с, heartbeat = 0.25 с, max_attempts = 4, backoff base = 0.5 с, cap = 4.0 с; по 5 повторов на сценарий; воркер — отдельный процесс, убивается `Popen.kill()` (на Windows это `TerminateProcess` — аналог SIGKILL: без обработчиков и `finally`), FakePublisherService — отдельный HTTP-процесс. Сырые данные: `results/raw/recovery_runs.csv`, `recovery_step_runs.jsonl`, `recovery_calls.jsonl`.
+Конфигурация: lease_timeout = 2.0 с, heartbeat = 0.25 с, max_attempts = 4, backoff base = 0.5 с, cap = 4.0 с; по 10 повторов на сценарий; воркер — отдельный процесс, убивается `Popen.kill()` (на Windows это `TerminateProcess` — аналог SIGKILL: без обработчиков и `finally`), FakePublisherService — отдельный HTTP-процесс. Сырые данные: `results/raw/recovery_runs.csv`, `recovery_step_runs.jsonl`, `recovery_calls.jsonl`.
 
 ![recovery](results/figures/recovery_job_time.png)
 
 **Наблюдения (из таблицы):**
 
-* **Kill между шагами.** Повторных LLM/tool вызовов: 0/0, перевыполненных шагов с чекпоинтом: 0. Шаги `fetch_documents`/`extract`, чей результат уже в `step_results`, не повторялись. Возобновление после того, как новый процесс готов: p50 = 0.000 с (тот же `--name` ⇒ lease прежней инкарнации забирается сразу при старте); основная часть времени «от старта процесса» (p50 1.16 с) — запуск интерпретатора и импорт модулей.
-* **Kill во время LLM-вызова.** Каждый прерванный вызов повторён ровно один раз (повторных LLM: 5 на 5 прогонов в 2a и 5 на 5 в 2b). Если подхватывает *другой* воркер, он ждёт истечения lease: возобновление через 0.83 с после его готовности (остаток lease_timeout), против 0.001 с при рестарте того же воркера. **Неопределённость исхода:** 10 вызовов остались в журнале вызовов без завершения — рантайм не знает, обработал ли их провайдер и выставил ли счёт. Поэтому дополнительные токены даны интервалом: фактически оплаченные повторы, которые мы видим, = 0, верхняя граница (prompt + max_output_tokens прерванных вызовов) = 2996 токенов на 10 прогонов.
+* **Kill между шагами.** Повторных LLM/tool вызовов: 0/0, перевыполненных шагов с чекпоинтом: 0. Шаги `fetch_documents`/`extract`, чей результат уже в `step_results`, не повторялись. Возобновление после того, как новый процесс готов: p50 = 0.001 с (тот же `--name` ⇒ lease прежней инкарнации забирается сразу при старте); основная часть времени «от старта процесса» (p50 1.77 с) — запуск интерпретатора и импорт модулей.
+* **Kill во время LLM-вызова.** Каждый прерванный вызов повторён ровно один раз (повторных LLM: 10 на 10 прогонов в 2a и 10 на 10 в 2b). Если подхватывает *другой* воркер, он ждёт истечения lease: возобновление через 0.41 с после его готовности (остаток lease_timeout), против 0.022 с при рестарте того же воркера. **Неопределённость исхода:** 20 вызовов остались в журнале вызовов без завершения — рантайм не знает, обработал ли их провайдер и выставил ли счёт. Поэтому дополнительные токены даны интервалом: фактически оплаченные повторы, которые мы видим, = 0, верхняя граница (prompt + max_output_tokens прерванных вызовов) = 5988 токенов на 20 прогонов.
 * **Side effect без ack.** В 3a процесс умирает сразу после ответа сервиса (до чекпоинта), в 3b сервис коммитит и отвечает 503. В обоих случаях физических запросов публикации 2 на job, логических — 1, дублей логических публикаций 0: повтор идёт с тем же `Idempotency-Key`, и сервис возвращает прежний `publication_id` (`replayed=true`).
-* **Повторяющаяся transient-ошибка.** Ровно 4 попытки на прогон (всего 20 неудачных попыток в 5 прогонах), паузы между попытками (с, по прогонам): [0.46, 0.69, 1.31]; [0.47, 0.94, 1.07]; [0.46, 0.90, 1.17]; [0.41, 0.69, 1.15]; [0.43, 0.97, 1.42] — растут экспоненциально с jitter (ожидаемые интервалы [0.25–0.5], [0.5–1.0], [1.0–2.0] плюс время поллинга). Итог — `FAILED` с причиной: `step draft#0.0 failed after 4 attempts (max_attempts=4); last error: TransientError: simulated transient LLM error (503) on draft#0.0`.
+* **Повторяющаяся transient-ошибка.** Ровно 4 попытки на прогон (всего 40 неудачных попыток в 10 прогонах), паузы между попытками (с, по прогонам): [0.28, 0.77, 1.68]; [0.34, 0.70, 1.51]; [0.27, 0.55, 1.96]; [0.33, 0.68, 1.64]; [0.50, 0.76, 1.98]; [0.48, 0.81, 1.37]; [0.33, 0.77, 1.82]; [0.34, 0.56, 1.17]; [0.41, 0.77, 1.36]; [0.26, 0.57, 1.14] — растут экспоненциально с jitter (ожидаемые интервалы [0.25–0.5], [0.5–1.0], [1.0–2.0] плюс время поллинга). Итог — `FAILED` с причиной: `step draft#0.0 failed after 4 attempts (max_attempts=4); last error: TransientError: simulated transient LLM error (503) on draft#0.0`.
 
 ### Part 1 на Linux: тот же эксперимент в Docker-контейнере (настоящий SIGKILL)
 
-Окружение: Linux-6.18.58.1-microsoft-standard-WSL2-x86_64-with-glibc2.41, Python 3.13.18 (образ из `Dockerfile`, Docker Desktop на этой же машине, ядро WSL2). Код и параметры те же (`python -m experiments.exp_recovery --reps 5`), но `Popen.kill()` здесь посылает POSIX SIGKILL. Сырые данные — отдельно, в `results/raw_linux/`; с Windows-прогоном выше не смешиваются. Команда: `.\scripts\run_linux.ps1 -Parts recovery`.
+Окружение: Linux-6.18.58.1-microsoft-standard-WSL2-x86_64-with-glibc2.41, Python 3.13.18 (образ из `Dockerfile`, Docker Desktop на этой же машине, ядро WSL2). Код и параметры те же (`python -m experiments.exp_recovery --reps 10`), но `Popen.kill()` здесь посылает POSIX SIGKILL. Сырые данные — отдельно, в `results/raw_linux/`; с Windows-прогоном выше не смешиваются. Команда: `.\scripts\run_linux.ps1 -Parts recovery`.
 
 | сценарий | N | итог | время job p50 [min–max], с | воркер готов → возобновление p50, с | повторных LLM | перевыполнено шагов с чекпоинтом | publish физ. / лог. | дублей лог. публикаций |
 |---|---|---|---|---|---|---|---|---|
-| без отказов (baseline) | 5 | SUCCEEDED: 5 | 2.76 [2.76–2.77] | – | 0 | 0 | 5 / 5 | 0 |
-| 1. kill между шагами (после extract) | 5 | SUCCEEDED: 5 | 3.43 [3.43–3.46] | 0.000 | 0 | 0 | 5 / 5 | 0 |
-| 2a. kill во время LLM, другой воркер ждёт lease | 5 | SUCCEEDED: 5 | 5.13 [5.12–5.13] | 1.607 | 5 | 0 | 5 / 5 | 0 |
-| 2b. kill во время LLM, рестарт того же воркера | 5 | SUCCEEDED: 5 | 3.52 [3.51–3.54] | 0.000 | 5 | 0 | 5 / 5 | 0 |
-| 3a. крэш после publish (ack не сохранён) | 5 | SUCCEEDED: 5 | 3.36 [3.35–3.40] | 0.000 | 0 | 0 | 10 / 5 | 0 |
-| 3b. ack потерян в сети (503 после коммита) | 5 | SUCCEEDED: 5 | 3.20 [3.14–3.33] | – | 0 | 0 | 10 / 5 | 0 |
-| 4. повторяющаяся transient-ошибка | 5 | FAILED: 5 | 7.25 [6.80–7.72] | – | 15 | 0 | 0 / 0 | 0 |
+| без отказов (baseline) | 10 | SUCCEEDED: 10 | 2.78 [2.77–2.83] | – | 0 | 0 | 10 / 10 | 0 |
+| 1. kill между шагами (после extract) | 10 | SUCCEEDED: 10 | 3.72 [3.65–3.80] | 0.000 | 0 | 0 | 10 / 10 | 0 |
+| 2a. kill во время LLM, другой воркер ждёт lease | 10 | SUCCEEDED: 10 | 5.12 [5.06–5.23] | 1.308 | 10 | 0 | 10 / 10 | 0 |
+| 2b. kill во время LLM, рестарт того же воркера | 10 | SUCCEEDED: 10 | 3.86 [3.80–3.89] | 0.000 | 10 | 0 | 10 / 10 | 0 |
+| 3a. крэш после publish (ack не сохранён) | 10 | SUCCEEDED: 10 | 3.74 [3.72–3.78] | 0.000 | 0 | 0 | 20 / 10 | 0 |
+| 3b. ack потерян в сети (503 после коммита) | 10 | SUCCEEDED: 10 | 3.33 [3.18–3.40] | – | 0 | 0 | 20 / 10 | 0 |
+| 4. повторяющаяся transient-ошибка | 10 | FAILED: 10 | 7.23 [6.49–7.78] | – | 30 | 0 | 0 / 0 | 0 |
 
-Гарантии воспроизвелись и под SIGKILL: шаги с чекпоинтом не перевыполняются, прерванный LLM-вызов повторяется ровно один раз, повторная публикация не создаёт дубля, transient-ошибка исчерпывает 4 попытки и даёт `FAILED`. Абсолютные времена отличаются от Windows (другой запуск процесса, файловая система тома). В 2a «готов → возобновление» — это остаток lease (2.0 с от последнего heartbeat), который новый воркер ещё ждёт после своей готовности: на Linux процесс готов быстрее (старт → готов p50 0.46 с против 1.17 с на Windows), поэтому ждать остаётся дольше (1.61 против 0.83 с), а время от старта процесса до возобновления близко (2.06 против 2.00 с).
+Гарантии воспроизвелись и под SIGKILL: шаги с чекпоинтом не перевыполняются, прерванный LLM-вызов повторяется ровно один раз, повторная публикация не создаёт дубля, transient-ошибка исчерпывает 4 попытки и даёт `FAILED`. Абсолютные времена отличаются от Windows (другой запуск процесса, файловая система тома). В 2a «готов → возобновление» — это остаток lease (2.0 с от последнего heartbeat), который новый воркер ещё ждёт после своей готовности: на Linux процесс готов быстрее (старт → готов p50 0.74 с против 1.73 с на Windows), поэтому ждать остаётся дольше (1.31 против 0.41 с), а время от старта процесса до возобновления близко (2.02 против 2.09 с).
 
 ## 4. Part 2 — событийный жизненный цикл (Simulated)
 
@@ -171,9 +179,9 @@ tests/test_timers_and_slots.py::test_waiting_job_does_not_occupy_execution_slot 
 
 | метрика | N | p50, мс | p95, мс | max, мс |
 |---|---|---|---|---|
-| event_to_transition_ms | 100 | 0.12 | 14.59 | 57.80 |
-| client_roundtrip_ms | 100 | 0.66 | 15.14 | 58.41 |
-| event_to_next_step_start_ms | 100 | 11.83 | 43.28 | 114.78 |
+| event_to_transition_ms | 100 | 0.16 | 32.01 | 45.89 |
+| client_roundtrip_ms | 100 | 0.90 | 32.53 | 46.74 |
+| event_to_next_step_start_ms | 100 | 12.82 | 48.50 | 90.18 |
 
 «event → state transition» — от приёма события до коммита перехода `WAITING_EVENT → QUEUED` (inbox и переход в одной транзакции). «event → next step started» дополнительно включает ожидание цикла планировщика (поллинг `poll_interval_s = 3 мс`, межпроцессного уведомления нет). Медиана — доли миллисекунды, а хвост (p95/max) — по всей видимости ожидание блокировки записи: если в этот момент транзакцию держит воркер, `BEGIN IMMEDIATE` отправителя попадает в busy-handler SQLite, который ждёт ступенями (1, 2, 5, 10, 15, 20, 25… мс). Это плата за single-writer хранилище.
 
@@ -181,7 +189,7 @@ tests/test_timers_and_slots.py::test_waiting_job_does_not_occupy_execution_slot 
 
 ### E2. Approval не пришёл → TIMED_OUT
 
-40 job с дедлайном 0.5 с: итог TIMED_OUT: 40. Запаздывание перехода относительно дедлайна: p50 = 4.147 мс, p95 = 8.301 мс, max = 8.886 мс (N = 40). Шагов, исполнявшихся во время ожидания: 0.
+40 job с дедлайном 0.5 с: итог TIMED_OUT: 40. Запаздывание перехода относительно дедлайна: p50 = 4.074 мс, p95 = 13.33 мс, max = 14.136 мс (N = 40). Шагов, исполнявшихся во время ожидания: 0.
 
 ### E3. Дубли события
 
@@ -198,12 +206,12 @@ tests/test_timers_and_slots.py::test_waiting_job_does_not_occupy_execution_slot 
 | итоговое состояние | N |
 |---|---|
 | CANCELLED | 128 |
-| SUCCEEDED | 84 |
-| TIMED_OUT | 88 |
+| SUCCEEDED | 83 |
+| TIMED_OUT | 89 |
 
-Откуда пришли в терминал: QUEUED->CANCELLED: 20, QUEUED->TIMED_OUT: 11, RUNNING->CANCELLED: 72, RUNNING->SUCCEEDED: 84, RUNNING->TIMED_OUT: 50, WAITING_EVENT->CANCELLED: 36, WAITING_EVENT->TIMED_OUT: 27. Исходы approval: applied: 237, deadline_won: 15, ignored_terminal: 48. Исходы cancel: already_terminal: 172, cancelled: 128. Счётчики рантайма: cancel_after_terminal: 172, events_late: 48, late_results_discarded: 49.
+Откуда пришли в терминал: QUEUED->CANCELLED: 8, QUEUED->TIMED_OUT: 14, RUNNING->CANCELLED: 82, RUNNING->SUCCEEDED: 83, RUNNING->TIMED_OUT: 46, WAITING_EVENT->CANCELLED: 38, WAITING_EVENT->TIMED_OUT: 29. Исходы approval: applied: 233, deadline_won: 12, ignored_terminal: 55. Исходы cancel: already_terminal: 172, cancelled: 128. Счётчики рантайма: cancel_after_terminal: 172, events_late: 55, late_results_discarded: 55.
 
-Инварианты: job с ≠1 терминальным переходом — 0; публикаций, принадлежащих не-SUCCEEDED job и не отозванных — 0; SUCCEEDED без живой публикации — 0; публикаций, отозванных компенсацией — 46; попыток недопустимого перехода, отклонённых триггером — 0.
+Инварианты: job с ≠1 терминальным переходом — 0; публикаций, принадлежащих не-SUCCEEDED job и не отозванных — 0; SUCCEEDED без живой публикации — 0; публикаций, отозванных компенсацией — 64; попыток недопустимого перехода, отклонённых триггером — 0.
 
 ![races](results/figures/events_race_outcomes.png)
 
@@ -219,33 +227,33 @@ tests/test_timers_and_slots.py::test_waiting_job_does_not_occupy_execution_slot 
 | approval применён, хотя отправлен после дедлайна | 0 |
 | больше одного терминального перехода | 0 |
 
-Всего нарушений: 0. Отдельно: 37 job получили CANCELLED позже дедлайна (до 56.51 мс) — это допустимо по правилу: cancel не проверяет дедлайн и побеждает, если закоммичен раньше, чем таймер дедлайна (поллинг) успел перевести job в TIMED_OUT; первая закоммиченная терминальная транзакция выигрывает.
+Всего нарушений: 0. Отдельно: 31 job получили CANCELLED позже дедлайна (до 45.84 мс) — это допустимо по правилу: cancel не проверяет дедлайн и побеждает, если закоммичен раньше, чем таймер дедлайна (поллинг) успел перевести job в TIMED_OUT; первая закоммиченная терминальная транзакция выигрывает.
 
 Картина соответствует правилу: cancel, закоммиченный раньше дедлайна и раньше завершения `publish`, даёт CANCELLED; если approval пришёл достаточно рано, шаги успевают закоммитить SUCCEEDED, и более поздние cancel получают `already_terminal`; если к моменту approval или коммита шага дедлайн уже прошёл, побеждает TIMED_OUT (`deadline_won`, `aborted_deadline`, `late_results_discarded`).
 
 **Воспроизводимость E5.** Seed фиксирует только *плановые* моменты отправки; фактический порядок коммитов зависит от планирования потоков ОС и ожидания блокировки записи, поэтому распределение итоговых состояний (CANCELLED / SUCCEEDED / TIMED_OUT) от запуска к запуску заметно меняется (наблюдалось при контрольных перезапусках; их сырые данные в репозиторий не входят). Воспроизводимым результатом E5 являются инварианты (0 нарушений во всех прогонах) и соответствие каждого исхода правилу гонок, а не доли исходов.
 
-**Исправление стенда E5 (найдено при прогоне на Linux).** В первой версии каждый из 20 потоков-отправителей сам опрашивал БД каждые 3 мс в том же процессе, что и воркер. На Windows это почти не влияло, а в Linux-контейнере из-за конкуренции за GIL воркер вытеснялся, job не успевали дойти до ожидания за 0.6 с, и все 300 повторов заканчивались TIMED_OUT — гонки не было (сырые данные того прогона перезаписаны исправленным; эффект воспроизводится диагностикой ниже). Диагностика `experiments/diag_e5_polling.py` (10 job, p50 пути «создание → `WAITING_EVENT`»): Linux — 5.04 с с 20 опрашивающими потоками против 0.09 с без них; Windows — 0.17 против 0.16 с (`results/raw_linux/diag_e5_polling.json`, `results/raw/diag_e5_polling.json`). Сейчас состояние опрашивает один поток-монитор, отправители ждут его сигнала; весь Part 2 перезапущен этим кодом на обеих ОС — данные выше и в блоке «на Linux» уже с исправленным стендом. Рантайм не менялся: это свойство стенда, где воркер и отправители живут в одном процессе.
+**Исправление стенда E5 (найдено при прогоне на Linux).** В первой версии каждый из 20 потоков-отправителей сам опрашивал БД каждые 3 мс в том же процессе, что и воркер. На Windows это почти не влияло, а в Linux-контейнере из-за конкуренции за GIL воркер вытеснялся, job не успевали дойти до ожидания за 0.6 с, и все 300 повторов заканчивались TIMED_OUT — гонки не было (сырые данные того прогона перезаписаны исправленным; эффект воспроизводится диагностикой ниже). Диагностика `experiments/diag_e5_polling.py` (10 job, p50 пути «создание → `WAITING_EVENT`»): Linux — 7.21 с с 20 опрашивающими потоками против 0.14 с без них; Windows — 0.23 против 0.19 с (`results/raw_linux/diag_e5_polling.json`, `results/raw/diag_e5_polling.json`). Сейчас состояние опрашивает один поток-монитор, отправители ждут его сигнала; весь Part 2 перезапущен этим кодом на обеих ОС — данные выше и в блоке «на Linux» уже с исправленным стендом. Рантайм не менялся: это свойство стенда, где воркер и отправители живут в одном процессе.
 
 ### E6. Рестарт воркера во время ожидания
 
 | вариант | повтор | итог | открытых step_runs в ожидании | состояние пока воркер мёртв | исход события | готов → первый шаг, мс | готов → терминал, мс | опоздание таймаута, мс |
 |---|---|---|---|---|---|---|---|---|
-| approval_while_down | 0 | SUCCEEDED | 0 | QUEUED | applied | 0.36 | 59.79 | – |
-| deadline_while_down | 0 | TIMED_OUT | 0 | WAITING_EVENT | – | – | -0.78 | 1107.63 |
-| approval_after_restart | 0 | SUCCEEDED | 0 | WAITING_EVENT | applied | 37.36 | 85.10 | – |
-| approval_while_down | 1 | SUCCEEDED | 0 | QUEUED | applied | 0.39 | 58.19 | – |
-| deadline_while_down | 1 | TIMED_OUT | 0 | WAITING_EVENT | – | – | -1.40 | 1102.90 |
-| approval_after_restart | 1 | SUCCEEDED | 0 | WAITING_EVENT | applied | 22.64 | 75.47 | – |
-| approval_while_down | 2 | SUCCEEDED | 0 | QUEUED | applied | 0.45 | 52.96 | – |
-| deadline_while_down | 2 | TIMED_OUT | 0 | WAITING_EVENT | – | – | -0.79 | 1109.12 |
-| approval_after_restart | 2 | SUCCEEDED | 0 | WAITING_EVENT | applied | 9.66 | 58.98 | – |
-| approval_while_down | 3 | SUCCEEDED | 0 | QUEUED | applied | 0.37 | 64.41 | – |
-| deadline_while_down | 3 | TIMED_OUT | 0 | WAITING_EVENT | – | – | -1.68 | 1129.73 |
-| approval_after_restart | 3 | SUCCEEDED | 0 | WAITING_EVENT | applied | 15.18 | 63.06 | – |
-| approval_while_down | 4 | SUCCEEDED | 0 | QUEUED | applied | 0.50 | 50.95 | – |
-| deadline_while_down | 4 | TIMED_OUT | 0 | WAITING_EVENT | – | – | -0.95 | 1099.05 |
-| approval_after_restart | 4 | SUCCEEDED | 0 | WAITING_EVENT | applied | 5.48 | 56.83 | – |
+| approval_while_down | 0 | SUCCEEDED | 0 | QUEUED | applied | 0.49 | 66.53 | – |
+| deadline_while_down | 0 | TIMED_OUT | 0 | WAITING_EVENT | – | – | -1.49 | 1217.56 |
+| approval_after_restart | 0 | SUCCEEDED | 0 | WAITING_EVENT | applied | 7.82 | 66.06 | – |
+| approval_while_down | 1 | SUCCEEDED | 0 | QUEUED | applied | 0.49 | 52.69 | – |
+| deadline_while_down | 1 | TIMED_OUT | 0 | WAITING_EVENT | – | – | -1.22 | 1218.91 |
+| approval_after_restart | 1 | SUCCEEDED | 0 | WAITING_EVENT | applied | 7.66 | 64.49 | – |
+| approval_while_down | 2 | SUCCEEDED | 0 | QUEUED | applied | 0.60 | 58.76 | – |
+| deadline_while_down | 2 | TIMED_OUT | 0 | WAITING_EVENT | – | – | -1.31 | 1210.25 |
+| approval_after_restart | 2 | SUCCEEDED | 0 | WAITING_EVENT | applied | 8.34 | 59.58 | – |
+| approval_while_down | 3 | SUCCEEDED | 0 | QUEUED | applied | 0.53 | 58.02 | – |
+| deadline_while_down | 3 | TIMED_OUT | 0 | WAITING_EVENT | – | – | -1.26 | 1182.62 |
+| approval_after_restart | 3 | SUCCEEDED | 0 | WAITING_EVENT | applied | 21.54 | 71.75 | – |
+| approval_while_down | 4 | SUCCEEDED | 0 | QUEUED | applied | 0.58 | 62.02 | – |
+| deadline_while_down | 4 | TIMED_OUT | 0 | WAITING_EVENT | – | – | -1.35 | 1209.58 |
+| approval_after_restart | 4 | SUCCEEDED | 0 | WAITING_EVENT | applied | 13.94 | 63.50 | – |
 
 Ожидание не держит слот (0 открытых `step_runs`), событие принимается и применяется даже когда воркер мёртв (inbox в БД), а дедлайн, истёкший во время простоя, срабатывает при старте нового воркера (таймер хранится в БД). Для `deadline_while_down` «опоздание таймаута» ≈ длительность простоя — таймер не может сработать, пока нет ни одного живого воркера; отрицательное «готов → терминал» означает, что просроченный таймер сработал в процедуре старта воркера ещё до отметки готовности.
 
@@ -254,7 +262,7 @@ tests/test_timers_and_slots.py::test_waiting_job_does_not_occupy_execution_slot 
 | отмена в состоянии | N | p50, мс | p95, мс | max, мс (QUEUED/WAITING: 0 по определению) |
 |---|---|---|---|---|
 | QUEUED | 15 | 0.00 | 0.00 | 0.00 |
-| RUNNING | 15 | 63.48 | 93.38 | 100.83 |
+| RUNNING | 15 | 70.28 | 101.60 | 107.27 |
 | WAITING_EVENT | 15 | 0.00 | 0.00 | 0.00 |
 
 Исходы LLM-вызовов в E7: cancelled: 15, ok: 15. В `RUNNING` остановка ограничена интервалом heartbeat (0.1 с в E7): шаг узнаёт об отмене на следующем heartbeat и прерывает LLM-вызов; в `QUEUED` и `WAITING_EVENT` исполняемой работы нет — остановка мгновенная (коммит перехода).
@@ -267,7 +275,7 @@ tests/test_timers_and_slots.py::test_waiting_job_does_not_occupy_execution_slot 
 | E2 | 400 | 0 | 0 | 0 | 0 | 0 |
 | E3 | 700 | 0 | 0 | 0 | 0 | 0 |
 | E4 | 400 | 0 | 0 | 0 | 0 | 0 |
-| E5 | 3749 | 0 | 0 | 0 | 0 | 0 |
+| E5 | 3778 | 0 | 0 | 0 | 0 | 0 |
 | E7 | 285 | 0 | 0 | 0 | 0 | 0 |
 
 ### Part 2 на Linux (Docker-контейнер)
@@ -276,20 +284,20 @@ tests/test_timers_and_slots.py::test_waiting_job_does_not_occupy_execution_slot 
 
 | эксперимент | результат на Linux |
 |---|---|
-| E1 approval вовремя | SUCCEEDED: 100; event → transition p50 0.119 / p95 3.75 мс (N = 100) |
-| E2 approval не пришёл | TIMED_OUT: 40; опоздание таймаута p50 3.025 / p95 4.716 мс (N = 40); шагов во время ожидания: 0 |
+| E1 approval вовремя | SUCCEEDED: 100; event → transition p50 0.43 / p95 8.981 мс (N = 100) |
+| E2 approval не пришёл | TIMED_OUT: 40; опоздание таймаута p50 3.54 / p95 6.789 мс (N = 40); шагов во время ожидания: 0 |
 | E3 дубли события | отправлено 250, применено 50, дублей 200; job с >1 переходом: 0 |
 | E4 approval после терминала | 40 поздних: ignored_terminal: 40; изменений состояния: 0 |
-| E5 гонки | CANCELLED: 61, SUCCEEDED: 185, TIMED_OUT: 54; job с ≠1 терминальным переходом: 0; неотозванных публикаций не-SUCCEEDED job: 0; нарушений правила гонок по каждой job: 0; CANCELLED позже дедлайна (допустимо): 3 |
+| E5 гонки | CANCELLED: 63, SUCCEEDED: 175, TIMED_OUT: 62; job с ≠1 терминальным переходом: 0; неотозванных публикаций не-SUCCEEDED job: 0; нарушений правила гонок по каждой job: 0; CANCELLED позже дедлайна (допустимо): 4 |
 | E6 рестарт во время ожидания | 15 из 15 прогонов с ожидаемым итогом и 0 открытых step_runs |
-| E7 остановка после cancel в RUNNING | p50 53.29 / p95 73.566 мс (N = 15) |
-| инварианты E1–E5, E7 | проверено переходов 7088, нарушений 0 |
+| E7 остановка после cancel в RUNNING | p50 55.16 / p95 76.224 мс (N = 15) |
+| инварианты E1–E5, E7 | проверено переходов 7072, нарушений 0 |
 
 Поведение совпадает с Windows по всем проверкам (итоги E1–E4, E6, нулевые нарушения инвариантов). Латентности и доли исходов E5 различаются — они зависят от планировщика ОС и файловой системы тома (см. «Воспроизводимость E5»).
 
 ## 5. Part 3 — backpressure и честное планирование (Simulated)
 
-**Нагрузка.** 3 пользователя (`heavy` шлёт сильно больше остальных), 2 класса: short ≈ 1.00 c и long ≈ 9.50 c номинальной работы (long = 30% заявок; long разбит на шаги ≤ 1.5 с), 10% заявок с priority = 1. Фазы (заявок в вирт. секунду): P1_below [0–150 с): heavy 0.5/с, light1 0.2/с, light2 0.2/с; P2_burst [150–240 с): heavy 3.0/с, light1 0.2/с, light2 0.2/с; P3_recovery [240–480 с): heavy 0.3/с, light1 0.2/с, light2 0.2/с. Пуассоновские прибытия, трасса генерируется из seed и сохраняется (`results/raw/load_arrivals_seed*.csv`) — **один и тот же поток заявок для всех политик**. Ресурсы одинаковые: `global_concurrency = 6` (номинальная ёмкость ≈ 1.69 job/с), `max_queue_size = 150` (admitted QUEUED+RUNNING), дедлайны short 60 с / long 200 с. **Масштаб времени: 1 вирт. с = 0.1 реальной с** (все времена ниже — виртуальные секунды). Seeds [11, 12, 13], по одному прогону каждой политики на seed.
+**Нагрузка.** 3 пользователя (`heavy` шлёт сильно больше остальных), 2 класса: short ≈ 1.00 c и long ≈ 9.50 c номинальной работы (long = 30% заявок; long разбит на шаги ≤ 1.5 с), 10% заявок с priority = 1. Фазы (заявок в вирт. секунду): P1_below [0–150 с): heavy 0.5/с, light1 0.2/с, light2 0.2/с; P2_burst [150–240 с): heavy 3.0/с, light1 0.2/с, light2 0.2/с; P3_recovery [240–480 с): heavy 0.3/с, light1 0.2/с, light2 0.2/с. Пуассоновские прибытия, трасса генерируется из seed и сохраняется (`results/raw/load_arrivals_seed*.csv`) — **один и тот же поток заявок для всех политик**. Ресурсы одинаковые: `global_concurrency = 6` (номинальная ёмкость ≈ 1.69 job/с), `max_queue_size = 150` (admitted QUEUED+RUNNING), дедлайны short 60 с / long 200 с. **Масштаб времени: 1 вирт. с = 0.1 реальной с** (все времена ниже — виртуальные секунды). Seeds [11, 12, 13, 14, 15], по одному прогону каждой политики на seed.
 
 Политики:
 * `fifo` — общая очередь по `ready_at`, без лимита на tenant (`per_tenant_concurrency = global`);
@@ -300,65 +308,65 @@ tests/test_timers_and_slots.py::test_waiting_job_does_not_occupy_execution_slot 
 
 | политика | user | class | N | p50 ожидания, с | p95 ожидания, с | p95 по seed (min–max) | max, с | истекло (TIMED_OUT) | e2e p50 успешных, с |
 |---|---|---|---|---|---|---|---|---|---|
-| fifo | heavy | short | 713 | 43.14 | 59.13 | 59.09–59.16 | 59.28 | 307 | 1.46 |
-| fifo | heavy | long | 341 | 71.54 | 115.45 | 94.66–117.14 | 118.85 | 0 | 81.36 |
-| fifo | light1 | short | 191 | 0.11 | 59.08 | 59.04–59.10 | 59.14 | 30 | 1.21 |
-| fifo | light1 | long | 74 | 0.65 | 110.56 | 88.63–114.30 | 117.98 | 0 | 10.36 |
-| fifo | light2 | short | 208 | 0.11 | 59.08 | 59.03–59.10 | 59.16 | 26 | 1.23 |
-| fifo | light2 | long | 72 | 0.98 | 112.63 | 73.52–116.55 | 117.22 | 0 | 10.85 |
-| drr | heavy | short | 754 | 58.97 | 59.67 | 59.17–59.67 | 59.70 | 395 | 1.29 |
-| drr | heavy | long | 358 | 86.87 | 155.21 | 125.09–157.87 | 159.78 | 0 | 96.41 |
-| drr | light1 | short | 189 | 0.12 | 1.21 | 1.04–1.44 | 2.85 | 0 | 1.29 |
-| drr | light1 | long | 74 | 0.93 | 2.47 | 2.20–3.73 | 3.95 | 0 | 10.69 |
-| drr | light2 | short | 208 | 0.11 | 1.62 | 1.03–3.27 | 4.08 | 0 | 1.31 |
-| drr | light2 | long | 76 | 0.94 | 4.14 | 1.73–5.48 | 5.72 | 0 | 10.59 |
-| drr_iso | heavy | short | 622 | 59.07 | 59.68 | 59.68–59.68 | 59.77 | 358 | 1.44 |
-| drr_iso | heavy | long | 306 | 107.91 | 188.02 | 162.93–190.69 | 191.11 | 11 | 111.60 |
-| drr_iso | light1 | short | 200 | 0.03 | 1.15 | 0.30–2.05 | 4.12 | 0 | 1.20 |
-| drr_iso | light1 | long | 76 | 0.14 | 1.82 | 0.66–2.52 | 3.89 | 0 | 10.00 |
-| drr_iso | light2 | short | 218 | 0.03 | 0.88 | 0.38–2.35 | 5.72 | 0 | 1.20 |
-| drr_iso | light2 | long | 78 | 0.07 | 2.97 | 0.81–4.70 | 4.99 | 0 | 9.90 |
+| fifo | heavy | short | 1172 | 42.41 | 59.12 | 59.10–59.15 | 59.49 | 502 | 1.64 |
+| fifo | heavy | long | 537 | 74.84 | 117.01 | 97.33–118.50 | 119.37 | 0 | 84.82 |
+| fifo | light1 | short | 339 | 0.12 | 59.08 | 59.03–59.10 | 59.15 | 46 | 1.38 |
+| fifo | light1 | long | 128 | 0.41 | 110.94 | 94.65–114.84 | 117.88 | 0 | 10.30 |
+| fifo | light2 | short | 315 | 0.15 | 59.05 | 59.00–59.09 | 59.12 | 51 | 1.38 |
+| fifo | light2 | long | 140 | 2.11 | 111.29 | 74.98–115.42 | 117.54 | 0 | 11.96 |
+| drr | heavy | short | 1241 | 58.92 | 59.66 | 59.17–59.67 | 59.81 | 657 | 1.47 |
+| drr | heavy | long | 567 | 98.29 | 161.93 | 127.65–166.71 | 168.82 | 0 | 107.93 |
+| drr | light1 | short | 349 | 0.14 | 1.24 | 0.84–1.71 | 4.61 | 0 | 1.44 |
+| drr | light1 | long | 130 | 0.79 | 3.79 | 2.56–4.56 | 4.91 | 0 | 10.63 |
+| drr | light2 | short | 317 | 0.13 | 1.47 | 0.93–2.56 | 5.72 | 0 | 1.46 |
+| drr | light2 | long | 138 | 0.95 | 4.20 | 2.00–6.32 | 6.72 | 0 | 10.86 |
+| drr_iso | heavy | short | 1027 | 59.05 | 59.67 | 59.66–59.68 | 60.07 | 573 | 1.72 |
+| drr_iso | heavy | long | 483 | 117.09 | 190.62 | 152.99–190.88 | 191.11 | 38 | 115.63 |
+| drr_iso | light1 | short | 362 | 0.04 | 0.98 | 0.39–2.56 | 4.87 | 0 | 1.33 |
+| drr_iso | light1 | long | 132 | 0.15 | 2.49 | 0.85–3.66 | 4.70 | 0 | 10.20 |
+| drr_iso | light2 | short | 332 | 0.04 | 1.01 | 0.65–2.61 | 7.42 | 0 | 1.32 |
+| drr_iso | light2 | long | 147 | 0.09 | 3.13 | 0.71–5.92 | 6.42 | 0 | 10.15 |
 
 ![p95](results/figures/load_wait_p95.png)
 
-### Ожидание по приоритету (aging и защита от голодания; все 3 seed)
+### Ожидание по приоритету (aging и защита от голодания; все 5 seed)
 
 | политика | пользователи | priority | N | p50 ожидания, с | p95 ожидания, с | max, с | SUCCEEDED | TIMED_OUT |
 |---|---|---|---|---|---|---|---|---|
-| fifo | heavy | 0 | 963 | 47.25 | 107.90 | 118.85 | 683 | 280 |
-| fifo | heavy | 1 | 91 | 49.00 | 111.35 | 118.22 | 64 | 27 |
-| fifo | light1+light2 | 0 | 509 | 0.35 | 73.02 | 117.98 | 456 | 53 |
-| fifo | light1+light2 | 1 | 36 | 0.04 | 70.51 | 117.22 | 33 | 3 |
-| drr | heavy | 0 | 1015 | 59.06 | 143.43 | 159.78 | 625 | 390 |
-| drr | heavy | 1 | 97 | 0.68 | 70.67 | 91.46 | 92 | 5 |
-| drr | light1+light2 | 0 | 512 | 0.24 | 2.28 | 5.72 | 512 | 0 |
-| drr | light1+light2 | 1 | 35 | 0.12 | 1.72 | 2.25 | 35 | 0 |
-| drr_iso | heavy | 0 | 849 | 59.12 | 181.25 | 191.11 | 495 | 354 |
-| drr_iso | heavy | 1 | 79 | 0.81 | 107.21 | 119.68 | 64 | 15 |
-| drr_iso | light1+light2 | 0 | 533 | 0.03 | 1.74 | 5.72 | 533 | 0 |
-| drr_iso | light1+light2 | 1 | 39 | 0.03 | 0.24 | 0.38 | 39 | 0 |
+| fifo | heavy | 0 | 1557 | 49.26 | 110.99 | 119.37 | 1103 | 454 |
+| fifo | heavy | 1 | 152 | 49.40 | 113.75 | 118.14 | 104 | 48 |
+| fifo | light1+light2 | 0 | 856 | 0.34 | 86.68 | 117.88 | 767 | 89 |
+| fifo | light1+light2 | 1 | 66 | 0.07 | 62.73 | 117.54 | 58 | 8 |
+| drr | heavy | 0 | 1644 | 59.04 | 147.16 | 168.82 | 999 | 645 |
+| drr | heavy | 1 | 164 | 1.72 | 73.44 | 105.86 | 152 | 12 |
+| drr | light1+light2 | 0 | 868 | 0.25 | 2.77 | 6.72 | 868 | 0 |
+| drr | light1+light2 | 1 | 66 | 0.08 | 1.64 | 2.04 | 66 | 0 |
+| drr_iso | heavy | 0 | 1378 | 59.11 | 183.65 | 191.11 | 789 | 589 |
+| drr_iso | heavy | 1 | 132 | 1.41 | 110.19 | 128.03 | 110 | 22 |
+| drr_iso | light1+light2 | 0 | 902 | 0.05 | 2.09 | 7.42 | 902 | 0 |
+| drr_iso | light1+light2 | 1 | 71 | 0.04 | 0.73 | 1.09 | 71 | 0 |
 
-В `fifo` приоритет не учитывается: у `heavy` p50 ожидания priority 0 и 1 почти одинаковы (47.25 и 49.00 с). В `drr` priority = 1 внутри tenant обслуживается первым (p50 0.68 с против 59.06 с у priority 0), но задачи priority 0 не вытесняются бесконечно: aging (+1 к эффективному приоритету за 10 с ожидания) возвращает их в оборот — 625 из 1015 завершились успешно. Остальные (390) истекли по дедлайну: при длительной перегрузке «защита от голодания» не создаёт ёмкость, и дедлайн снимает в первую очередь давно ждущую низкоприоритетную работу перегружающего tenant. У лёгких пользователей приоритет почти не влияет — их спрос ниже доли. Для priority = 1 наблюдений мало (10 % заявок), см. столбец N.
+В `fifo` приоритет не учитывается: у `heavy` p50 ожидания priority 0 и 1 почти одинаковы (49.26 и 49.40 с). В `drr` priority = 1 внутри tenant обслуживается первым (p50 1.72 с против 59.04 с у priority 0), но задачи priority 0 не вытесняются бесконечно: aging (+1 к эффективному приоритету за 10 с ожидания) возвращает их в оборот — 999 из 1644 завершились успешно. Остальные (645) истекли по дедлайну: при длительной перегрузке «защита от голодания» не создаёт ёмкость, и дедлайн снимает в первую очередь давно ждущую низкоприоритетную работу перегружающего tenant. У лёгких пользователей приоритет почти не влияет — их спрос ниже доли. Для priority = 1 наблюдений мало (10 % заявок), см. столбец N.
 
-### Сводка по политикам (сумма/максимум по 3 прогонам)
+### Сводка по политикам (сумма/максимум по 5 прогонам на политику)
 
 | политика | прогонов | заявок | принято | отклонено (по user) | SUCCEEDED | TIMED_OUT (по user) | jobs/s (весь прогон) | jobs/s в burst | загрузка слотов в burst | доля слот-времени на job, которые потом истекли | max суммарное ожидание job, с | max возраст старейшей job в очереди (от создания), с | max ожидание старейшего готового шага (от готовности), с | max длина очереди | max одновременно global / лимит | max на tenant / лимит |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| fifo | 3 | 1811 | 1599 | 212 (heavy: 185, light1: 11, light2: 16) | 1236 | 363 (heavy: 307, light1: 30, light2: 26) | 0.853 | 0.667 | 98.4% | 5.9% | 118.85 | 128.16 | 16.54 | 145 | 6 / 6 | 6 / 6 |
-| drr | 3 | 1811 | 1659 | 152 (heavy: 127, light1: 13, light2: 12) | 1264 | 395 (heavy: 395) | 0.872 | 0.730 | 98.4% | 5.2% | 159.78 | 168.84 | 31.63 | 144 | 6 / 6 | 6 / 6 |
-| drr_iso | 3 | 1811 | 1500 | 311 (heavy: 311) | 1131 | 369 (heavy: 369) | 0.780 | 0.570 | 74.2% | 5.9% | 191.11 | 200.00 | 30.58 | 99 | 6 / 6 | 3 / 3 |
+| fifo | 5 | 2994 | 2631 | 363 (heavy: 312, light1: 27, light2: 24) | 2032 | 599 (heavy: 502, light1: 46, light2: 51) | 0.839 | 0.704 | 98.3% | 6.0% | 119.37 | 128.48 | 16.53 | 146 | 6 / 6 | 6 / 6 |
+| drr | 5 | 2994 | 2742 | 252 (heavy: 213, light1: 15, light2: 24) | 2085 | 657 (heavy: 657) | 0.861 | 0.793 | 98.2% | 5.3% | 168.82 | 178.23 | 32.81 | 146 | 6 / 6 | 6 / 6 |
+| drr_iso | 5 | 2994 | 2483 | 511 (heavy: 511) | 1872 | 611 (heavy: 611) | 0.773 | 0.656 | 77.5% | 7.8% | 191.11 | 200.00 | 32.27 | 99 | 6 / 6 | 3 / 3 |
 
-Масштабирование времени добавляет накладные расходы: медиана (фактическая − номинальная длительность шага) = 0.023 вирт. с, p95 = 0.123 вирт. с (транзакции SQLite и цикл asyncio в реальном времени не масштабируются).
+Масштабирование времени добавляет накладные расходы: медиана (фактическая − номинальная длительность шага) = 0.029 вирт. с, p95 = 0.165 вирт. с (транзакции SQLite и цикл asyncio в реальном времени не масштабируются).
 
 ### Доля выполненной работы во время перегрузки (окно burst 150–240 с, все seed)
 
 |  | heavy | light1 | light2 |
 |---|---|---|---|
-| спрос (номинальная работа заявок) | 88.5% | 5.2% | 6.4% |
+| спрос (номинальная работа заявок) | 87.3% | 5.5% | 7.2% |
 | вес / квота | 33.3% | 33.3% | 33.3% |
-| fifo | 87.7% | 5.8% | 6.5% |
-| drr | 78.6% | 9.3% | 12.1% |
-| drr_iso | 66.4% | 14.7% | 18.9% |
+| fifo | 85.8% | 6.0% | 8.3% |
+| drr | 75.5% | 11.2% | 13.3% |
+| drr_iso | 62.4% | 16.2% | 21.4% |
 
 ![share](results/figures/load_work_share.png)
 
@@ -373,26 +381,37 @@ tests/test_timers_and_slots.py::test_waiting_job_does_not_occupy_execution_slot 
 ### Интерпретация
 
 * **Изоляция.** В FIFO burst пользователя `heavy` заполняет общую очередь, и короткие задачи лёгких пользователей стоят за ней — их p95 ожидания вырастает до десятков секунд и часть их задач истекает или отклоняется. DRR выбирает следующий шаг по кругу между tenant, поэтому лёгкие пользователи, чей спрос ниже их доли (33 %), получают всё, что просят, а перегрузка ложится на виновника:
-  * light1: short p95 59.08 → 1.21 с, long p95 110.56 → 2.47 с (FIFO → DRR);
-  * light2: short p95 59.08 → 1.62 с, long p95 112.63 → 4.14 с (FIFO → DRR);
-  * heavy: short p95 59.13 → 59.67 с, long p95 115.45 → 155.21 с.
-* **Throughput vs latency vs isolation.** `fifo` и `drr` work-conserving: загрузка слотов в burst 98.4% и 98.4%, DRR перераспределяет ожидание (и истечения) в сторону виновника перегрузки; число успешных job у DRR даже немного выше, т.к. короткие задачи лёгких пользователей не истекают. Throughput в job/с при одинаковой загрузке слотов не одинаков: в окне burst у `fifo` завершилось 180 job (из них long — 39), у `drr` — 197 (long — 56). Часть слот-времени уходит на шаги job, которые затем истекают по дедлайну (столбец «доля слот-времени…»: 5.9% у `fifo`, 5.2% у `drr`, 5.9% у `drr_iso`) — это работа, потерянная из-за перегрузки; остальная разница связана с тем, какие job успевают завершиться внутри окна, и отдельно не раскладывалась. `drr_iso` не даёт `heavy` занять больше 3 из 6 слотов даже когда остальные простаивают: загрузка слотов в burst 74.2%, throughput в burst 0.570 против 0.730 job/с у `drr` — плата за гарантированный запас ёмкости и за то, что лёгкие пользователи вообще не получают отказов (все 311 отказов `drr_iso` — у `heavy`). Квота очереди на tenant дополнительно защищает лёгких пользователей от отказов `queue_full`, которые в `fifo`/`drr` вызывает чужой burst (общий `max_queue_size`).
+  * light1: short p95 59.08 → 1.24 с, long p95 110.94 → 3.79 с (FIFO → DRR);
+  * light2: short p95 59.05 → 1.47 с, long p95 111.29 → 4.20 с (FIFO → DRR);
+  * heavy: short p95 59.12 → 59.66 с, long p95 117.01 → 161.93 с.
+* **Throughput vs latency vs isolation.** `fifo` и `drr` work-conserving: загрузка слотов в burst 98.3% и 98.2%, DRR перераспределяет ожидание (и истечения) в сторону виновника перегрузки; число успешных job у DRR даже немного выше, т.к. короткие задачи лёгких пользователей не истекают. Throughput в job/с при одинаковой загрузке слотов не одинаков: в окне burst у `fifo` завершилось 317 job (из них long — 63), у `drr` — 357 (long — 97). Часть слот-времени уходит на шаги job, которые затем истекают по дедлайну (столбец «доля слот-времени…»: 6.0% у `fifo`, 5.3% у `drr`, 7.8% у `drr_iso`) — это работа, потерянная из-за перегрузки; остальная разница связана с тем, какие job успевают завершиться внутри окна, и отдельно не раскладывалась. `drr_iso` не даёт `heavy` занять больше 3 из 6 слотов даже когда остальные простаивают: загрузка слотов в burst 77.5%, throughput в burst 0.656 против 0.793 job/с у `drr` — плата за гарантированный запас ёмкости и за то, что лёгкие пользователи вообще не получают отказов (все 511 отказов `drr_iso` — у `heavy`). Квота очереди на tenant дополнительно защищает лёгких пользователей от отказов `queue_full`, которые в `fifo`/`drr` вызывает чужой burst (общий `max_queue_size`).
 * **Чтение таблиц.** p95 ожидания `heavy` short ≈ 59–60 с во всех политиках — это цензурирование дедлайном 60 с (задачи истекают в очереди, см. TIMED_OUT); «e2e p50 успешных» считается только по выжившим задачам (survivorship), поэтому у `heavy` он мал при большом ожидании. Возраст старейшей job считается от её создания до последнего выхода из очереди (старт последнего шага или истечение в очереди); он ограничен дедлайном (60 с short / 200 с long) и у DRR больше, чем у FIFO: FIFO старит всех одинаково, DRR намеренно держит в очереди именно backlog `heavy`. Отдельный столбец «ожидание старейшего готового шага» (и график ниже) — возраст в очереди от момента готовности очередного шага; он сбрасывается после каждого шага, поэтому меньше.
-* **Длительная перегрузка.** Admission control ограничивает очередь (429/REJECTED с причиной), дедлайны снимают job, которые не успеют, поэтому очередь и возраст старейшей job ограничены сверху, а не растут бесконечно; после окончания burst очередь рассасывается (фаза P3). Цена: почти все истёкшие job истекли в состоянии QUEUED *между* шагами, уже выполнив часть работы (1127 из 1127 истёкших по всем политикам успели исполнить хотя бы один шаг), — это и есть потерянное слот-время из сводной таблицы. Ранний отказ при admission дешевле, чем позднее истечение.
+* **Длительная перегрузка.** Admission control ограничивает очередь (429/REJECTED с причиной), дедлайны снимают job, которые не успеют, поэтому очередь и возраст старейшей job ограничены сверху, а не растут бесконечно; после окончания burst очередь рассасывается (фаза P3). Цена: почти все истёкшие job истекли в состоянии QUEUED *между* шагами, уже выполнив часть работы (1867 из 1867 истёкших по всем политикам успели исполнить хотя бы один шаг), — это и есть потерянное слот-время из сводной таблицы. Ранний отказ при admission дешевле, чем позднее истечение.
 * **Планирование на границах шагов и ожидание коротких job.** После каждого шага job возвращается в очередь (`RUNNING → QUEUED`, `ready_at = now`) и заново конкурирует за слот. Поэтому шаг, стоящий первым в очереди, ждёт не всю 10-секундную long-job, а лишь освобождения любого слота — не дольше самого длинного шага (≤ 1.5 вирт. с в этой нагрузке; с реальной LLM шаг ограничен только `step_timeout_s` = 30 с). Но заходов столько, сколько шагов (медиана у успешных short — 6, у long — 9), и при backlog каждое повторное ожидание включает очередь перед job: под FIFO суммарное ожидание короткой job растёт как «число шагов × длина очереди» (p50 ожидания `heavy` short — десятки секунд, см. таблицу). DRR ограничивает это для лёгких пользователей, но не для перегружающего tenant. Цена шага как единицы планирования — лишняя транзакция claim/complete на каждый шаг (см. накладные расходы выше).
 * **Aging.** Внутри tenant priority = 1 обгоняет priority = 0, но задача с низким приоритетом, прождавшая 10 с, получает +1 и не голодает (`tests/test_scheduling.py::test_aging_lets_old_low_priority_job_overtake`; измерения под нагрузкой — таблица «Ожидание по приоритету» выше).
 * **Лимиты.** По трассе `step_runs` (интервалы исполнения) максимальная одновременность ни разу не превысила global/per-tenant лимит (столбцы «max … / лимит»; то же проверяют автотесты).
 * **Ожидание approval не занимает слоты** — подтверждено автотестом `tests/test_timers_and_slots.py::test_waiting_job_does_not_occupy_execution_slot` (при `global_concurrency=1` вторая job полностью выполняется, пока первая ждёт approval) и E2/E6 (0 открытых `step_runs` в ожидании).
 
+### Approval под нагрузкой (ожидание не занимает слоты)
+
+Тот же поток заявок, те же seeds [11, 12, 13, 14, 15] и ресурсы, политика `drr`; доля job, требующих approval, — 50% (выбор по seed, поток заявок не меняется); симулированный «человек» отвечает через 20 вирт. с после входа job в `WAITING_EVENT` (ожидание считается в дедлайн). Базовая строка — прогоны `drr` из основной таблицы. Сырые данные: `results/raw/loadappr_*` (`--approval-share 0.5 --approval-delay 20 --prefix loadappr_`).
+
+| вариант | принято | требуют approval | дошли до ожидания approval | SUCCEEDED | TIMED_OUT | jobs/s | загрузка слотов в burst | p95 ожидания в очереди light1 short, с | max одновременно в WAITING_EVENT | max активных шагов / лимит | моменты с ожидающими job, когда заняты все слоты | шагов job во время её же ожидания |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| drr, без approval (основной прогон) | 2742 | 0 | 0 | 2085 | 657 | 0.861 | 98.2% | 1.24 (N = 349) | 0 | 6 / 6 | – | 0 |
+| drr, approval у 50% job | 2743 | 1365 | 1102 | 2051 | 692 | 0.814 | 98.3% | 1.37 (N = 343) | 28 | 6 / 6 | 2308 из 4821 | 0 |
+
+Ожидание approval не держит слот: одновременно в `WAITING_EVENT` находилось до 28 job, а активных шагов никогда не было больше лимита; в 48% моментов с ожидающими job все слоты были заняты *другой* работой (в остальные моменты очередь просто была короче лимита), и ни один шаг job не исполнялся, пока она ждала approval (последний столбец). Загрузка слотов в burst при этом та же, что без approval (98.3% против 98.2%). Цена ожидания — в истечениях и throughput: время ожидания входит в дедлайн, поэтому TIMED_OUT 692 против 657, а job, ожидающие человека, завершаются позже.
+
 ### Part 3 на Linux (Docker-контейнер, те же seed и поток заявок)
 
-Окружение: Linux-6.18.58.1-microsoft-standard-WSL2-x86_64-with-glibc2.41, Python 3.13.18; seeds [11, 12, 13], по одному прогону каждой политики на seed, масштаб времени 0.1. Сырые данные отдельно — `results/raw_linux/load_*`; с Windows-прогоном не смешиваются.
+Окружение: Linux-6.18.58.1-microsoft-standard-WSL2-x86_64-with-glibc2.41, Python 3.13.18; seeds [11, 12, 13, 14, 15], по одному прогону каждой политики на seed, масштаб времени 0.1. Сырые данные отдельно — `results/raw_linux/load_*`; с Windows-прогоном не смешиваются.
 
 | политика | прогонов | заявок | отклонено (по user) | SUCCEEDED | TIMED_OUT (по user) | jobs/s | загрузка слотов в burst | p95 ожидания light1 short, с | p95 ожидания heavy short, с | доля работы в burst heavy / light1 / light2 | max global / лимит | max на tenant / лимит |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| fifo | 3 | 1811 | 209 (heavy: 181, light1: 12, light2: 16) | 1258 | 344 (heavy: 299, light1: 24, light2: 21) | 0.868 | 98.9% | 59.09 (N = 189) | 59.13 (N = 722) | 87.4% / 5.7% / 6.9% | 6 / 6 | 6 / 6 |
-| drr | 3 | 1811 | 140 (heavy: 117, light1: 11, light2: 12) | 1283 | 388 (heavy: 388) | 0.885 | 99.0% | 1.11 (N = 191) | 59.67 (N = 764) | 79.9% / 9.1% / 11.0% | 6 / 6 | 6 / 6 |
-| drr_iso | 3 | 1811 | 309 (heavy: 309) | 1131 | 371 (heavy: 371) | 0.780 | 74.1% | 1.02 (N = 200) | 59.69 (N = 621) | 66.9% / 14.6% / 18.6% | 6 / 6 | 3 / 3 |
+| fifo | 5 | 2994 | 356 (heavy: 304, light1: 27, light2: 25) | 2088 | 550 (heavy: 468, light1: 41, light2: 41) | 0.862 | 98.9% | 59.07 (N = 340) | 59.11 (N = 1178) | 85.6% / 6.0% / 8.4% | 6 / 6 | 6 / 6 |
+| drr | 5 | 2994 | 229 (heavy: 196, light1: 16, light2: 17) | 2127 | 638 (heavy: 638) | 0.878 | 98.9% | 1.19 (N = 348) | 59.66 (N = 1255) | 76.0% / 10.4% / 13.5% | 6 / 6 | 6 / 6 |
+| drr_iso | 5 | 2994 | 503 (heavy: 503) | 1908 | 583 (heavy: 583) | 0.788 | 76.3% | 0.92 (N = 362) | 59.68 (N = 1026) | 63.8% / 15.3% / 20.9% | 6 / 6 | 3 / 3 |
 
 Выводы Part 3 на Linux те же: DRR снижает p95 ожидания лёгких пользователей до единиц секунд, перегрузка (отказы и истечения) концентрируется у `heavy`, лимиты параллельности не превышаются, `drr_iso` жертвует загрузкой слотов ради изоляции.
 
@@ -403,10 +422,10 @@ tests/test_timers_and_slots.py::test_waiting_job_does_not_occupy_execution_slot 
 | метрика | SimulatedLLM |
 |---|---|
 | LLM-вызовов на job (baseline) | 2.0 |
-| токенов на job (prompt+completion) | 345.8 |
-| стоимость на job, USD (иллюстративная цена из конфига) | 0.000118 |
+| токенов на job (prompt+completion) | 348.2 |
+| стоимость на job, USD (иллюстративная цена из конфига) | 0.000119 |
 | латентность LLM-вызова | задана конфигом: 1.0 с (Part 1) |
-| время job baseline p50, с | 2.83 |
+| время job baseline p50, с | 2.96 |
 
 ### Real LLM run
 
@@ -421,10 +440,10 @@ tests/test_timers_and_slots.py::test_waiting_job_does_not_occupy_execution_slot 
 | латентность LLM-вызова p50 / max, с | 27.88 / 33.39 (N = 6) |
 | токенов prompt / completion | 702 / 919 |
 | стоимость, USD | 0.000657 — условная (цена из конфига; локальная модель, реальных затрат нет) |
-| recovery baseline (без отказов): время job, с / повторных LLM | 23.467 / 0 |
-| kill во время LLM: resume после spawn, с | 1.184 |
-| kill во время LLM: повторных вызовов / доп. токены прерванного вызова (подтверждено / верхняя граница) | 1 / 0 / ≤299 |
-| крэш после publish: физ./лог. публикаций / resume после spawn, с | 2 / 1 / 1.655 |
+| recovery baseline: N / итог / время job p50, с / повторных LLM | 1 / SUCCEEDED: 1 / 23.47 / 0 |
+| kill во время LLM: N / итог / resume после spawn p50, с | 1 / SUCCEEDED: 1 / 1.18 |
+| kill во время LLM: повторных вызовов / доп. токены прерванных вызовов (подтверждено / верхняя граница) / перевыполнено шагов с чекпоинтом | 1 / 0 / ≤299 / 0 |
+| крэш после publish: N / итог / публикаций физ. / лог. / дублей / resume p50, с | 1 / SUCCEEDED: 1 / 2 / 1 / 0 / 1.66 |
 
 В основном прогоне 3 job стартуют одновременно, а локальная Ollama на CPU обрабатывает запросы по очереди (в `results/real_llm/calls.jsonl` каждый следующий вызов завершается вплотную к предыдущему), поэтому латентность вызова и время job включают ожидание в очереди модели; в сценариях восстановления job одна, отсюда меньшее время baseline.
 
@@ -445,12 +464,12 @@ tests/test_timers_and_slots.py::test_waiting_job_does_not_occupy_execution_slot 
 | латентность LLM-вызова p50 / max, с | 1.72 / 1.98 (N = 6) |
 | токенов prompt / completion | 702 / 910 |
 | стоимость, USD | не считалась (тариф сервера неизвестен; цены в прогоне = 0) |
-| recovery baseline (без отказов): время job, с / повторных LLM | 3.061 / 0 |
-| kill во время LLM: resume после spawn, с | 1.315 |
-| kill во время LLM: повторных вызовов / доп. токены прерванного вызова (подтверждено / верхняя граница) | 1 / 0 / ≤299 |
-| крэш после publish: физ./лог. публикаций / resume после spawn, с | 2 / 1 / 1.37 |
+| recovery baseline: N / итог / время job p50, с / повторных LLM | 1 / SUCCEEDED: 1 / 3.06 / 0 |
+| kill во время LLM: N / итог / resume после spawn p50, с | 1 / SUCCEEDED: 1 / 1.31 |
+| kill во время LLM: повторных вызовов / доп. токены прерванных вызовов (подтверждено / верхняя граница) / перевыполнено шагов с чекпоинтом | 1 / 0 / ≤299 / 0 |
+| крэш после publish: N / итог / публикаций физ. / лог. / дублей / resume p50, с | 1 / SUCCEEDED: 1 / 2 / 1 / 0 / 1.37 |
 
-Один повтор на сценарий восстановления — это иллюстрация, а не статистика. Латентность и время job нельзя напрямую сравнивать с прогоном на Ollama: другая модель и другое железо (CPU против сервера университета). Столбцы `cost_*` в `results/real_llm_server/recovery_runs_real.csv` посчитаны подпрограммой восстановления по иллюстративным ценам из конфига по умолчанию и реальной стоимостью не являются.
+Этот прогон сделан раньше, с одним повтором на сценарий и решением `decide` по правилам (иллюстрация, а не статистика); повторить его с большим числом повторов не удалось — сервер доступен только через VPN университета. Латентность и время job нельзя напрямую сравнивать с прогоном на Ollama: другая модель и другое железо (CPU против сервера университета). Столбцы `cost_*` в `results/real_llm_server/recovery_runs_real.csv` посчитаны подпрограммой восстановления по иллюстративным ценам из конфига по умолчанию и реальной стоимостью не являются.
 
 ## 7. Ответы на вопросы задания
 
@@ -510,21 +529,24 @@ Throughput в job/с не равен номинальной ёмкости из 
 
 ## 8. Ограничения и честные оговорки
 
-* **Real LLM: два небольших прогона.** Прогон с реальной LLM выполнен локально на модели `qwen3.5:4b` (Ollama, CPU) с параметром `reasoning_effort=none`: без него модель тратит токены на рассуждение и возвращает пустой `content`. Выполнены 3 job и по одному повтору трёх сценариев восстановления (baseline, kill во время LLM-вызова, крэш после публикации), поэтому это иллюстрация, а не статистика. Таймаут ожидания воркера в сценарии восстановления увеличен с 60 до 300 с из-за медленной локальной модели. Две первые попытки завершились HTTP 503 (неверное имя модели в `.env`; затем 503 до отключения рассуждения, точную причину не установили); их результаты в отчёт не включены. Второй прогон (3 job и по одному повтору тех же сценариев) выполнен на сервере университета с моделью `qwen3.8-27b` (vLLM, доступ через VPN, токен хранится только в локальном `.env`) и опубликован отдельным блоком; стоимость не считалась, так как тариф сервера неизвестен. В обоих прогонах использовался `LLM_REASONING_EFFORT=none` (задан в `.env`); влияет ли этот параметр на серверную модель, не проверялось. Результаты двух моделей и Simulated не смешиваются. Цена в таблице условная (локальная модель, реальных затрат нет).
+* **Real LLM: два прогона, небольшая статистика.** Основной прогон — локально, `qwen3.5:4b` (Ollama, CPU), `reasoning_effort=none` (без него модель тратит токены на рассуждение и возвращает пустой `content`): 3 job, решение `decide` по правилам и по 1 повтор(ов) трёх сценариев восстановления (baseline, kill во время LLM-вызова, крэш после публикации). Таймаут ожидания воркера в сценарии восстановления 300 с из-за медленной локальной модели. Две самые первые попытки завершились HTTP 503 (неверное имя модели в `.env`; затем 503 до отключения рассуждения) и в отчёт не включены. Повторный прогон с решением через LLM и 5 повторами на сценарий запускался, но все вызовы модели завершились HTTP 500: локальной Ollama не хватило памяти для загрузки модели на этой машине (`out-of-memory` при старте `llama-server`); его данные в отчёт не включены, сохранён предыдущий успешный прогон. Второй прогон — сервер университета, `qwen3.8-27b` (vLLM, доступ только через VPN, токен только в локальном `.env`): 3 job, решение по правилам, по одному повтору сценариев; повторить его не удалось (сервер был недоступен). Стоимость сервера не считалась (тариф неизвестен); цена для Ollama условная. Влияет ли `LLM_REASONING_EFFORT=none` на серверную модель, не проверялось. Результаты двух моделей и Simulated не смешиваются.
 * **Один узел, один писатель.** SQLite сериализует все записи; масштабирование — несколько процессов на одной
   машине (лимиты проверяются в транзакции и для них верны), но не кластер. Узкое место — частота транзакций
   (claim + complete на каждый шаг + heartbeats).
-* **Основная ОС — Windows, Linux — контейнер на той же машине.** Основные таблицы Part 1–3 получены на Windows 10
-  («SIGKILL» там — `Popen.kill()` → `TerminateProcess`, без обработчиков/`finally`). Все три части и автотесты
-  повторены в Linux-контейнере с настоящим POSIX SIGKILL (`results/raw_linux/`, отдельные блоки «на Linux»), но это
-  Docker Desktop с ядром WSL2 на том же железе, а не отдельный Linux-сервер; на другой машине не проверялось.
+* **Основная ОС — Windows; Linux — контейнер и CI.** Основные таблицы Part 1–3 получены на Windows 10 («SIGKILL»
+  там — `Popen.kill()` → `TerminateProcess`, без обработчиков/`finally`). Все три части и автотесты повторены в
+  Linux-контейнере с настоящим POSIX SIGKILL (`results/raw_linux/`, блоки «на Linux») — это Docker Desktop с ядром
+  WSL2 на том же железе. На **отдельной** Linux-машине (GitHub Actions, `ubuntu-24.04`, `.github/workflows/ci.yml`)
+  на каждый push гоняются все автотесты, Part 1 и Part 2 с автоматической проверкой гарантий; сборка падает при
+  нарушении. Числа CI в таблицы отчёта не переносятся (они на странице прогона и в артефакте `ci-results`);
+  Part 3 в CI не гоняется — общий раннер с плавающей ёмкостью исказил бы времена.
 * **`synchronous=NORMAL`**: гарантия durable — против падения процесса (это и проверялось), но не против
   потери питания/краха ОС для последних транзакций (`AGENTRT_SYNC=FULL` закрывает это ценой латентности; не измерялось).
 * **Масштабированное время** в Part 3 (1 вирт. с = 0.1 с): накладные расходы рантайма (транзакции, поллинг)
   не масштабируются и в вирт. секундах выглядят больше (оценка приведена). Абсолютные значения — для этой
   машины и этого масштаба; сравнение политик корректно, т.к. условия одинаковые.
-* **Статистика.** Part 1: 5 повторов на сценарий; Part 3: 3 прогона на политику — разброс p95 по seed показан,
-  доверительные интервалы не считались. Для `light*`×`long` число наблюдений невелико (см. N в таблице).
+* **Статистика.** Part 1: 10 повторов на сценарий; Part 2: 300 повторов гонки E5; Part 3: 5 прогонов (seed) на политику —
+  разброс p95 по seed показан, доверительные интервалы не считались. Для `light*`×`long` и priority = 1 наблюдений меньше (см. N).
 * **Неопределённость внешних вызовов** не устранима на стороне клиента: прерванный LLM-вызов может быть
   оплачен; мы даём верхнюю оценку (prompt + max_output_tokens), а не точное значение.
 * **Окно публикации при cancel.** Отмена во время `publish` не может «отозвать» уже отправленный запрос;
@@ -534,8 +556,8 @@ Throughput в job/с не равен номинальной ёмкости из 
 * **Мгновенное восстановление по имени воркера** (`recover_own`) предполагает, что прежний процесс с тем же
   `--name` мёртв; это не проверяется (нет проверки pid). Два живых воркера с одним именем — ошибка конфигурации:
   фенсинг по `lease_token` не даст закоммитить чужой результат, но шаг (и LLM-вызов) может выполниться дважды.
-* **Нагрузочный тест без approval** (`require_approval = false`): то, что ожидание approval не занимает слоты,
-  показано автотестом и E2/E6, а не под нагрузкой Part 3.
+* **Approval под нагрузкой проверен только для `drr`** и одной доли/задержки (50 %, 20 вирт. с, отдельная таблица в
+  Part 3); основные таблицы Part 3 — без approval, чтобы сравнение политик не зависело от поведения «человека».
 * **Цены токенов** в конфиге иллюстративные (не прайс-лист провайдера); стоимость = токены × цена из конфига.
 * **Межпроцессных уведомлений нет**: воркер узнаёт о новых событиях/заявках из других процессов поллингом
   (`poll_interval_s`), это входит в латентность «event → next step».
@@ -549,6 +571,5 @@ Throughput в job/с не равен номинальной ёмкости из 
 * **Воспроизводимость с нуля проверена** на той же машине: клон из Git → новое окружение из `requirements.txt` →
   `scripts/run_all_experiments.ps1` (≈ 14 мин) — тесты зелёные, выводы всех трёх частей совпали; абсолютные
   времена и доли исходов E5 отличаются (см. E5). В другой ОС/на другом железе не проверялось.
-* Политика агента (`decide`) — детерминированные правила с ограничениями (min_docs, max_tool_calls, approval),
-  а не решение LLM; LLM используется для черновика.
+* **Решение агента через LLM** (`decide_mode = llm`) реализовано и покрыто автотестами (`tests/test_decide.py`, в т.ч. сквозной прогон job), но в сохранённых прогонах с реальной LLM решение принималось по правилам (они сделаны до появления режима, повтор не удался — см. выше); симуляционные эксперименты Part 1–3 идут на правилах — это сохраняет детерминизм и сравнимость политик планирования. Ограничения (бюджет tool-вызовов, обязательный approval) проверяются кодом, поэтому модель не может их нарушить, но качество её выбора не оценивалось (задание не оценивает качество ответов LLM).
 

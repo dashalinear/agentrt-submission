@@ -578,11 +578,14 @@ def _part3_approval(ld):
                    "загрузка слотов в burst", "p95 ожидания в очереди light1 short, с",
                    "max одновременно в WAITING_EVENT", "max активных шагов / лимит",
                    "моменты с ожидающими job, когда заняты все слоты", "шагов job во время её же ожидания"], rows), "",
-            "Ожидание approval не держит слот: одновременно в `WAITING_EVENT` находились десятки job, а активных шагов "
-            "никогда не было больше лимита, и в большинстве моментов с ожидающими job все слоты были заняты *другой* "
-            "работой; ни один шаг job не исполнялся, пока она ждала approval (последний столбец). Цена ожидания "
-            "видна в истечениях: время ожидания approval входит в дедлайн, поэтому при перегрузке часть ожидающих "
-            "job истекает."]
+            f"Ожидание approval не держит слот: одновременно в `WAITING_EVENT` находилось до {ea['max_wait_n']} job, а "
+            "активных шагов никогда не было больше лимита; в "
+            f"{ea['full_when_waiting'] / max(1, ea['waiting_samples']):.0%} моментов с ожидающими job все слоты были "
+            "заняты *другой* работой (в остальные моменты очередь просто была короче лимита), и ни один шаг job не "
+            "исполнялся, пока она ждала approval (последний столбец). Загрузка слотов в burst при этом та же, что без "
+            f"approval ({appr['slot_utilization_burst']:.1%} против {base['slot_utilization_burst']:.1%}). Цена ожидания — "
+            f"в истечениях и throughput: время ожидания входит в дедлайн, поэтому TIMED_OUT {appr['timed_out']} против "
+            f"{base['timed_out']}, а job, ожидающие человека, завершаются позже."]
 
 
 def _part3_linux():
@@ -620,29 +623,54 @@ def _real_rows(s, recovery_rows, cost_text):
     """Rows of one Real-LLM table; the same set of metrics for every real run."""
     from collections import Counter
     lat = s.get("llm_latency_s", {})
-    rr = {x["case"]: x for x in recovery_rows}
-    b = rr.get("baseline", {})
-    k = rr.get("s2b_kill_during_llm_restart", {})
-    p = rr.get("s3a_crash_after_publish", {})
+    by = {}
+    for x in recovery_rows:
+        by.setdefault(x["case"], []).append(x)
+
+    def agg(case):
+        rs = by.get(case, [])
+        if not rs:
+            return None
+        num = lambda k: [r[k] for r in rs if r.get(k) is not None]  # noqa: E731
+        return {"n": len(rs), "final": cnt(dict(Counter(r["final_state"] for r in rs))),
+                "time_p50": q(num("total_time_s"), 50), "resume_p50": q(num("resume_after_spawn_s"), 50),
+                "rep_llm": sum(num("repeated_llm_calls")), "extra_ok": sum(num("extra_tokens_ok")),
+                "extra_ub": sum(num("extra_tokens_upper_bound")), "phys": sum(num("publish_physical")),
+                "log": sum(num("publish_logical")), "dups": sum(num("logical_duplicates")),
+                "reexec": sum(num("checkpointed_step_reexecuted"))}
+
+    b, k, p = agg("baseline"), agg("s2b_kill_during_llm_restart"), agg("s3a_crash_after_publish")
     e2e = [j["e2e_s"] for j in s["jobs"] if j.get("e2e_s") is not None]
     e2e_txt = f"{fmt(min(e2e))}–{fmt(max(e2e))} (N = {len(e2e)})" if e2e else "…"
     url = s["base_url"]
     if not any(h in url for h in ("localhost", "127.0.0.1")):
         url = "<внутренний адрес сервера университета, доступ через VPN>/v1"  # do not advertise internal hosts
-    return [["модель / endpoint", f"{s['model']} / {url}"],
+    rows = [["модель / endpoint", f"{s['model']} / {url}"],
             ["job: итог", cnt(dict(Counter(j["state"] for j in s["jobs"])))],
             ["время job end-to-end, с (min–max)", e2e_txt],
             ["LLM-вызовов (ok / всего)", f"{s['llm_calls_ok']} / {s['llm_calls']}"],
             ["латентность LLM-вызова p50 / max, с", f"{fmt(lat.get('p50'))} / {fmt(lat.get('max'))} (N = {lat.get('n', '…')})"],
             ["токенов prompt / completion", f"{s['prompt_tokens']} / {s['completion_tokens']}"],
-            ["стоимость, USD", cost_text],
-            ["recovery baseline (без отказов): время job, с / повторных LLM",
-             f"{b.get('total_time_s', '…')} / {b.get('repeated_llm_calls', '…')}"],
-            ["kill во время LLM: resume после spawn, с", f"{k.get('resume_after_spawn_s', '…')}"],
-            ["kill во время LLM: повторных вызовов / доп. токены прерванного вызова (подтверждено / верхняя граница)",
-             f"{k.get('repeated_llm_calls', '…')} / {k.get('extra_tokens_ok', '…')} / ≤{k.get('extra_tokens_upper_bound', '…')}"],
-            ["крэш после publish: физ./лог. публикаций / resume после spawn, с",
-             f"{p.get('publish_physical', '…')} / {p.get('publish_logical', '…')} / {p.get('resume_after_spawn_s', '…')}"]]
+            ["стоимость, USD", cost_text]]
+    decs = [d for j in s["jobs"] for d in j.get("decisions", [])]
+    if decs:
+        rows.append([f"решения агента `decide` (режим {s.get('decide_mode', '?')}): действие × источник",
+                     cnt(dict(Counter(f"{d.get('action')}/{d.get('decision_source')}" for d in decs)))])
+        raw = sorted({(d.get("llm_raw") or "").strip()[:30] for d in decs if d.get("llm_raw")})
+        if raw:
+            rows.append(["ответы модели в `decide` (уникальные, до 30 символов)", "; ".join(f"«{x}»" for x in raw)])
+    if b:
+        rows.append([f"recovery baseline: N / итог / время job p50, с / повторных LLM",
+                     f"{b['n']} / {b['final']} / {fmt(b['time_p50'])} / {b['rep_llm']}"])
+    if k:
+        rows += [[f"kill во время LLM: N / итог / resume после spawn p50, с",
+                  f"{k['n']} / {k['final']} / {fmt(k['resume_p50'])}"],
+                 ["kill во время LLM: повторных вызовов / доп. токены прерванных вызовов (подтверждено / верхняя граница) / "
+                  "перевыполнено шагов с чекпоинтом", f"{k['rep_llm']} / {k['extra_ok']} / ≤{k['extra_ub']} / {k['reexec']}"]]
+    if p:
+        rows.append([f"крэш после publish: N / итог / публикаций физ. / лог. / дублей / resume p50, с",
+                     f"{p['n']} / {p['final']} / {p['phys']} / {p['log']} / {p['dups']} / {fmt(p['resume_p50'])}"])
+    return rows
 
 
 def _server_block():
@@ -655,7 +683,9 @@ def _server_block():
     return ["", "### Real LLM run: сервер ITMO (qwen3.8-27b)", "",
             "> **Статус: ЗАПУЩЕН** (данные из `results/real_llm_server/`; не смешиваются ни с симуляцией, ни с прогоном на qwen3.5:4b).", "",
             table(["метрика", "Real LLM (сервер ITMO)"], rows), "",
-            "Один повтор на сценарий восстановления — это иллюстрация, а не статистика. Латентность и время job нельзя напрямую "
+            "Этот прогон сделан раньше, с одним повтором на сценарий и решением `decide` по правилам (иллюстрация, а не "
+            "статистика); повторить его с большим числом повторов не удалось — сервер доступен только через VPN "
+            "университета. Латентность и время job нельзя напрямую "
             "сравнивать с прогоном на Ollama: другая модель и другое железо (CPU против сервера университета). "
             "Столбцы `cost_*` в `results/real_llm_server/recovery_runs_real.csv` посчитаны подпрограммой восстановления "
             "по иллюстративным ценам из конфига по умолчанию и реальной стоимостью не являются."]
@@ -791,15 +821,61 @@ Throughput в job/с не равен номинальной ёмкости из 
 раздел «Гарантии инфраструктуры vs кода приложения».
 """
 
+def _real_llm_meta():
+    from experiments.report_data import real_llm as _load
+    s = _load(os.path.join(ROOT, "results", "real_llm"))["summary"] or {}
+    rec = _load(os.path.join(ROOT, "results", "real_llm"))["recovery"] or []
+    reps = max([r["rep"] for r in rec] or [-1]) + 1
+    return s, reps
+
+
+def _limits_text():
+    s, reps = _real_llm_meta()
+    llm_decide = s.get("decide_mode") == "llm"
+    n_jobs = len(s.get("jobs", []))
+    real = (
+        "* **Real LLM: два прогона, небольшая статистика.** Основной прогон — локально, `qwen3.5:4b` (Ollama, CPU), "
+        "`reasoning_effort=none` (без него модель тратит токены на рассуждение и возвращает пустой `content`): "
+        f"{n_jobs} job" + (" с выбором действия через LLM (`decide_mode = llm`, `min_docs = 5`)" if llm_decide else
+                           ", решение `decide` по правилам") +
+        f" и по {reps} повтор(ов) трёх сценариев восстановления (baseline, kill во время LLM-вызова, крэш после "
+        "публикации). Таймаут ожидания воркера в сценарии восстановления 300 с из-за медленной локальной модели. Две "
+        "самые первые попытки завершились HTTP 503 (неверное имя модели в `.env`; затем 503 до отключения рассуждения) "
+        "и в отчёт не включены. "
+        + ("" if llm_decide else
+           "Повторный прогон с решением через LLM и 5 повторами на сценарий запускался, но все вызовы модели "
+           "завершились HTTP 500: локальной Ollama не хватило памяти для загрузки модели на этой машине (`out-of-memory` "
+           "при старте `llama-server`); его данные в отчёт не включены, сохранён предыдущий успешный прогон. ") +
+        "Второй прогон — сервер университета, `qwen3.8-27b` (vLLM, доступ только через VPN, токен только в локальном "
+        "`.env`): 3 job, решение по правилам, по одному повтору сценариев; повторить его не удалось (сервер был "
+        "недоступен). Стоимость сервера не считалась (тариф неизвестен); цена для Ollama условная. Влияет ли "
+        "`LLM_REASONING_EFFORT=none` на серверную модель, не проверялось. Результаты двух моделей и Simulated не "
+        "смешиваются.")
+    decide = ("* **Решение агента через LLM** (`decide_mode = llm`) "
+              + ("использовано в прогоне с реальной LLM (решения и их источник — в таблице Real LLM); "
+                 if llm_decide else
+                 "реализовано и покрыто автотестами (`tests/test_decide.py`, в т.ч. сквозной прогон job), но в "
+                 "сохранённых прогонах с реальной LLM решение принималось по правилам (они сделаны до появления режима, "
+                 "повтор не удался — см. выше); ")
+              + "симуляционные эксперименты Part 1–3 идут на правилах — это сохраняет детерминизм и сравнимость "
+              "политик планирования. Ограничения (бюджет tool-вызовов, обязательный approval) проверяются кодом, "
+              "поэтому модель не может их нарушить, но качество её выбора не оценивалось (задание не оценивает "
+              "качество ответов LLM).")
+    return LIMITS.replace("@@REAL_LLM_LIMIT@@", real).replace("@@DECIDE_LIMIT@@", decide)
+
+
 LIMITS = """
-* **Real LLM: два небольших прогона.** Прогон с реальной LLM выполнен локально на модели `qwen3.5:4b` (Ollama, CPU) с параметром `reasoning_effort=none`: без него модель тратит токены на рассуждение и возвращает пустой `content`. Выполнены 3 job и по одному повтору трёх сценариев восстановления (baseline, kill во время LLM-вызова, крэш после публикации), поэтому это иллюстрация, а не статистика. Таймаут ожидания воркера в сценарии восстановления увеличен с 60 до 300 с из-за медленной локальной модели. Две первые попытки завершились HTTP 503 (неверное имя модели в `.env`; затем 503 до отключения рассуждения, точную причину не установили); их результаты в отчёт не включены. Второй прогон (3 job и по одному повтору тех же сценариев) выполнен на сервере университета с моделью `qwen3.8-27b` (vLLM, доступ через VPN, токен хранится только в локальном `.env`) и опубликован отдельным блоком; стоимость не считалась, так как тариф сервера неизвестен. В обоих прогонах использовался `LLM_REASONING_EFFORT=none` (задан в `.env`); влияет ли этот параметр на серверную модель, не проверялось. Результаты двух моделей и Simulated не смешиваются. Цена в таблице условная (локальная модель, реальных затрат нет).
+@@REAL_LLM_LIMIT@@
 * **Один узел, один писатель.** SQLite сериализует все записи; масштабирование — несколько процессов на одной
   машине (лимиты проверяются в транзакции и для них верны), но не кластер. Узкое место — частота транзакций
   (claim + complete на каждый шаг + heartbeats).
-* **Основная ОС — Windows, Linux — контейнер на той же машине.** Основные таблицы Part 1–3 получены на Windows 10
-  («SIGKILL» там — `Popen.kill()` → `TerminateProcess`, без обработчиков/`finally`). Все три части и автотесты
-  повторены в Linux-контейнере с настоящим POSIX SIGKILL (`results/raw_linux/`, отдельные блоки «на Linux»), но это
-  Docker Desktop с ядром WSL2 на том же железе, а не отдельный Linux-сервер; на другой машине не проверялось.
+* **Основная ОС — Windows; Linux — контейнер и CI.** Основные таблицы Part 1–3 получены на Windows 10 («SIGKILL»
+  там — `Popen.kill()` → `TerminateProcess`, без обработчиков/`finally`). Все три части и автотесты повторены в
+  Linux-контейнере с настоящим POSIX SIGKILL (`results/raw_linux/`, блоки «на Linux») — это Docker Desktop с ядром
+  WSL2 на том же железе. На **отдельной** Linux-машине (GitHub Actions, `ubuntu-24.04`, `.github/workflows/ci.yml`)
+  на каждый push гоняются все автотесты, Part 1 и Part 2 с автоматической проверкой гарантий; сборка падает при
+  нарушении. Числа CI в таблицы отчёта не переносятся (они на странице прогона и в артефакте `ci-results`);
+  Part 3 в CI не гоняется — общий раннер с плавающей ёмкостью исказил бы времена.
 * **`synchronous=NORMAL`**: гарантия durable — против падения процесса (это и проверялось), но не против
   потери питания/краха ОС для последних транзакций (`AGENTRT_SYNC=FULL` закрывает это ценой латентности; не измерялось).
 * **Масштабированное время** в Part 3 (1 вирт. с = 0.1 с): накладные расходы рантайма (транзакции, поллинг)
@@ -816,8 +892,8 @@ LIMITS = """
 * **Мгновенное восстановление по имени воркера** (`recover_own`) предполагает, что прежний процесс с тем же
   `--name` мёртв; это не проверяется (нет проверки pid). Два живых воркера с одним именем — ошибка конфигурации:
   фенсинг по `lease_token` не даст закоммитить чужой результат, но шаг (и LLM-вызов) может выполниться дважды.
-* **Нагрузочный тест без approval** (`require_approval = false`): то, что ожидание approval не занимает слоты,
-  показано автотестом и E2/E6, а не под нагрузкой Part 3.
+* **Approval под нагрузкой проверен только для `drr`** и одной доли/задержки (50 %, 20 вирт. с, отдельная таблица в
+  Part 3); основные таблицы Part 3 — без approval, чтобы сравнение политик не зависело от поведения «человека».
 * **Цены токенов** в конфиге иллюстративные (не прайс-лист провайдера); стоимость = токены × цена из конфига.
 * **Межпроцессных уведомлений нет**: воркер узнаёт о новых событиях/заявках из других процессов поллингом
   (`poll_interval_s`), это входит в латентность «event → next step».
@@ -831,8 +907,7 @@ LIMITS = """
 * **Воспроизводимость с нуля проверена** на той же машине: клон из Git → новое окружение из `requirements.txt` →
   `scripts/run_all_experiments.ps1` (≈ 14 мин) — тесты зелёные, выводы всех трёх частей совпали; абсолютные
   времена и доли исходов E5 отличаются (см. E5). В другой ОС/на другом железе не проверялось.
-* Политика агента (`decide`) — детерминированные правила с ограничениями (min_docs, max_tool_calls, approval),
-  а не решение LLM; LLM используется для черновика.
+@@DECIDE_LIMIT@@
 """
 
 
@@ -883,7 +958,7 @@ def build_md() -> str:
 ## 7. Ответы на вопросы задания
 {ANSWERS}
 ## 8. Ограничения и честные оговорки
-{LIMITS}
+{_limits_text()}
 """
     return md
 

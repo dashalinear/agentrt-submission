@@ -22,7 +22,9 @@
   "seeds": [
     11,
     12,
-    13
+    13,
+    14,
+    15
   ],
   "phases": [
     [
@@ -78,6 +80,8 @@
     }
   },
   "global_concurrency": 6,
+  "approval_share": 0.0,
+  "approval_delay_v": 20.0,
   "nominal_work_v": {
     "short": 1.0000000000000002,
     "long": 9.5
@@ -105,7 +109,8 @@
       "llm_jitter": 0.1
     },
     "faults": {},
-    "seed": 11
+    "seed": 11,
+    "decide_mode": "rules"
   },
   "runs": [
     {
@@ -114,28 +119,8 @@
       "arrivals": 607,
       "admitted": 525,
       "rejected": 82,
-      "makespan_v": 480.219,
-      "real_seconds": 48.1,
-      "max_global_concurrency_observed": 6,
-      "global_limit": 6,
-      "max_per_tenant_observed": {
-        "heavy": 6,
-        "light1": 5,
-        "light2": 4
-      },
-      "per_tenant_limit": 6,
-      "counters": {
-        "rejected_queue_full": 82
-      }
-    },
-    {
-      "policy": "drr",
-      "seed": 11,
-      "arrivals": 607,
-      "admitted": 543,
-      "rejected": 64,
-      "makespan_v": 480.231,
-      "real_seconds": 48.08,
+      "makespan_v": 480.203,
+      "real_seconds": 48.17,
       "max_global_concurrency_observed": 6,
       "global_limit": 6,
       "max_per_tenant_observed": {
@@ -145,108 +130,150 @@
       },
       "per_tenant_limit": 6,
       "counters": {
-        "rejected_queue_full": 64
-      }
-    },
-    {
-      "policy": "drr_iso",
-      "seed": 11,
-      "arrivals": 607,
-      "admitted": 497,
-      "rejected": 110,
-      "makespan_v": 480.231,
-      "real_seconds": 48.14,
-      "max_global_concurrency_observed": 6,
-      "global_limit": 6,
-      "max_per_tenant_observed": {
-        "heavy": 3,
-        "light1": 3,
-        "light2": 3
+        "rejected_queue_full": 82
       },
-      "per_tenant_limit": 3,
-      "counters": {
-        "rejected_tenant_queue_full": 110
-      }
-    },
-    {
-      "policy": "fifo",
-      "seed": 12,
-      "arrivals": 605,
-      "admitted": 532,
-      "rejected": 73,
-      "makespan_v": 489.553,
-      "real_seconds": 49.1,
-      "max_global_concurrency_observed": 6,
-      "global_limit": 6,
-      "max_per_tenant_observed": {
-        "heavy": 6,
-        "light1": 5,
-        "light2": 4
-      },
-      "per_tenant_limit": 6,
-      "counters": {
-        "rejected_queue_full": 73
-      }
+      "approval_share": 0.0,
+      "approval_delay_v": 20.0,
+      "approval_outcomes": {}
     },
     {
       "policy": "drr",
-      "seed": 12,
-      "arrivals": 605,
-      "admitted": 555,
-      "rejected": 50,
-      "makespan_v": 490.019,
-      "real_seconds": 49.08,
-      "max_global_concurrency_observed": 6,
-      "global_limit": 6,
-      "max_per_tenant_observed": {
-        "heavy": 6,
-        "light1": 5,
-        "light2": 4
-      },
-      "per_tenant_limit": 6,
-      "counters": {
-        "rejected_queue_full": 50
-      }
-    },
-    {
-      "policy": "drr_iso",
-      "seed": 12,
-      "arrivals": 605,
-      "admitted": 501,
-      "rejected": 104,
-      "makespan_v": 490.127,
-      "real_seconds": 49.08,
-      "max_global_concurrency_observed": 6,
-      "global_limit": 6,
-      "max_per_tenant_observed": {
-        "heavy": 3,
-        "light1": 3,
-        "light2": 3
-      },
-      "per_tenant_limit": 3,
-      "counters": {
-        "rejected_tenant_queue_full": 104
-      }
-    },
-    {
-      "policy": "fifo",
-      "seed": 13,
-      "arrivals": 599,
-      "admitted": 542,
-      "rejected": 57,
-      "makespan_v": 479.549,
-      "real_seconds": 48.05,
+      "seed": 11,
+      "arrivals": 607,
+      "admitted": 544,
+      "rejected": 63,
+      "makespan_v": 480.233,
+      "real_seconds": 48.1,
       "max_global_concurrency_observed": 6,
       "global_limit": 6,
       "max_per_tenant_observed": {
         "heavy": 6,
         "light1": 4,
+        "light2": 5
+      },
+      "per_tenant_limit": 6,
+      "counters": {
+        "rejected_queue_full": 63
+      },
+      "approval_share": 0.0,
+      "approval_delay_v": 20.0,
+      "approval_outcomes": {}
+    },
+    {
+      "policy": "drr_iso",
+      "seed": 11,
+      "arrivals": 607,
+      "admitted": 498,
+      "rejected": 109,
+      "makespan_v": 480.224,
+      "real_seconds": 48.13,
+      "max_global_concurrency_observed": 6,
+      "global_limit": 6,
+      "max_per_tenant_observed": {
+        "heavy": 3,
+        "light1": 3,
+        "light2": 3
+      },
+      "per_tenant_limit": 3,
+      "counters": {
+        "rejected_tenant_queue_full": 109,
+        "late_results_discarded": 1
+      },
+      "approval_share": 0.0,
+      "approval_delay_v": 20.0,
+      "approval_outcomes": {}
+    },
+    {
+      "policy": "fifo",
+      "seed": 12,
+      "arrivals": 605,
+      "admitted": 531,
+      "rejected": 74,
+      "makespan_v": 490.682,
+      "real_seconds": 49.17,
+      "max_global_concurrency_observed": 6,
+      "global_limit": 6,
+      "max_per_tenant_observed": {
+        "heavy": 6,
+        "light1": 5,
+        "light2": 5
+      },
+      "per_tenant_limit": 6,
+      "counters": {
+        "rejected_queue_full": 74
+      },
+      "approval_share": 0.0,
+      "approval_delay_v": 20.0,
+      "approval_outcomes": {}
+    },
+    {
+      "policy": "drr",
+      "seed": 12,
+      "arrivals": 605,
+      "admitted": 553,
+      "rejected": 52,
+      "makespan_v": 490.599,
+      "real_seconds": 49.24,
+      "max_global_concurrency_observed": 6,
+      "global_limit": 6,
+      "max_per_tenant_observed": {
+        "heavy": 6,
+        "light1": 5,
         "light2": 4
       },
       "per_tenant_limit": 6,
       "counters": {
-        "rejected_queue_full": 57
-      }
+        "rejected_queue_full": 52
+      },
+      "approval_share": 0.0,
+      "approval_delay_v": 20.0,
+      "approval_outcomes": {}
+    },
+    {
+      "policy": "drr_iso",
+      "seed": 12,
+      "arrivals": 605,
+      "admitted": 500,
+      "rejected": 105,
+      "makespan_v": 490.037,
+      "real_seconds": 49.12,
+      "max_global_concurrency_observed": 6,
+      "global_limit": 6,
+      "max_per_tenant_observed": {
+        "heavy": 3,
+        "light1": 3,
+        "light2": 3
+      },
+      "per_tenant_limit": 3,
+      "counters": {
+        "rejected_tenant_queue_full": 105
+      },
+      "approval_share": 0.0,
+      "approval_delay_v": 20.0,
+      "approval_outcomes": {}
+    },
+    {
+      "policy": "fifo",
+      "seed": 13,
+      "arrivals": 599,
+      "admitted": 541,
+      "rejected": 58,
+      "makespan_v": 479.552,
+      "real_seconds": 48.05,
+      "max_global_concurrency_observed": 6,
+      "global_limit": 6,
+      "max_per_tenant_observed": {
+        "heavy": 6,
+        "light1": 3,
+        "light2": 4
+      },
+      "per_tenant_limit": 6,
+      "counters": {
+        "rejected_queue_full": 58
+      },
+      "approval_share": 0.0,
+      "approval_delay_v": 20.0,
+      "approval_outcomes": {}
     },
     {
       "policy": "drr",
@@ -254,8 +281,8 @@
       "arrivals": 599,
       "admitted": 561,
       "rejected": 38,
-      "makespan_v": 479.55,
-      "real_seconds": 48.02,
+      "makespan_v": 479.581,
+      "real_seconds": 48.08,
       "max_global_concurrency_observed": 6,
       "global_limit": 6,
       "max_per_tenant_observed": {
@@ -266,15 +293,18 @@
       "per_tenant_limit": 6,
       "counters": {
         "rejected_queue_full": 38
-      }
+      },
+      "approval_share": 0.0,
+      "approval_delay_v": 20.0,
+      "approval_outcomes": {}
     },
     {
       "policy": "drr_iso",
       "seed": 13,
       "arrivals": 599,
-      "admitted": 502,
-      "rejected": 97,
-      "makespan_v": 479.561,
+      "admitted": 500,
+      "rejected": 99,
+      "makespan_v": 479.549,
       "real_seconds": 48.06,
       "max_global_concurrency_observed": 6,
       "global_limit": 6,
@@ -285,8 +315,149 @@
       },
       "per_tenant_limit": 3,
       "counters": {
-        "rejected_tenant_queue_full": 97
-      }
+        "rejected_tenant_queue_full": 99
+      },
+      "approval_share": 0.0,
+      "approval_delay_v": 20.0,
+      "approval_outcomes": {}
+    },
+    {
+      "policy": "fifo",
+      "seed": 14,
+      "arrivals": 639,
+      "admitted": 528,
+      "rejected": 111,
+      "makespan_v": 483.293,
+      "real_seconds": 48.52,
+      "max_global_concurrency_observed": 6,
+      "global_limit": 6,
+      "max_per_tenant_observed": {
+        "heavy": 6,
+        "light1": 4,
+        "light2": 5
+      },
+      "per_tenant_limit": 6,
+      "counters": {
+        "rejected_queue_full": 111
+      },
+      "approval_share": 0.0,
+      "approval_delay_v": 20.0,
+      "approval_outcomes": {}
+    },
+    {
+      "policy": "drr",
+      "seed": 14,
+      "arrivals": 639,
+      "admitted": 556,
+      "rejected": 83,
+      "makespan_v": 482.823,
+      "real_seconds": 48.39,
+      "max_global_concurrency_observed": 6,
+      "global_limit": 6,
+      "max_per_tenant_observed": {
+        "heavy": 6,
+        "light1": 4,
+        "light2": 4
+      },
+      "per_tenant_limit": 6,
+      "counters": {
+        "rejected_queue_full": 83
+      },
+      "approval_share": 0.0,
+      "approval_delay_v": 20.0,
+      "approval_outcomes": {}
+    },
+    {
+      "policy": "drr_iso",
+      "seed": 14,
+      "arrivals": 639,
+      "admitted": 508,
+      "rejected": 131,
+      "makespan_v": 482.823,
+      "real_seconds": 48.42,
+      "max_global_concurrency_observed": 6,
+      "global_limit": 6,
+      "max_per_tenant_observed": {
+        "heavy": 3,
+        "light1": 3,
+        "light2": 3
+      },
+      "per_tenant_limit": 3,
+      "counters": {
+        "rejected_tenant_queue_full": 131
+      },
+      "approval_share": 0.0,
+      "approval_delay_v": 20.0,
+      "approval_outcomes": {}
+    },
+    {
+      "policy": "fifo",
+      "seed": 15,
+      "arrivals": 544,
+      "admitted": 506,
+      "rejected": 38,
+      "makespan_v": 489.41,
+      "real_seconds": 49.02,
+      "max_global_concurrency_observed": 6,
+      "global_limit": 6,
+      "max_per_tenant_observed": {
+        "heavy": 6,
+        "light1": 4,
+        "light2": 5
+      },
+      "per_tenant_limit": 6,
+      "counters": {
+        "rejected_queue_full": 38
+      },
+      "approval_share": 0.0,
+      "approval_delay_v": 20.0,
+      "approval_outcomes": {}
+    },
+    {
+      "policy": "drr",
+      "seed": 15,
+      "arrivals": 544,
+      "admitted": 528,
+      "rejected": 16,
+      "makespan_v": 489.132,
+      "real_seconds": 49.03,
+      "max_global_concurrency_observed": 6,
+      "global_limit": 6,
+      "max_per_tenant_observed": {
+        "heavy": 6,
+        "light1": 4,
+        "light2": 4
+      },
+      "per_tenant_limit": 6,
+      "counters": {
+        "rejected_queue_full": 16
+      },
+      "approval_share": 0.0,
+      "approval_delay_v": 20.0,
+      "approval_outcomes": {}
+    },
+    {
+      "policy": "drr_iso",
+      "seed": 15,
+      "arrivals": 544,
+      "admitted": 477,
+      "rejected": 67,
+      "makespan_v": 489.642,
+      "real_seconds": 49.05,
+      "max_global_concurrency_observed": 6,
+      "global_limit": 6,
+      "max_per_tenant_observed": {
+        "heavy": 3,
+        "light1": 3,
+        "light2": 3
+      },
+      "per_tenant_limit": 3,
+      "counters": {
+        "rejected_tenant_queue_full": 67
+      },
+      "approval_share": 0.0,
+      "approval_delay_v": 20.0,
+      "approval_outcomes": {}
     }
   ]
 }
