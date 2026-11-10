@@ -1030,7 +1030,9 @@ def build_pdf(md_text: str, out_pdf: str) -> str:
     build = os.path.join(WORK, "report_build")
     os.makedirs(build, exist_ok=True)
     root_uri = "file:///" + ROOT.replace("\\", "/") + "/"
-    html = (f"<!doctype html><html><head><meta charset='utf-8'><base href='{root_uri}'><style>{CSS}</style>"
+    html = (f"<!doctype html><html><head><meta charset='utf-8'>"
+            f"<title>Отчёт: durable event-driven runtime для агента-составителя отчётов</title>"
+            f"<base href='{root_uri}'><style>{CSS}</style>"
             f"</head><body>{html_body}</body></html>")
     hp = os.path.join(build, "REPORT.html")
     with open(hp, "w", encoding="utf-8") as fh:
