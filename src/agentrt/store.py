@@ -96,6 +96,16 @@ class Store:
             if dst in S.TERMINAL:
                 self._outbox(conn, job["job_id"], f"job.{dst.lower()}", {"job_id": job["job_id"], "state": dst,
                                                                        "reason": reason}, job["version"] + 1)
+                if dst != S.SUCCEEDED and conn.execute(
+                        "SELECT 1 FROM step_runs WHERE job_id=? AND step_key LIKE 'publish%' LIMIT 1",
+                        (job["job_id"],)).fetchone():
+                    # Durable compensation: a publish attempt was started, so a publication may exist (e.g. the
+                    # worker crashed after the external commit). The retract is committed together with the
+                    # terminal state and delivered by the outbox relay (at-least-once; DELETE is idempotent),
+                    # so it survives worker crashes.
+                    self._outbox(conn, job["job_id"], "compensate.retract_publication",
+                                 {"job_id": job["job_id"], "idempotency_key": f"{job['job_id']}:publish"},
+                                 job["version"] + 1)
             log(logger, logging.INFO, "transition", job_id=job["job_id"], step=job.get("next_step"),
                 attempt=job.get("attempt"), src=job["state"], dst=dst, reason=reason, state=dst)
         else:
@@ -443,9 +453,14 @@ class Store:
 
     # ------------------------------------------------------------------ outbox
     def pending_outbox(self, limit: int = 50) -> list[dict]:
+        # A compensation waits until no step of that job is still in flight (open step_run): otherwise a publish
+        # request that is still on the wire could commit after the retract. A crashed worker's run is closed by
+        # the reaper / restart recovery, after which the retract proceeds.
         return [dict(r) for r in self.conn.execute(
-            "SELECT * FROM outbox WHERE delivered_at IS NULL AND next_try_at<=? ORDER BY created_at LIMIT ?",
-            (self.now(), limit))]
+            "SELECT * FROM outbox o WHERE o.delivered_at IS NULL AND o.next_try_at<=? "
+            "AND NOT (o.topic LIKE 'compensate.%' AND EXISTS "
+            "(SELECT 1 FROM step_runs sr WHERE sr.job_id=o.job_id AND sr.ended_at IS NULL)) "
+            "ORDER BY o.created_at LIMIT ?", (self.now(), limit))]
 
     def outbox_delivered(self, message_id: str) -> None:
         with tx(self.conn) as c:

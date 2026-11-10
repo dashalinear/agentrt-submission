@@ -1,0 +1,32 @@
+{
+  "env": {
+    "os": "Linux-6.18.58.1-microsoft-standard-WSL2-x86_64-with-glibc2.41",
+    "python": "3.13.18",
+    "machine": "x86_64",
+    "processor": "",
+    "cpu_count": 16,
+    "sqlite": "3.46.1",
+    "ram_gb": 7.4,
+    "fastapi": "0.162.0",
+    "uvicorn": "0.54.0",
+    "httpx": "0.28.1",
+    "pydantic": "2.14.3",
+    "starlette": "1.10.0",
+    "pytest": "9.2.0",
+    "matplotlib": "3.11.2",
+    "numpy": "2.5.4",
+    "Markdown": "3.11.3"
+  },
+  "without_pollers": {
+    "pollers": 0,
+    "n_jobs": 10,
+    "create_to_waiting_p50_s": 0.0907,
+    "create_to_waiting_max_s": 0.0999
+  },
+  "with_20_pollers": {
+    "pollers": 20,
+    "n_jobs": 10,
+    "create_to_waiting_p50_s": 5.035,
+    "create_to_waiting_max_s": 5.3148
+  }
+}

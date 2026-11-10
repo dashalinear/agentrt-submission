@@ -112,30 +112,30 @@
       "policy": "fifo",
       "seed": 11,
       "arrivals": 607,
-      "admitted": 524,
-      "rejected": 83,
+      "admitted": 525,
+      "rejected": 82,
       "makespan_v": 480.219,
-      "real_seconds": 48.16,
+      "real_seconds": 48.1,
       "max_global_concurrency_observed": 6,
       "global_limit": 6,
       "max_per_tenant_observed": {
         "heavy": 6,
-        "light1": 4,
-        "light2": 5
+        "light1": 5,
+        "light2": 4
       },
       "per_tenant_limit": 6,
       "counters": {
-        "rejected_queue_full": 83
+        "rejected_queue_full": 82
       }
     },
     {
       "policy": "drr",
       "seed": 11,
       "arrivals": 607,
-      "admitted": 545,
-      "rejected": 62,
-      "makespan_v": 480.214,
-      "real_seconds": 48.14,
+      "admitted": 543,
+      "rejected": 64,
+      "makespan_v": 480.231,
+      "real_seconds": 48.08,
       "max_global_concurrency_observed": 6,
       "global_limit": 6,
       "max_per_tenant_observed": {
@@ -145,7 +145,7 @@
       },
       "per_tenant_limit": 6,
       "counters": {
-        "rejected_queue_full": 62
+        "rejected_queue_full": 64
       }
     },
     {
@@ -154,8 +154,8 @@
       "arrivals": 607,
       "admitted": 497,
       "rejected": 110,
-      "makespan_v": 480.252,
-      "real_seconds": 48.17,
+      "makespan_v": 480.231,
+      "real_seconds": 48.14,
       "max_global_concurrency_observed": 6,
       "global_limit": 6,
       "max_per_tenant_observed": {
@@ -174,8 +174,8 @@
       "arrivals": 605,
       "admitted": 532,
       "rejected": 73,
-      "makespan_v": 490.085,
-      "real_seconds": 49.15,
+      "makespan_v": 489.553,
+      "real_seconds": 49.1,
       "max_global_concurrency_observed": 6,
       "global_limit": 6,
       "max_per_tenant_observed": {
@@ -192,10 +192,10 @@
       "policy": "drr",
       "seed": 12,
       "arrivals": 605,
-      "admitted": 553,
-      "rejected": 52,
-      "makespan_v": 490.055,
-      "real_seconds": 49.13,
+      "admitted": 555,
+      "rejected": 50,
+      "makespan_v": 490.019,
+      "real_seconds": 49.08,
       "max_global_concurrency_observed": 6,
       "global_limit": 6,
       "max_per_tenant_observed": {
@@ -205,7 +205,7 @@
       },
       "per_tenant_limit": 6,
       "counters": {
-        "rejected_queue_full": 52
+        "rejected_queue_full": 50
       }
     },
     {
@@ -214,8 +214,8 @@
       "arrivals": 605,
       "admitted": 501,
       "rejected": 104,
-      "makespan_v": 490.053,
-      "real_seconds": 49.12,
+      "makespan_v": 490.127,
+      "real_seconds": 49.08,
       "max_global_concurrency_observed": 6,
       "global_limit": 6,
       "max_per_tenant_observed": {
@@ -234,8 +234,8 @@
       "arrivals": 599,
       "admitted": 542,
       "rejected": 57,
-      "makespan_v": 479.555,
-      "real_seconds": 48.09,
+      "makespan_v": 479.549,
+      "real_seconds": 48.05,
       "max_global_concurrency_observed": 6,
       "global_limit": 6,
       "max_per_tenant_observed": {
@@ -254,8 +254,8 @@
       "arrivals": 599,
       "admitted": 561,
       "rejected": 38,
-      "makespan_v": 479.556,
-      "real_seconds": 48.1,
+      "makespan_v": 479.55,
+      "real_seconds": 48.02,
       "max_global_concurrency_observed": 6,
       "global_limit": 6,
       "max_per_tenant_observed": {
@@ -272,10 +272,10 @@
       "policy": "drr_iso",
       "seed": 13,
       "arrivals": 599,
-      "admitted": 503,
-      "rejected": 96,
-      "makespan_v": 479.553,
-      "real_seconds": 48.1,
+      "admitted": 502,
+      "rejected": 97,
+      "makespan_v": 479.561,
+      "real_seconds": 48.06,
       "max_global_concurrency_observed": 6,
       "global_limit": 6,
       "max_per_tenant_observed": {
@@ -285,7 +285,7 @@
       },
       "per_tenant_limit": 3,
       "counters": {
-        "rejected_tenant_queue_full": 96
+        "rejected_tenant_queue_full": 97
       }
     }
   ]

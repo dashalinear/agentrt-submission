@@ -1,10 +1,10 @@
 ============================= test session starts =============================
-platform win32 -- Python 3.13.7, pytest-9.2.0, pluggy-1.7.0 -- C:\Users\DASHA\AppData\Roaming\Claude\scratch-workspaces\b33051f0-de6b-4a9e-8cb5-3f4a9de5d4d4\ca869129-0407-443a-acf2-ac3bc810b457\scratch-2026-11-07-6ce89b\.venv\Scripts\python.exe
-rootdir: C:\Users\DASHA\AppData\Roaming\Claude\scratch-workspaces\b33051f0-de6b-4a9e-8cb5-3f4a9de5d4d4\ca869129-0407-443a-acf2-ac3bc810b457\scratch-2026-11-07-6ce89b
+platform win32 -- Python 3.13.7, pytest-9.2.0, pluggy-1.7.0 -- D:\загрузки\AI in production & MLOps\agentrt-submission\.venv\Scripts\python.exe
+rootdir: D:\загрузки\AI in production & MLOps\agentrt-submission
 configfile: pytest.ini
 testpaths: tests
 plugins: anyio-4.16.0
-collecting ... collected 56 items
+collecting ... collected 57 items
 
 tests/test_cancel.py::test_cancel_queued PASSED                          [  1%]
 tests/test_cancel.py::test_cancel_waiting PASSED                         [  3%]
@@ -14,45 +14,46 @@ tests/test_events.py::test_duplicate_event_applied_once PASSED           [  8%]
 tests/test_events.py::test_event_in_wrong_state_is_ignored_and_logged PASSED [ 10%]
 tests/test_events.py::test_stale_approval_id_is_ignored PASSED           [ 12%]
 tests/test_events.py::test_approval_after_cancel_or_timeout_does_not_change_state PASSED [ 14%]
-tests/test_events.py::test_rejection_revises_then_fails PASSED           [ 16%]
+tests/test_events.py::test_rejection_revises_then_fails PASSED           [ 15%]
 tests/test_events.py::test_outbox_notifies_approval_request_and_terminal_state PASSED [ 17%]
 tests/test_idempotency.py::test_create_job_same_key_returns_same_job PASSED [ 19%]
 tests/test_idempotency.py::test_unique_index_is_the_backstop PASSED      [ 21%]
-tests/test_idempotency.py::test_concurrent_creates_with_same_key_create_one_job PASSED [ 23%]
-tests/test_idempotency.py::test_publisher_dedups_by_idempotency_key PASSED [ 25%]
+tests/test_idempotency.py::test_concurrent_creates_with_same_key_create_one_job PASSED [ 22%]
+tests/test_idempotency.py::test_publisher_dedups_by_idempotency_key PASSED [ 24%]
 tests/test_idempotency.py::test_publisher_ack_lost_then_retry_returns_previous_result PASSED [ 26%]
 tests/test_idempotency.py::test_http_api_create_idempotent_and_429 PASSED [ 28%]
-tests/test_idempotency.py::test_http_publisher_app PASSED                [ 30%]
-tests/test_llm.py::test_simulated_llm_is_deterministic PASSED            [ 32%]
+tests/test_idempotency.py::test_http_publisher_app PASSED                [ 29%]
+tests/test_llm.py::test_simulated_llm_is_deterministic PASSED            [ 31%]
 tests/test_llm.py::test_openai_compatible_success_and_usage PASSED       [ 33%]
 tests/test_llm.py::test_openai_compatible_error_classification[429-TransientError] PASSED [ 35%]
-tests/test_llm.py::test_openai_compatible_error_classification[503-TransientError] PASSED [ 37%]
-tests/test_llm.py::test_openai_compatible_error_classification[400-PermanentError] PASSED [ 39%]
-tests/test_llm.py::test_openai_compatible_error_classification[401-PermanentError] PASSED [ 41%]
+tests/test_llm.py::test_openai_compatible_error_classification[503-TransientError] PASSED [ 36%]
+tests/test_llm.py::test_openai_compatible_error_classification[400-PermanentError] PASSED [ 38%]
+tests/test_llm.py::test_openai_compatible_error_classification[401-PermanentError] PASSED [ 40%]
 tests/test_llm.py::test_openai_compatible_transport_error_is_transient PASSED [ 42%]
-tests/test_races.py::test_deadline_beats_approval_when_timer_not_yet_fired PASSED [ 44%]
-tests/test_races.py::test_cancel_beats_deadline_when_timer_not_yet_fired PASSED [ 46%]
-tests/test_races.py::test_deadline_beats_step_completion PASSED          [ 48%]
-tests/test_races.py::test_randomized_races_preserve_invariants PASSED    [ 50%]
-tests/test_recovery.py::test_kill_between_steps_does_not_repeat_checkpointed_steps PASSED [ 51%]
-tests/test_recovery.py::test_kill_during_llm_call_is_retried_after_lease_expiry PASSED [ 53%]
-tests/test_recovery.py::test_side_effect_without_ack_is_not_duplicated PASSED [ 55%]
+tests/test_races.py::test_deadline_beats_approval_when_timer_not_yet_fired PASSED [ 43%]
+tests/test_races.py::test_cancel_beats_deadline_when_timer_not_yet_fired PASSED [ 45%]
+tests/test_races.py::test_deadline_beats_step_completion PASSED          [ 47%]
+tests/test_races.py::test_randomized_races_preserve_invariants PASSED    [ 49%]
+tests/test_recovery.py::test_kill_between_steps_does_not_repeat_checkpointed_steps PASSED [ 50%]
+tests/test_recovery.py::test_kill_during_llm_call_is_retried_after_lease_expiry PASSED [ 52%]
+tests/test_recovery.py::test_publication_retracted_durably_when_job_cancelled_after_worker_crash PASSED [ 54%]
+tests/test_recovery.py::test_side_effect_without_ack_is_not_duplicated PASSED [ 56%]
 tests/test_retry.py::test_repeated_transient_error_bounded_then_failed PASSED [ 57%]
-tests/test_retry.py::test_transient_then_success PASSED                  [ 58%]
-tests/test_retry.py::test_permanent_error_fails_immediately PASSED       [ 60%]
-tests/test_retry.py::test_token_budget_and_max_steps PASSED              [ 62%]
+tests/test_retry.py::test_transient_then_success PASSED                  [ 59%]
+tests/test_retry.py::test_permanent_error_fails_immediately PASSED       [ 61%]
+tests/test_retry.py::test_token_budget_and_max_steps PASSED              [ 63%]
 tests/test_retry.py::test_backoff_equal_jitter_bounds PASSED             [ 64%]
 tests/test_retry.py::test_lease_loss_counts_as_attempt_poison_pill PASSED [ 66%]
-tests/test_scheduling.py::test_global_and_per_tenant_limits_never_exceeded[fifo] PASSED [ 67%]
-tests/test_scheduling.py::test_global_and_per_tenant_limits_never_exceeded[drr] PASSED [ 69%]
+tests/test_scheduling.py::test_global_and_per_tenant_limits_never_exceeded[fifo] PASSED [ 68%]
+tests/test_scheduling.py::test_global_and_per_tenant_limits_never_exceeded[drr] PASSED [ 70%]
 tests/test_scheduling.py::test_limits_hold_across_two_worker_processes_sharing_the_db PASSED [ 71%]
 tests/test_scheduling.py::test_admission_control_rejects_with_reason PASSED [ 73%]
 tests/test_scheduling.py::test_fifo_serves_heavy_backlog_first_drr_interleaves PASSED [ 75%]
-tests/test_scheduling.py::test_aging_lets_old_low_priority_job_overtake PASSED [ 76%]
+tests/test_scheduling.py::test_aging_lets_old_low_priority_job_overtake PASSED [ 77%]
 tests/test_smoke.py::test_happy_path_with_approval PASSED                [ 78%]
 tests/test_states.py::test_allowed_transitions_table_matches_code PASSED [ 80%]
 tests/test_states.py::test_terminal_row_cannot_be_updated_even_with_raw_sql[SUCCEEDED] PASSED [ 82%]
-tests/test_states.py::test_terminal_row_cannot_be_updated_even_with_raw_sql[FAILED] PASSED [ 83%]
+tests/test_states.py::test_terminal_row_cannot_be_updated_even_with_raw_sql[FAILED] PASSED [ 84%]
 tests/test_states.py::test_terminal_row_cannot_be_updated_even_with_raw_sql[CANCELLED] PASSED [ 85%]
 tests/test_states.py::test_terminal_row_cannot_be_updated_even_with_raw_sql[TIMED_OUT] PASSED [ 87%]
 tests/test_states.py::test_invalid_transition_rejected_by_trigger PASSED [ 89%]
@@ -65,46 +66,46 @@ tests/test_timers_and_slots.py::test_waiting_job_does_not_occupy_execution_slot 
 
 ============================== warnings summary ===============================
 .venv\Lib\site-packages\fastapi\testclient.py:1
-  C:\Users\DASHA\AppData\Roaming\Claude\scratch-workspaces\b33051f0-de6b-4a9e-8cb5-3f4a9de5d4d4\ca869129-0407-443a-acf2-ac3bc810b457\scratch-2026-11-07-6ce89b\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+  D:\загрузки\AI in production & MLOps\agentrt-submission\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
     from starlette.testclient import TestClient as TestClient  # noqa
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-======================= 56 passed, 1 warning in 26.06s ========================
-{"case": "baseline", "rep": 0, "final_state": "SUCCEEDED", "total_time_s": 2.882, "resume_after_spawn_s": null, "repeated_llm_calls": 0, "publish_physical": 1, "publish_logical": 1}
-{"case": "baseline", "rep": 1, "final_state": "SUCCEEDED", "total_time_s": 2.864, "resume_after_spawn_s": null, "repeated_llm_calls": 0, "publish_physical": 1, "publish_logical": 1}
-{"case": "baseline", "rep": 2, "final_state": "SUCCEEDED", "total_time_s": 2.858, "resume_after_spawn_s": null, "repeated_llm_calls": 0, "publish_physical": 1, "publish_logical": 1}
-{"case": "baseline", "rep": 3, "final_state": "SUCCEEDED", "total_time_s": 2.837, "resume_after_spawn_s": null, "repeated_llm_calls": 0, "publish_physical": 1, "publish_logical": 1}
-{"case": "baseline", "rep": 4, "final_state": "SUCCEEDED", "total_time_s": 2.873, "resume_after_spawn_s": null, "repeated_llm_calls": 0, "publish_physical": 1, "publish_logical": 1}
-{"case": "s1_kill_between_steps", "rep": 0, "final_state": "SUCCEEDED", "total_time_s": 4.494, "resume_after_spawn_s": 1.412, "repeated_llm_calls": 0, "publish_physical": 1, "publish_logical": 1}
-{"case": "s1_kill_between_steps", "rep": 1, "final_state": "SUCCEEDED", "total_time_s": 4.512, "resume_after_spawn_s": 1.447, "repeated_llm_calls": 0, "publish_physical": 1, "publish_logical": 1}
-{"case": "s1_kill_between_steps", "rep": 2, "final_state": "SUCCEEDED", "total_time_s": 5.034, "resume_after_spawn_s": 1.93, "repeated_llm_calls": 0, "publish_physical": 1, "publish_logical": 1}
-{"case": "s1_kill_between_steps", "rep": 3, "final_state": "SUCCEEDED", "total_time_s": 4.466, "resume_after_spawn_s": 1.402, "repeated_llm_calls": 0, "publish_physical": 1, "publish_logical": 1}
-{"case": "s1_kill_between_steps", "rep": 4, "final_state": "SUCCEEDED", "total_time_s": 4.477, "resume_after_spawn_s": 1.407, "repeated_llm_calls": 0, "publish_physical": 1, "publish_logical": 1}
-{"case": "s2a_kill_during_llm_lease", "rep": 0, "final_state": "SUCCEEDED", "total_time_s": 5.21, "resume_after_spawn_s": 2.051, "repeated_llm_calls": 1, "publish_physical": 1, "publish_logical": 1}
-{"case": "s2a_kill_during_llm_lease", "rep": 1, "final_state": "SUCCEEDED", "total_time_s": 5.317, "resume_after_spawn_s": 2.148, "repeated_llm_calls": 1, "publish_physical": 1, "publish_logical": 1}
-{"case": "s2a_kill_during_llm_lease", "rep": 2, "final_state": "SUCCEEDED", "total_time_s": 5.214, "resume_after_spawn_s": 2.045, "repeated_llm_calls": 1, "publish_physical": 1, "publish_logical": 1}
-{"case": "s2a_kill_during_llm_lease", "rep": 3, "final_state": "SUCCEEDED", "total_time_s": 5.194, "resume_after_spawn_s": 2.031, "repeated_llm_calls": 1, "publish_physical": 1, "publish_logical": 1}
-{"case": "s2a_kill_during_llm_lease", "rep": 4, "final_state": "SUCCEEDED", "total_time_s": 5.216, "resume_after_spawn_s": 2.054, "repeated_llm_calls": 1, "publish_physical": 1, "publish_logical": 1}
-{"case": "s2b_kill_during_llm_restart", "rep": 0, "final_state": "SUCCEEDED", "total_time_s": 5.104, "resume_after_spawn_s": 1.92, "repeated_llm_calls": 1, "publish_physical": 1, "publish_logical": 1}
-{"case": "s2b_kill_during_llm_restart", "rep": 1, "final_state": "SUCCEEDED", "total_time_s": 4.591, "resume_after_spawn_s": 1.402, "repeated_llm_calls": 1, "publish_physical": 1, "publish_logical": 1}
-{"case": "s2b_kill_during_llm_restart", "rep": 2, "final_state": "SUCCEEDED", "total_time_s": 4.607, "resume_after_spawn_s": 1.427, "repeated_llm_calls": 1, "publish_physical": 1, "publish_logical": 1}
-{"case": "s2b_kill_during_llm_restart", "rep": 3, "final_state": "SUCCEEDED", "total_time_s": 4.748, "resume_after_spawn_s": 1.585, "repeated_llm_calls": 1, "publish_physical": 1, "publish_logical": 1}
-{"case": "s2b_kill_during_llm_restart", "rep": 4, "final_state": "SUCCEEDED", "total_time_s": 5.227, "resume_after_spawn_s": 2.058, "repeated_llm_calls": 1, "publish_physical": 1, "publish_logical": 1}
-{"case": "s3a_crash_after_publish", "rep": 0, "final_state": "SUCCEEDED", "total_time_s": 4.964, "resume_after_spawn_s": 1.918, "repeated_llm_calls": 0, "publish_physical": 2, "publish_logical": 1}
-{"case": "s3a_crash_after_publish", "rep": 1, "final_state": "SUCCEEDED", "total_time_s": 4.567, "resume_after_spawn_s": 1.526, "repeated_llm_calls": 0, "publish_physical": 2, "publish_logical": 1}
-{"case": "s3a_crash_after_publish", "rep": 2, "final_state": "SUCCEEDED", "total_time_s": 4.508, "resume_after_spawn_s": 1.465, "repeated_llm_calls": 0, "publish_physical": 2, "publish_logical": 1}
-{"case": "s3a_crash_after_publish", "rep": 3, "final_state": "SUCCEEDED", "total_time_s": 4.496, "resume_after_spawn_s": 1.458, "repeated_llm_calls": 0, "publish_physical": 2, "publish_logical": 1}
-{"case": "s3a_crash_after_publish", "rep": 4, "final_state": "SUCCEEDED", "total_time_s": 5.023, "resume_after_spawn_s": 1.973, "repeated_llm_calls": 0, "publish_physical": 2, "publish_logical": 1}
-{"case": "s3b_ack_lost_network", "rep": 0, "final_state": "SUCCEEDED", "total_time_s": 3.354, "resume_after_spawn_s": null, "repeated_llm_calls": 0, "publish_physical": 2, "publish_logical": 1}
-{"case": "s3b_ack_lost_network", "rep": 1, "final_state": "SUCCEEDED", "total_time_s": 3.366, "resume_after_spawn_s": null, "repeated_llm_calls": 0, "publish_physical": 2, "publish_logical": 1}
-{"case": "s3b_ack_lost_network", "rep": 2, "final_state": "SUCCEEDED", "total_time_s": 3.663, "resume_after_spawn_s": null, "repeated_llm_calls": 0, "publish_physical": 2, "publish_logical": 1}
-{"case": "s3b_ack_lost_network", "rep": 3, "final_state": "SUCCEEDED", "total_time_s": 3.604, "resume_after_spawn_s": null, "repeated_llm_calls": 0, "publish_physical": 2, "publish_logical": 1}
-{"case": "s3b_ack_lost_network", "rep": 4, "final_state": "SUCCEEDED", "total_time_s": 3.436, "resume_after_spawn_s": null, "repeated_llm_calls": 0, "publish_physical": 2, "publish_logical": 1}
-{"case": "s4_transient_repeated", "rep": 0, "final_state": "FAILED", "total_time_s": 7.4, "resume_after_spawn_s": null, "repeated_llm_calls": 3, "publish_physical": 0, "publish_logical": 0}
-{"case": "s4_transient_repeated", "rep": 1, "final_state": "FAILED", "total_time_s": 7.614, "resume_after_spawn_s": null, "repeated_llm_calls": 3, "publish_physical": 0, "publish_logical": 0}
-{"case": "s4_transient_repeated", "rep": 2, "final_state": "FAILED", "total_time_s": 7.088, "resume_after_spawn_s": null, "repeated_llm_calls": 3, "publish_physical": 0, "publish_logical": 0}
-{"case": "s4_transient_repeated", "rep": 3, "final_state": "FAILED", "total_time_s": 7.265, "resume_after_spawn_s": null, "repeated_llm_calls": 3, "publish_physical": 0, "publish_logical": 0}
-{"case": "s4_transient_repeated", "rep": 4, "final_state": "FAILED", "total_time_s": 7.66, "resume_after_spawn_s": null, "repeated_llm_calls": 3, "publish_physical": 0, "publish_logical": 0}
+======================= 57 passed, 1 warning in 27.41s ========================
+{"case": "baseline", "rep": 0, "final_state": "SUCCEEDED", "total_time_s": 2.841, "resume_after_spawn_s": null, "repeated_llm_calls": 0, "publish_physical": 1, "publish_logical": 1}
+{"case": "baseline", "rep": 1, "final_state": "SUCCEEDED", "total_time_s": 2.835, "resume_after_spawn_s": null, "repeated_llm_calls": 0, "publish_physical": 1, "publish_logical": 1}
+{"case": "baseline", "rep": 2, "final_state": "SUCCEEDED", "total_time_s": 2.846, "resume_after_spawn_s": null, "repeated_llm_calls": 0, "publish_physical": 1, "publish_logical": 1}
+{"case": "baseline", "rep": 3, "final_state": "SUCCEEDED", "total_time_s": 2.824, "resume_after_spawn_s": null, "repeated_llm_calls": 0, "publish_physical": 1, "publish_logical": 1}
+{"case": "baseline", "rep": 4, "final_state": "SUCCEEDED", "total_time_s": 2.825, "resume_after_spawn_s": null, "repeated_llm_calls": 0, "publish_physical": 1, "publish_logical": 1}
+{"case": "s1_kill_between_steps", "rep": 0, "final_state": "SUCCEEDED", "total_time_s": 4.234, "resume_after_spawn_s": 1.172, "repeated_llm_calls": 0, "publish_physical": 1, "publish_logical": 1}
+{"case": "s1_kill_between_steps", "rep": 1, "final_state": "SUCCEEDED", "total_time_s": 4.187, "resume_after_spawn_s": 1.149, "repeated_llm_calls": 0, "publish_physical": 1, "publish_logical": 1}
+{"case": "s1_kill_between_steps", "rep": 2, "final_state": "SUCCEEDED", "total_time_s": 4.217, "resume_after_spawn_s": 1.165, "repeated_llm_calls": 0, "publish_physical": 1, "publish_logical": 1}
+{"case": "s1_kill_between_steps", "rep": 3, "final_state": "SUCCEEDED", "total_time_s": 4.197, "resume_after_spawn_s": 1.164, "repeated_llm_calls": 0, "publish_physical": 1, "publish_logical": 1}
+{"case": "s1_kill_between_steps", "rep": 4, "final_state": "SUCCEEDED", "total_time_s": 4.192, "resume_after_spawn_s": 1.159, "repeated_llm_calls": 0, "publish_physical": 1, "publish_logical": 1}
+{"case": "s2a_kill_during_llm_lease", "rep": 0, "final_state": "SUCCEEDED", "total_time_s": 5.119, "resume_after_spawn_s": 1.972, "repeated_llm_calls": 1, "publish_physical": 1, "publish_logical": 1}
+{"case": "s2a_kill_during_llm_lease", "rep": 1, "final_state": "SUCCEEDED", "total_time_s": 5.149, "resume_after_spawn_s": 2.015, "repeated_llm_calls": 1, "publish_physical": 1, "publish_logical": 1}
+{"case": "s2a_kill_during_llm_lease", "rep": 2, "final_state": "SUCCEEDED", "total_time_s": 5.131, "resume_after_spawn_s": 1.999, "repeated_llm_calls": 1, "publish_physical": 1, "publish_logical": 1}
+{"case": "s2a_kill_during_llm_lease", "rep": 3, "final_state": "SUCCEEDED", "total_time_s": 5.16, "resume_after_spawn_s": 2.004, "repeated_llm_calls": 1, "publish_physical": 1, "publish_logical": 1}
+{"case": "s2a_kill_during_llm_lease", "rep": 4, "final_state": "SUCCEEDED", "total_time_s": 5.124, "resume_after_spawn_s": 1.977, "repeated_llm_calls": 1, "publish_physical": 1, "publish_logical": 1}
+{"case": "s2b_kill_during_llm_restart", "rep": 0, "final_state": "SUCCEEDED", "total_time_s": 4.326, "resume_after_spawn_s": 1.185, "repeated_llm_calls": 1, "publish_physical": 1, "publish_logical": 1}
+{"case": "s2b_kill_during_llm_restart", "rep": 1, "final_state": "SUCCEEDED", "total_time_s": 4.298, "resume_after_spawn_s": 1.146, "repeated_llm_calls": 1, "publish_physical": 1, "publish_logical": 1}
+{"case": "s2b_kill_during_llm_restart", "rep": 2, "final_state": "SUCCEEDED", "total_time_s": 4.344, "resume_after_spawn_s": 1.184, "repeated_llm_calls": 1, "publish_physical": 1, "publish_logical": 1}
+{"case": "s2b_kill_during_llm_restart", "rep": 3, "final_state": "SUCCEEDED", "total_time_s": 4.37, "resume_after_spawn_s": 1.224, "repeated_llm_calls": 1, "publish_physical": 1, "publish_logical": 1}
+{"case": "s2b_kill_during_llm_restart", "rep": 4, "final_state": "SUCCEEDED", "total_time_s": 4.426, "resume_after_spawn_s": 1.266, "repeated_llm_calls": 1, "publish_physical": 1, "publish_logical": 1}
+{"case": "s3a_crash_after_publish", "rep": 0, "final_state": "SUCCEEDED", "total_time_s": 4.295, "resume_after_spawn_s": 1.285, "repeated_llm_calls": 0, "publish_physical": 2, "publish_logical": 1}
+{"case": "s3a_crash_after_publish", "rep": 1, "final_state": "SUCCEEDED", "total_time_s": 4.248, "resume_after_spawn_s": 1.234, "repeated_llm_calls": 0, "publish_physical": 2, "publish_logical": 1}
+{"case": "s3a_crash_after_publish", "rep": 2, "final_state": "SUCCEEDED", "total_time_s": 4.329, "resume_after_spawn_s": 1.316, "repeated_llm_calls": 0, "publish_physical": 2, "publish_logical": 1}
+{"case": "s3a_crash_after_publish", "rep": 3, "final_state": "SUCCEEDED", "total_time_s": 4.371, "resume_after_spawn_s": 1.327, "repeated_llm_calls": 0, "publish_physical": 2, "publish_logical": 1}
+{"case": "s3a_crash_after_publish", "rep": 4, "final_state": "SUCCEEDED", "total_time_s": 4.377, "resume_after_spawn_s": 1.36, "repeated_llm_calls": 0, "publish_physical": 2, "publish_logical": 1}
+{"case": "s3b_ack_lost_network", "rep": 0, "final_state": "SUCCEEDED", "total_time_s": 3.42, "resume_after_spawn_s": null, "repeated_llm_calls": 0, "publish_physical": 2, "publish_logical": 1}
+{"case": "s3b_ack_lost_network", "rep": 1, "final_state": "SUCCEEDED", "total_time_s": 3.331, "resume_after_spawn_s": null, "repeated_llm_calls": 0, "publish_physical": 2, "publish_logical": 1}
+{"case": "s3b_ack_lost_network", "rep": 2, "final_state": "SUCCEEDED", "total_time_s": 3.361, "resume_after_spawn_s": null, "repeated_llm_calls": 0, "publish_physical": 2, "publish_logical": 1}
+{"case": "s3b_ack_lost_network", "rep": 3, "final_state": "SUCCEEDED", "total_time_s": 3.298, "resume_after_spawn_s": null, "repeated_llm_calls": 0, "publish_physical": 2, "publish_logical": 1}
+{"case": "s3b_ack_lost_network", "rep": 4, "final_state": "SUCCEEDED", "total_time_s": 3.215, "resume_after_spawn_s": null, "repeated_llm_calls": 0, "publish_physical": 2, "publish_logical": 1}
+{"case": "s4_transient_repeated", "rep": 0, "final_state": "FAILED", "total_time_s": 7.04, "resume_after_spawn_s": null, "repeated_llm_calls": 3, "publish_physical": 0, "publish_logical": 0}
+{"case": "s4_transient_repeated", "rep": 1, "final_state": "FAILED", "total_time_s": 7.062, "resume_after_spawn_s": null, "repeated_llm_calls": 3, "publish_physical": 0, "publish_logical": 0}
+{"case": "s4_transient_repeated", "rep": 2, "final_state": "FAILED", "total_time_s": 7.122, "resume_after_spawn_s": null, "repeated_llm_calls": 3, "publish_physical": 0, "publish_logical": 0}
+{"case": "s4_transient_repeated", "rep": 3, "final_state": "FAILED", "total_time_s": 6.849, "resume_after_spawn_s": null, "repeated_llm_calls": 3, "publish_physical": 0, "publish_logical": 0}
+{"case": "s4_transient_repeated", "rep": 4, "final_state": "FAILED", "total_time_s": 7.411, "resume_after_spawn_s": null, "repeated_llm_calls": 3, "publish_physical": 0, "publish_logical": 0}
 e1-e4 done
 e5 done
 e6-e7 done
@@ -123,23 +124,23 @@ e6-e7 done
    {
     "metric": "event_to_transition_ms",
     "n": 100,
-    "p50": 0.122,
-    "p95": 27.058,
-    "max": 51.101
+    "p50": 0.118,
+    "p95": 14.588,
+    "max": 57.801
    },
    {
     "metric": "client_roundtrip_ms",
     "n": 100,
-    "p50": 0.476,
-    "p95": 27.351,
-    "max": 51.503
+    "p50": 0.658,
+    "p95": 15.143,
+    "max": 58.411
    },
    {
     "metric": "event_to_next_step_start_ms",
     "n": 100,
-    "p50": 9.982,
-    "p95": 56.993,
-    "max": 99.486
+    "p50": 11.831,
+    "p95": 43.278,
+    "max": 114.779
    }
   ],
   "invariants": {
@@ -158,9 +159,9 @@ e6-e7 done
   "lateness": {
    "metric": "timeout_lateness_ms",
    "n": 40,
-   "p50": 3.996,
-   "p95": 6.581,
-   "max": 6.909
+   "p50": 4.147,
+   "p95": 8.301,
+   "max": 8.886
   },
   "step_runs_during_wait_total": 0,
   "invariants": {
@@ -211,41 +212,41 @@ e6-e7 done
  "e5": {
   "reps": 300,
   "final": {
-   "SUCCEEDED": 99,
-   "CANCELLED": 123,
-   "TIMED_OUT": 78
+   "SUCCEEDED": 84,
+   "CANCELLED": 128,
+   "TIMED_OUT": 88
   },
   "terminal_from": {
-   "RUNNING->SUCCEEDED": 99,
-   "RUNNING->CANCELLED": 66,
-   "WAITING_EVENT->TIMED_OUT": 21,
-   "RUNNING->TIMED_OUT": 48,
-   "WAITING_EVENT->CANCELLED": 39,
-   "QUEUED->TIMED_OUT": 9,
-   "QUEUED->CANCELLED": 18
+   "RUNNING->SUCCEEDED": 84,
+   "RUNNING->CANCELLED": 72,
+   "WAITING_EVENT->TIMED_OUT": 27,
+   "WAITING_EVENT->CANCELLED": 36,
+   "QUEUED->CANCELLED": 20,
+   "QUEUED->TIMED_OUT": 11,
+   "RUNNING->TIMED_OUT": 50
   },
   "approval_outcomes": {
-   "applied": 240,
-   "ignored_terminal": 48,
-   "deadline_won": 12
+   "applied": 237,
+   "deadline_won": 15,
+   "ignored_terminal": 48
   },
   "cancel_outcomes": {
-   "already_terminal": 177,
-   "cancelled": 123
+   "already_terminal": 172,
+   "cancelled": 128
   },
   "multi_terminal_jobs": 0,
   "orphan_publications": 0,
   "succeeded_without_publication": 0,
-  "published_then_retracted": 54,
+  "published_then_retracted": 46,
   "cancel_stop": {
    "metric": "cancel_stop_ms",
-   "n": 60,
-   "p50": 23.48,
-   "p95": 63.927,
-   "max": 76.51
+   "n": 58,
+   "p50": 20.565,
+   "p95": 63.43,
+   "max": 75.76
   },
   "invariants": {
-   "transitions_checked": 3787,
+   "transitions_checked": 3749,
    "invalid_transitions": 0,
    "terminal_changes": 0,
    "version_gaps": 0,
@@ -254,8 +255,8 @@ e6-e7 done
    "invalid_transition_attempts_counter": 0,
    "counters": {
     "events_late": 48,
-    "cancel_after_terminal": 177,
-    "late_results_discarded": 62
+    "cancel_after_terminal": 172,
+    "late_results_discarded": 49
    }
   }
  },
@@ -271,9 +272,9 @@ e6-e7 done
    "RUNNING": {
     "metric": "stop_latency_ms[RUNNING]",
     "n": 15,
-    "p50": 67.29,
-    "p95": 106.996,
-    "max": 109.67
+    "p50": 63.48,
+    "p95": 93.382,
+    "max": 100.83
    },
    "WAITING_EVENT": {
     "metric": "stop_latency_ms[WAITING_EVENT]",
@@ -302,14 +303,15 @@ e6-e7 done
   }
  }
 }
-{"policy": "fifo", "seed": 11, "arrivals": 607, "admitted": 524, "rejected": 83, "makespan_v": 480.219, "real_seconds": 48.16, "max_global_concurrency_observed": 6, "global_limit": 6, "max_per_tenant_observed": {"heavy": 6, "light1": 4, "light2": 5}, "per_tenant_limit": 6, "counters": {"rejected_queue_full": 83}}
-{"policy": "drr", "seed": 11, "arrivals": 607, "admitted": 545, "rejected": 62, "makespan_v": 480.214, "real_seconds": 48.14, "max_global_concurrency_observed": 6, "global_limit": 6, "max_per_tenant_observed": {"heavy": 6, "light1": 4, "light2": 5}, "per_tenant_limit": 6, "counters": {"rejected_queue_full": 62}}
-{"policy": "drr_iso", "seed": 11, "arrivals": 607, "admitted": 497, "rejected": 110, "makespan_v": 480.252, "real_seconds": 48.17, "max_global_concurrency_observed": 6, "global_limit": 6, "max_per_tenant_observed": {"heavy": 3, "light1": 3, "light2": 3}, "per_tenant_limit": 3, "counters": {"rejected_tenant_queue_full": 110}}
-{"policy": "fifo", "seed": 12, "arrivals": 605, "admitted": 532, "rejected": 73, "makespan_v": 490.085, "real_seconds": 49.15, "max_global_concurrency_observed": 6, "global_limit": 6, "max_per_tenant_observed": {"heavy": 6, "light1": 5, "light2": 4}, "per_tenant_limit": 6, "counters": {"rejected_queue_full": 73}}
-{"policy": "drr", "seed": 12, "arrivals": 605, "admitted": 553, "rejected": 52, "makespan_v": 490.055, "real_seconds": 49.13, "max_global_concurrency_observed": 6, "global_limit": 6, "max_per_tenant_observed": {"heavy": 6, "light1": 5, "light2": 4}, "per_tenant_limit": 6, "counters": {"rejected_queue_full": 52}}
-{"policy": "drr_iso", "seed": 12, "arrivals": 605, "admitted": 501, "rejected": 104, "makespan_v": 490.053, "real_seconds": 49.12, "max_global_concurrency_observed": 6, "global_limit": 6, "max_per_tenant_observed": {"heavy": 3, "light1": 3, "light2": 3}, "per_tenant_limit": 3, "counters": {"rejected_tenant_queue_full": 104}}
-{"policy": "fifo", "seed": 13, "arrivals": 599, "admitted": 542, "rejected": 57, "makespan_v": 479.555, "real_seconds": 48.09, "max_global_concurrency_observed": 6, "global_limit": 6, "max_per_tenant_observed": {"heavy": 6, "light1": 4, "light2": 4}, "per_tenant_limit": 6, "counters": {"rejected_queue_full": 57}}
-{"policy": "drr", "seed": 13, "arrivals": 599, "admitted": 561, "rejected": 38, "makespan_v": 479.556, "real_seconds": 48.1, "max_global_concurrency_observed": 6, "global_limit": 6, "max_per_tenant_observed": {"heavy": 6, "light1": 3, "light2": 4}, "per_tenant_limit": 6, "counters": {"rejected_queue_full": 38}}
-{"policy": "drr_iso", "seed": 13, "arrivals": 599, "admitted": 503, "rejected": 96, "makespan_v": 479.553, "real_seconds": 48.1, "max_global_concurrency_observed": 6, "global_limit": 6, "max_per_tenant_observed": {"heavy": 3, "light1": 3, "light2": 3}, "per_tenant_limit": 3, "counters": {"rejected_tenant_queue_full": 96}}
+{"policy": "fifo", "seed": 11, "arrivals": 607, "admitted": 525, "rejected": 82, "makespan_v": 480.219, "real_seconds": 48.1, "max_global_concurrency_observed": 6, "global_limit": 6, "max_per_tenant_observed": {"heavy": 6, "light1": 5, "light2": 4}, "per_tenant_limit": 6, "counters": {"rejected_queue_full": 82}}
+{"policy": "drr", "seed": 11, "arrivals": 607, "admitted": 543, "rejected": 64, "makespan_v": 480.231, "real_seconds": 48.08, "max_global_concurrency_observed": 6, "global_limit": 6, "max_per_tenant_observed": {"heavy": 6, "light1": 4, "light2": 5}, "per_tenant_limit": 6, "counters": {"rejected_queue_full": 64}}
+{"policy": "drr_iso", "seed": 11, "arrivals": 607, "admitted": 497, "rejected": 110, "makespan_v": 480.231, "real_seconds": 48.14, "max_global_concurrency_observed": 6, "global_limit": 6, "max_per_tenant_observed": {"heavy": 3, "light1": 3, "light2": 3}, "per_tenant_limit": 3, "counters": {"rejected_tenant_queue_full": 110}}
+{"policy": "fifo", "seed": 12, "arrivals": 605, "admitted": 532, "rejected": 73, "makespan_v": 489.553, "real_seconds": 49.1, "max_global_concurrency_observed": 6, "global_limit": 6, "max_per_tenant_observed": {"heavy": 6, "light1": 5, "light2": 4}, "per_tenant_limit": 6, "counters": {"rejected_queue_full": 73}}
+{"policy": "drr", "seed": 12, "arrivals": 605, "admitted": 555, "rejected": 50, "makespan_v": 490.019, "real_seconds": 49.08, "max_global_concurrency_observed": 6, "global_limit": 6, "max_per_tenant_observed": {"heavy": 6, "light1": 5, "light2": 4}, "per_tenant_limit": 6, "counters": {"rejected_queue_full": 50}}
+{"policy": "drr_iso", "seed": 12, "arrivals": 605, "admitted": 501, "rejected": 104, "makespan_v": 490.127, "real_seconds": 49.08, "max_global_concurrency_observed": 6, "global_limit": 6, "max_per_tenant_observed": {"heavy": 3, "light1": 3, "light2": 3}, "per_tenant_limit": 3, "counters": {"rejected_tenant_queue_full": 104}}
+{"policy": "fifo", "seed": 13, "arrivals": 599, "admitted": 542, "rejected": 57, "makespan_v": 479.549, "real_seconds": 48.05, "max_global_concurrency_observed": 6, "global_limit": 6, "max_per_tenant_observed": {"heavy": 6, "light1": 4, "light2": 4}, "per_tenant_limit": 6, "counters": {"rejected_queue_full": 57}}
+{"policy": "drr", "seed": 13, "arrivals": 599, "admitted": 561, "rejected": 38, "makespan_v": 479.55, "real_seconds": 48.02, "max_global_concurrency_observed": 6, "global_limit": 6, "max_per_tenant_observed": {"heavy": 6, "light1": 3, "light2": 4}, "per_tenant_limit": 6, "counters": {"rejected_queue_full": 38}}
+{"policy": "drr_iso", "seed": 13, "arrivals": 599, "admitted": 502, "rejected": 97, "makespan_v": 479.561, "real_seconds": 48.06, "max_global_concurrency_observed": 6, "global_limit": 6, "max_per_tenant_observed": {"heavy": 3, "light1": 3, "light2": 3}, "per_tenant_limit": 3, "counters": {"rejected_tenant_queue_full": 97}}
+D:\загрузки\AI in production & MLOps\agentrt-submission\results\raw\sample_structured_log.jsonl
 REPORT.md written
 PDF via msedge.exe: True

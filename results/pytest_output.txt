@@ -1,10 +1,10 @@
-============================= test session starts =============================
-platform win32 -- Python 3.13.7, pytest-9.2.0, pluggy-1.7.0 -- C:\Users\DASHA\AppData\Roaming\Claude\scratch-workspaces\b33051f0-de6b-4a9e-8cb5-3f4a9de5d4d4\ca869129-0407-443a-acf2-ac3bc810b457\scratch-2026-11-07-6ce89b\.venv\Scripts\python.exe
-rootdir: C:\Users\DASHA\AppData\Roaming\Claude\scratch-workspaces\b33051f0-de6b-4a9e-8cb5-3f4a9de5d4d4\ca869129-0407-443a-acf2-ac3bc810b457\scratch-2026-11-07-6ce89b
+﻿============================= test session starts =============================
+platform win32 -- Python 3.13.7, pytest-9.2.0, pluggy-1.7.0 -- D:\загрузки\AI in production & MLOps\agentrt-submission\.venv\Scripts\python.exe
+rootdir: D:\загрузки\AI in production & MLOps\agentrt-submission
 configfile: pytest.ini
 testpaths: tests
 plugins: anyio-4.16.0
-collecting ... collected 56 items
+collecting ... collected 57 items
 
 tests/test_cancel.py::test_cancel_queued PASSED                          [  1%]
 tests/test_cancel.py::test_cancel_waiting PASSED                         [  3%]
@@ -14,45 +14,46 @@ tests/test_events.py::test_duplicate_event_applied_once PASSED           [  8%]
 tests/test_events.py::test_event_in_wrong_state_is_ignored_and_logged PASSED [ 10%]
 tests/test_events.py::test_stale_approval_id_is_ignored PASSED           [ 12%]
 tests/test_events.py::test_approval_after_cancel_or_timeout_does_not_change_state PASSED [ 14%]
-tests/test_events.py::test_rejection_revises_then_fails PASSED           [ 16%]
+tests/test_events.py::test_rejection_revises_then_fails PASSED           [ 15%]
 tests/test_events.py::test_outbox_notifies_approval_request_and_terminal_state PASSED [ 17%]
 tests/test_idempotency.py::test_create_job_same_key_returns_same_job PASSED [ 19%]
 tests/test_idempotency.py::test_unique_index_is_the_backstop PASSED      [ 21%]
-tests/test_idempotency.py::test_concurrent_creates_with_same_key_create_one_job PASSED [ 23%]
-tests/test_idempotency.py::test_publisher_dedups_by_idempotency_key PASSED [ 25%]
+tests/test_idempotency.py::test_concurrent_creates_with_same_key_create_one_job PASSED [ 22%]
+tests/test_idempotency.py::test_publisher_dedups_by_idempotency_key PASSED [ 24%]
 tests/test_idempotency.py::test_publisher_ack_lost_then_retry_returns_previous_result PASSED [ 26%]
 tests/test_idempotency.py::test_http_api_create_idempotent_and_429 PASSED [ 28%]
-tests/test_idempotency.py::test_http_publisher_app PASSED                [ 30%]
-tests/test_llm.py::test_simulated_llm_is_deterministic PASSED            [ 32%]
+tests/test_idempotency.py::test_http_publisher_app PASSED                [ 29%]
+tests/test_llm.py::test_simulated_llm_is_deterministic PASSED            [ 31%]
 tests/test_llm.py::test_openai_compatible_success_and_usage PASSED       [ 33%]
 tests/test_llm.py::test_openai_compatible_error_classification[429-TransientError] PASSED [ 35%]
-tests/test_llm.py::test_openai_compatible_error_classification[503-TransientError] PASSED [ 37%]
-tests/test_llm.py::test_openai_compatible_error_classification[400-PermanentError] PASSED [ 39%]
-tests/test_llm.py::test_openai_compatible_error_classification[401-PermanentError] PASSED [ 41%]
+tests/test_llm.py::test_openai_compatible_error_classification[503-TransientError] PASSED [ 36%]
+tests/test_llm.py::test_openai_compatible_error_classification[400-PermanentError] PASSED [ 38%]
+tests/test_llm.py::test_openai_compatible_error_classification[401-PermanentError] PASSED [ 40%]
 tests/test_llm.py::test_openai_compatible_transport_error_is_transient PASSED [ 42%]
-tests/test_races.py::test_deadline_beats_approval_when_timer_not_yet_fired PASSED [ 44%]
-tests/test_races.py::test_cancel_beats_deadline_when_timer_not_yet_fired PASSED [ 46%]
-tests/test_races.py::test_deadline_beats_step_completion PASSED          [ 48%]
-tests/test_races.py::test_randomized_races_preserve_invariants PASSED    [ 50%]
-tests/test_recovery.py::test_kill_between_steps_does_not_repeat_checkpointed_steps PASSED [ 51%]
-tests/test_recovery.py::test_kill_during_llm_call_is_retried_after_lease_expiry PASSED [ 53%]
-tests/test_recovery.py::test_side_effect_without_ack_is_not_duplicated PASSED [ 55%]
+tests/test_races.py::test_deadline_beats_approval_when_timer_not_yet_fired PASSED [ 43%]
+tests/test_races.py::test_cancel_beats_deadline_when_timer_not_yet_fired PASSED [ 45%]
+tests/test_races.py::test_deadline_beats_step_completion PASSED          [ 47%]
+tests/test_races.py::test_randomized_races_preserve_invariants PASSED    [ 49%]
+tests/test_recovery.py::test_kill_between_steps_does_not_repeat_checkpointed_steps PASSED [ 50%]
+tests/test_recovery.py::test_kill_during_llm_call_is_retried_after_lease_expiry PASSED [ 52%]
+tests/test_recovery.py::test_publication_retracted_durably_when_job_cancelled_after_worker_crash PASSED [ 54%]
+tests/test_recovery.py::test_side_effect_without_ack_is_not_duplicated PASSED [ 56%]
 tests/test_retry.py::test_repeated_transient_error_bounded_then_failed PASSED [ 57%]
-tests/test_retry.py::test_transient_then_success PASSED                  [ 58%]
-tests/test_retry.py::test_permanent_error_fails_immediately PASSED       [ 60%]
-tests/test_retry.py::test_token_budget_and_max_steps PASSED              [ 62%]
+tests/test_retry.py::test_transient_then_success PASSED                  [ 59%]
+tests/test_retry.py::test_permanent_error_fails_immediately PASSED       [ 61%]
+tests/test_retry.py::test_token_budget_and_max_steps PASSED              [ 63%]
 tests/test_retry.py::test_backoff_equal_jitter_bounds PASSED             [ 64%]
 tests/test_retry.py::test_lease_loss_counts_as_attempt_poison_pill PASSED [ 66%]
-tests/test_scheduling.py::test_global_and_per_tenant_limits_never_exceeded[fifo] PASSED [ 67%]
-tests/test_scheduling.py::test_global_and_per_tenant_limits_never_exceeded[drr] PASSED [ 69%]
+tests/test_scheduling.py::test_global_and_per_tenant_limits_never_exceeded[fifo] PASSED [ 68%]
+tests/test_scheduling.py::test_global_and_per_tenant_limits_never_exceeded[drr] PASSED [ 70%]
 tests/test_scheduling.py::test_limits_hold_across_two_worker_processes_sharing_the_db PASSED [ 71%]
 tests/test_scheduling.py::test_admission_control_rejects_with_reason PASSED [ 73%]
 tests/test_scheduling.py::test_fifo_serves_heavy_backlog_first_drr_interleaves PASSED [ 75%]
-tests/test_scheduling.py::test_aging_lets_old_low_priority_job_overtake PASSED [ 76%]
+tests/test_scheduling.py::test_aging_lets_old_low_priority_job_overtake PASSED [ 77%]
 tests/test_smoke.py::test_happy_path_with_approval PASSED                [ 78%]
 tests/test_states.py::test_allowed_transitions_table_matches_code PASSED [ 80%]
 tests/test_states.py::test_terminal_row_cannot_be_updated_even_with_raw_sql[SUCCEEDED] PASSED [ 82%]
-tests/test_states.py::test_terminal_row_cannot_be_updated_even_with_raw_sql[FAILED] PASSED [ 83%]
+tests/test_states.py::test_terminal_row_cannot_be_updated_even_with_raw_sql[FAILED] PASSED [ 84%]
 tests/test_states.py::test_terminal_row_cannot_be_updated_even_with_raw_sql[CANCELLED] PASSED [ 85%]
 tests/test_states.py::test_terminal_row_cannot_be_updated_even_with_raw_sql[TIMED_OUT] PASSED [ 87%]
 tests/test_states.py::test_invalid_transition_rejected_by_trigger PASSED [ 89%]
@@ -65,8 +66,8 @@ tests/test_timers_and_slots.py::test_waiting_job_does_not_occupy_execution_slot 
 
 ============================== warnings summary ===============================
 .venv\Lib\site-packages\fastapi\testclient.py:1
-  C:\Users\DASHA\AppData\Roaming\Claude\scratch-workspaces\b33051f0-de6b-4a9e-8cb5-3f4a9de5d4d4\ca869129-0407-443a-acf2-ac3bc810b457\scratch-2026-11-07-6ce89b\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+  D:\загрузки\AI in production & MLOps\agentrt-submission\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
     from starlette.testclient import TestClient as TestClient  # noqa
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-======================= 56 passed, 1 warning in 26.06s ========================
+======================= 57 passed, 1 warning in 27.90s ========================

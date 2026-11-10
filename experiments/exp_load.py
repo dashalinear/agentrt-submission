@@ -4,7 +4,7 @@ Same arrival trace (per seed) for every policy, same resources (global_concurren
 Time is SCALED: 1 virtual second = TIME_SCALE real seconds (default 0.1 -> 100 ms).
 All reported times are virtual seconds.
 
-Usage: python -m experiments.exp_load [--seeds 11,12,13] [--policies fifo,drr,drr_cap] [--scale 0.1]
+Usage: python -m experiments.exp_load [--seeds 11,12,13] [--policies fifo,drr,drr_iso] [--scale 0.1]
 """
 from __future__ import annotations
 

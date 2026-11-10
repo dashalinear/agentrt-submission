@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # Tests + Part 1/2/3 experiments inside a Linux container (real POSIX SIGKILL) -> results/raw_linux/
-# Usage: scripts/run_linux.sh [tests,recovery,events,load]
+# Usage: scripts/run_linux.sh [tests,recovery,events,load,diag]
 set -euo pipefail
 cd "$(dirname "$0")/.."
-PARTS="${1:-tests,recovery,events,load}"
+PARTS="${1:-tests,recovery,events,load,diag}"
 docker build -q -t agentrt:local . >/dev/null
 mkdir -p results/raw_linux
 run() {
@@ -18,5 +18,6 @@ for p in ${PARTS//,/ }; do
     recovery) run "python -m experiments.exp_recovery --reps 5 --out /out" ;;
     events)   run "python -m experiments.exp_events --race-reps 300 --out /out" ;;
     load)     run "python -m experiments.exp_load --seeds 11,12,13 --policies fifo,drr,drr_iso --scale 0.1 --out /out" ;;
+    diag)     run "python -m experiments.diag_e5_polling --out /out" ;;
   esac
 done

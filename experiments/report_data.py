@@ -145,8 +145,29 @@ def load(base: str = RAW):
             if ov > 0 and r["outcome"] == "ok":
                 work[r["tenant"]] += ov
         tot = sum(work.values()) or 1.0
-        fin_burst = sum(1 for r in pj if r["state"] == "SUCCEEDED" and b0 <= r["created_v"] + r["e2e_v"] < b1)
+        fin_burst_jobs = [r for r in pj if r["state"] == "SUCCEEDED" and b0 <= r["created_v"] + r["e2e_v"] < b1]
+        fin_burst = len(fin_burst_jobs)
         pts = [x for x in ts if x["policy"] == p]
+        # age of the oldest queued JOB (from created_at): a job last leaves the queue when its last step starts,
+        # or, if it expired while QUEUED, at its deadline. (The time series column oldest_queued_age_v is measured
+        # from ready_at, i.e. the wait of the oldest ready STEP, which resets after every step.)
+        dl = meta.get("deadlines_v", {})
+        last_start, slot_all, slot_expired = {}, 0.0, 0.0
+        state_of = {(r["seed"], r["job_id"]): r["state"] for r in pj}
+        for r in pr:
+            k = (r["seed"], r["job_id"])
+            last_start[k] = max(last_start.get(k, r["start_v"]), r["start_v"])
+            d = r["end_v"] - r["start_v"]
+            slot_all += d
+            if state_of.get(k) == "TIMED_OUT":
+                slot_expired += d
+        ages = []
+        for r in pj:
+            k = (r["seed"], r["job_id"])
+            if r["state"] == "TIMED_OUT" and r.get("expired_in") == "QUEUED" and r["job_class"] in dl:
+                ages.append(dl[r["job_class"]])
+            elif k in last_start:
+                ages.append(last_start[k] - r["created_v"])
         per_policy.append({
             "policy": p, "runs": len(mk), "arrivals": sum(m["arrivals"] for m in mk),
             "admitted": len(pj), "rejected": sum(m["rejected"] for m in mk),
@@ -158,6 +179,10 @@ def load(base: str = RAW):
             "burst_throughput": fin_burst / len(mk) / (b1 - b0),
             "max_wait": max(r["wait_total_v"] for r in pj),
             "max_oldest_age": max(x["oldest_queued_age_v"] for x in pts) if pts else None,
+            "max_oldest_job_age": max(ages) if ages else None,
+            "expired_after_steps": sum(1 for r in pj if r["state"] == "TIMED_OUT" and (r.get("steps") or 0) > 0),
+            "slot_share_expired": slot_expired / slot_all if slot_all else None,
+            "burst_done": fin_burst, "burst_done_long": sum(1 for r in fin_burst_jobs if r["job_class"] == "long"),
             "max_queue": max(x["queued_total"] for x in pts) if pts else None,
             "work_share_burst": {t: work[t] / tot for t in TENANTS},
             "slot_utilization_burst": busy / (len(mk) * (b1 - b0) * (mk[0]["global_limit"] if mk else 1)),

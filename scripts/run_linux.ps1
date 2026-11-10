@@ -1,7 +1,7 @@
 # Tests + Part 1/2/3 experiments inside a Linux container (real POSIX SIGKILL) -> results/raw_linux/
 # Needs Docker Desktop. The repo is mounted read-only; only results/raw_linux is writable.
-# Usage: .\scripts\run_linux.ps1 [-Parts tests,recovery,events,load]
-param([string]$Parts = "tests,recovery,events,load")
+# Usage: .\scripts\run_linux.ps1 [-Parts tests,recovery,events,load,diag]
+param([string]$Parts = "tests,recovery,events,load,diag")
 $ErrorActionPreference = "Continue"   # docker writes progress to stderr; failures are checked via $LASTEXITCODE
 Set-Location (Join-Path $PSScriptRoot "..")
 $src = (Get-Location).Path
@@ -13,6 +13,7 @@ $cmds = @{
     recovery = "python -m experiments.exp_recovery --reps 5 --out /out"
     events   = "python -m experiments.exp_events --race-reps 300 --out /out"
     load     = "python -m experiments.exp_load --seeds 11,12,13 --policies fifo,drr,drr_iso --scale 0.1 --out /out"
+    diag     = "python -m experiments.diag_e5_polling --out /out"
 }
 foreach ($p in ($Parts -split ",")) {
     Write-Host "== linux: $p"

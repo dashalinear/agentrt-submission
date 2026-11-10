@@ -147,9 +147,9 @@ def load_compare(ld, seed):
         axs[0].plot(t, [x["queued_total"] for x in pts], color=POLICY_COLORS.get(p, S4), lw=1.6, label=p)
         axs[1].plot(t, [x["oldest_queued_age_v"] for x in pts], color=POLICY_COLORS.get(p, S4), lw=1.6, label=p)
     axs[0].set_ylabel("queued (all tenants)")
-    axs[1].set_ylabel("age of oldest queued item (s)")
+    axs[1].set_ylabel("oldest ready step: wait since ready (s)")
     axs[1].set_xlabel("virtual time (s)")
-    axs[0].set_title(f"Part 3: total queue and oldest queued age by policy (seed={seed})")
+    axs[0].set_title(f"Part 3: queue length and wait of the oldest ready step (seed={seed})")
     axs[0].legend(ncol=3, fontsize=8)
     return _save(fig, "load_queue_by_policy.png")
 

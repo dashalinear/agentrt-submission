@@ -1,6 +1,6 @@
 {
   "env": {
-    "os": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.41",
+    "os": "Linux-6.18.58.1-microsoft-standard-WSL2-x86_64-with-glibc2.41",
     "python": "3.13.18",
     "machine": "x86_64",
     "processor": "",

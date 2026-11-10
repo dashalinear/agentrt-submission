@@ -86,6 +86,34 @@ def test_kill_during_llm_call_is_retried_after_lease_expiry(tmp_path):
     assert runs[1][1] - t_kill > 0.5  # resumed only after the lease (1.5 s) ran out
 
 
+def test_publication_retracted_durably_when_job_cancelled_after_worker_crash(tmp_path):
+    """Worker hard-crashes right after the publisher committed (checkpoint never written); the job is cancelled
+    while no worker is alive. The compensation must not depend on the crashed process: it is committed to the
+    outbox with the CANCELLED transition and executed by another worker after the dead run is reaped."""
+    marker = str(tmp_path / "crashed")
+    db, ledger, pub, cfg_path, store = _setup(tmp_path, crash_after_publish_response=True, crash_marker=marker)
+    job, _ = store.create_job("t", "k", params={"require_approval": False})
+    w = spawn_worker(db, cfg_path, "w1", ledger=ledger, publisher_db=pub)
+    w.wait(30)
+    assert os.path.exists(marker)
+    assert FakePublisherService(pub).stats()["active_publications"] == 1  # side effect happened
+    assert store.cancel(job["job_id"])["outcome"] == "cancelled"
+    assert _state(store, job["job_id"]) == "CANCELLED"
+    w2 = spawn_worker(db, cfg_path, "w2", ledger=ledger, publisher_db=pub)  # other name: waits for lease expiry
+    def compensated():
+        rows = store.conn.execute("SELECT action FROM compensations WHERE job_id=?", (job["job_id"],)).fetchall()
+        return any(r[0] == "retract_publication(outbox)" for r in rows)
+
+    try:
+        # the relay retracts first and records the compensation right after -> wait for both before stopping w2
+        wait_for(lambda: FakePublisherService(pub).stats()["active_publications"] == 0 and compensated(), timeout=30)
+    finally:
+        w2.kill()
+    st = FakePublisherService(pub).stats()
+    assert st["logical_publications"] == 1 and st["retracted"] == 1
+    assert _state(store, job["job_id"]) == "CANCELLED"  # terminal state unchanged
+
+
 def test_side_effect_without_ack_is_not_duplicated(tmp_path):
     marker = str(tmp_path / "crashed")
     db, ledger, pub, cfg_path, store = _setup(tmp_path, crash_after_publish_response=True, crash_marker=marker)

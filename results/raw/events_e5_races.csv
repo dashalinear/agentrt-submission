@@ -1,301 +1,301 @@
 exp,rep,job_id,final,reached_waiting_before_deadline_ms,terminal_from,n_terminal_transitions,approve_offset_ms,cancel_offset_ms,approve_sent_ms,cancel_sent_ms,approval_outcome,cancel_outcome,cancel_was,terminal_ts_minus_deadline_ms,aborted_or_discarded_steps,cancel_stop_ms,published,publication_retracted,orphan_publication,succeeded_without_publication
-e5,0,job-b5f65e4f722b4d08,SUCCEEDED,420.84,RUNNING,1,-120.04,-26.8,-120.04,-26.8,applied,already_terminal,,-43.18,[],,True,False,False,False
-e5,1,job-aca90230e1d24d11,SUCCEEDED,419.67,RUNNING,1,-110.33,-1.5,-110.33,-1.5,applied,already_terminal,,-43.5,[],,True,False,False,False
-e5,2,job-a8812d6733034ecb,CANCELLED,419.66,RUNNING,1,-49.85,-23.73,-49.85,-23.73,applied,cancelled,RUNNING,-23.52,"[[""save_report#0"", ""discarded_late_result""]]",7.16,False,False,False,False
-e5,3,job-623f0fff270c4715,SUCCEEDED,419.21,RUNNING,1,-149.3,-8.11,-149.3,-8.11,applied,already_terminal,,-88.31,[],,True,False,False,False
-e5,4,job-af8cecd10d2248af,SUCCEEDED,419.03,RUNNING,1,-87.23,6.63,-87.23,6.63,applied,already_terminal,,-16.2,[],,True,False,False,False
-e5,5,job-4f63f994f83e49fc,CANCELLED,418.93,WAITING_EVENT,1,12.03,19.05,12.03,19.05,ignored_terminal,cancelled,WAITING_EVENT,19.18,[],,False,False,False,False
-e5,6,job-a2f0e3ce55604584,CANCELLED,418.82,RUNNING,1,-62.37,11.76,-62.37,11.76,applied,cancelled,RUNNING,12.89,[],,True,True,False,False
-e5,7,job-0aa6f15e53bc4a94,CANCELLED,418.78,WAITING_EVENT,1,-35.05,-44.6,-35.05,-44.6,ignored_terminal,cancelled,WAITING_EVENT,-44.41,[],,False,False,False,False
-e5,8,job-b9022f9834bd498a,TIMED_OUT,418.81,WAITING_EVENT,1,2.92,28.0,2.92,28.0,deadline_won,already_terminal,,3.17,[],,False,False,False,False
-e5,9,job-1f5a1cb6dd6c4eb2,CANCELLED,418.75,QUEUED,1,-1.33,29.79,-1.33,29.79,applied,cancelled,QUEUED,29.88,[],,False,False,False,False
-e5,10,job-42dea9114dcf44a9,CANCELLED,417.98,RUNNING,1,-83.3,-10.1,-83.3,-10.1,applied,cancelled,RUNNING,-9.99,"[[""publish#0"", ""discarded_late_result""]]",14.82,True,True,False,False
-e5,11,job-fb9d4914832a4580,SUCCEEDED,417.7,RUNNING,1,-132.4,13.43,-132.4,13.43,applied,already_terminal,,-28.34,[],,True,False,False,False
-e5,12,job-6120070f84c74efc,SUCCEEDED,417.45,RUNNING,1,-139.42,-43.27,-139.42,-43.27,applied,already_terminal,,-53.58,[],,True,False,False,False
-e5,13,job-aa49151800374402,SUCCEEDED,417.12,RUNNING,1,-114.51,-33.77,-114.51,-33.77,applied,already_terminal,,-22.89,[],,True,False,False,False
-e5,14,job-ef0f0c9045084587,CANCELLED,417.02,RUNNING,1,-92.19,-44.74,-92.19,-44.17,applied,cancelled,RUNNING,-43.92,"[[""save_report#0"", ""discarded_late_result""]]",15.54,False,False,False,False
-e5,15,job-43dec7fa6b3d441e,SUCCEEDED,416.57,RUNNING,1,-149.96,-34.87,-149.96,-34.87,applied,already_terminal,,-55.99,[],,True,False,False,False
-e5,16,job-423f621630f540fe,SUCCEEDED,416.2,RUNNING,1,-132.75,-13.64,-132.75,-13.64,applied,already_terminal,,-29.41,[],,True,False,False,False
-e5,17,job-48a124ca62964f13,SUCCEEDED,416.13,RUNNING,1,-145.66,37.43,-145.66,37.45,applied,already_terminal,,-55.87,[],,True,False,False,False
-e5,18,job-a1228b8f4bac4685,CANCELLED,416.01,WAITING_EVENT,1,-45.61,-35.14,-45.39,-35.15,ignored_terminal,cancelled,WAITING_EVENT,-15.36,[],,False,False,False,False
-e5,19,job-a132fdc5b1034547,TIMED_OUT,416.0,RUNNING,1,-107.12,-15.26,-107.12,-15.26,applied,already_terminal,,2.53,[],,True,True,False,False
-e5,20,job-14efdcbbc4054030,CANCELLED,413.18,WAITING_EVENT,1,-88.09,-37.72,-88.09,-37.72,ignored_terminal,cancelled,WAITING_EVENT,6.07,[],,False,False,False,False
-e5,21,job-25758060ff6b4a0a,TIMED_OUT,413.0,QUEUED,1,-5.68,49.31,-5.68,49.31,applied,already_terminal,,36.65,[],,False,False,False,False
-e5,22,job-78edae3af3134c9a,CANCELLED,413.06,RUNNING,1,-70.78,-1.62,-70.78,-1.62,applied,cancelled,RUNNING,-1.46,"[[""save_report#0"", ""discarded_late_result""]]",39.0,False,False,False,False
-e5,23,job-307464ffa347430d,CANCELLED,412.84,RUNNING,1,-135.4,-39.78,-135.4,-39.78,applied,cancelled,RUNNING,-39.58,"[[""save_report#0"", ""discarded_late_result""]]",12.51,False,False,False,False
-e5,24,job-56b9e7fd8e254016,CANCELLED,412.84,RUNNING,1,-91.75,-23.52,-91.75,-23.52,applied,cancelled,RUNNING,-23.43,"[[""save_report#0"", ""discarded_late_result""]]",7.66,False,False,False,False
-e5,25,job-2dd66c8b63994525,CANCELLED,412.89,WAITING_EVENT,1,-9.09,-33.86,-9.09,-33.85,ignored_terminal,cancelled,WAITING_EVENT,-11.64,[],,False,False,False,False
-e5,26,job-5f06308b1b9644d4,SUCCEEDED,412.91,RUNNING,1,-146.07,45.1,-146.07,45.1,applied,already_terminal,,-21.89,[],,True,False,False,False
-e5,27,job-f5202f99b5cf4c74,CANCELLED,412.87,QUEUED,1,-60.2,-35.34,-60.19,-35.34,applied,cancelled,QUEUED,-35.09,[],,False,False,False,False
-e5,28,job-4fc8057614894ada,CANCELLED,412.57,QUEUED,1,-57.66,-47.3,-57.66,-47.3,applied,cancelled,QUEUED,-47.1,[],,False,False,False,False
-e5,29,job-11a102a1ec384358,TIMED_OUT,411.87,RUNNING,1,-60.22,47.85,-60.22,47.85,applied,already_terminal,,33.73,"[[""save_report#0"", ""discarded_late_result""]]",,False,False,False,False
-e5,30,job-3f1a3b761a224dd1,TIMED_OUT,415.23,QUEUED,1,-3.23,19.62,-3.23,19.62,applied,already_terminal,,2.19,[],,False,False,False,False
-e5,31,job-23e2b978ae7048cf,TIMED_OUT,414.91,RUNNING,1,-105.61,-13.33,-105.61,-13.33,applied,already_terminal,,1.66,"[[""publish#0"", ""aborted_deadline""]]",,False,False,False,False
-e5,32,job-30c6b3e779974cae,SUCCEEDED,414.76,RUNNING,1,-121.6,27.19,-121.6,27.19,applied,already_terminal,,-22.93,[],,True,False,False,False
-e5,33,job-5f928018128947c8,TIMED_OUT,414.67,RUNNING,1,-59.46,27.91,-59.46,27.91,applied,already_terminal,,1.06,"[[""save_report#0"", ""aborted_deadline""]]",,False,False,False,False
-e5,34,job-9b8951917b954bcd,CANCELLED,414.03,RUNNING,1,-93.96,-27.7,-93.96,-27.7,applied,cancelled,RUNNING,-14.25,"[[""publish#0"", ""aborted_lease_lost""]]",51.27,True,True,False,False
-e5,35,job-746abca775234a6a,TIMED_OUT,413.8,QUEUED,1,-12.04,48.49,-12.04,48.49,applied,already_terminal,,0.52,[],,False,False,False,False
-e5,36,job-6952817e85364aaf,TIMED_OUT,413.7,WAITING_EVENT,1,-5.05,30.61,-5.05,30.61,ignored_terminal,already_terminal,,0.27,[],,False,False,False,False
-e5,37,job-38b3e7baafb3429a,CANCELLED,413.64,QUEUED,1,-10.88,23.99,-10.88,23.99,applied,cancelled,QUEUED,24.32,[],,False,False,False,False
-e5,38,job-da5a70aa474f45bb,SUCCEEDED,413.45,RUNNING,1,-111.45,1.76,-111.45,1.77,applied,already_terminal,,-22.66,[],,True,False,False,False
-e5,39,job-5bed65774f9e43bb,CANCELLED,413.37,RUNNING,1,-89.55,-47.1,-89.55,-47.1,applied,cancelled,RUNNING,-47.0,"[[""save_report#0"", ""discarded_late_result""]]",17.64,False,False,False,False
-e5,40,job-377aec5378964c8b,SUCCEEDED,431.79,RUNNING,1,-145.25,-22.06,-145.25,-22.06,applied,already_terminal,,-85.68,[],,True,False,False,False
-e5,41,job-8210c7b1f21143b4,TIMED_OUT,431.75,RUNNING,1,-105.94,19.25,-105.94,19.26,applied,already_terminal,,18.76,"[[""publish#0"", ""discarded_late_result""]]",,True,True,False,False
-e5,42,job-a2a55c7c15ee4374,TIMED_OUT,431.5,WAITING_EVENT,1,12.61,-5.28,12.61,-5.28,deadline_won,already_terminal,,13.04,[],,False,False,False,False
-e5,43,job-ac5f580ce63f4953,TIMED_OUT,431.1,WAITING_EVENT,1,9.29,48.8,9.29,48.8,deadline_won,already_terminal,,9.66,[],,False,False,False,False
-e5,44,job-20b47572b5fe4566,CANCELLED,430.45,WAITING_EVENT,1,12.35,-13.54,12.35,-13.54,ignored_terminal,cancelled,WAITING_EVENT,-13.36,[],,False,False,False,False
-e5,45,job-df99a940b7654905,SUCCEEDED,430.18,RUNNING,1,-112.52,-27.32,-112.52,-27.31,applied,already_terminal,,-29.02,[],,True,False,False,False
-e5,46,job-092eff3574e04814,CANCELLED,429.92,RUNNING,1,-116.56,-29.56,-116.56,-29.54,applied,cancelled,RUNNING,2.56,"[[""publish#0"", ""discarded_late_result""]]",17.2,True,True,False,False
-e5,47,job-b055dcf8e45f4af5,TIMED_OUT,429.62,QUEUED,1,-43.91,40.03,-43.91,40.03,applied,already_terminal,,17.11,[],,False,False,False,False
-e5,48,job-1a4eac05a29640c7,CANCELLED,429.19,QUEUED,1,-7.13,-2.05,-7.11,-2.05,applied,cancelled,QUEUED,-1.83,[],,False,False,False,False
-e5,49,job-193956f7375a4200,TIMED_OUT,428.63,QUEUED,1,-38.99,29.96,-38.99,29.96,applied,already_terminal,,16.62,[],,False,False,False,False
-e5,50,job-b9071ad763b340cb,SUCCEEDED,433.13,RUNNING,1,-135.59,16.06,-135.59,16.06,applied,already_terminal,,-44.99,[],,True,False,False,False
-e5,51,job-ccb8a84606e94512,TIMED_OUT,433.08,WAITING_EVENT,1,4.66,28.23,4.66,28.23,deadline_won,already_terminal,,4.99,[],,False,False,False,False
-e5,52,job-27dabb1ddbee4944,CANCELLED,432.94,RUNNING,1,-22.48,-2.2,-22.48,-2.2,applied,cancelled,RUNNING,-2.06,"[[""save_report#0"", ""discarded_late_result""]]",43.19,False,False,False,False
-e5,53,job-ea4999c27c0945bf,TIMED_OUT,432.82,RUNNING,1,-119.65,28.91,-119.65,28.91,applied,already_terminal,,6.86,"[[""publish#0"", ""aborted_deadline""]]",,False,False,False,False
-e5,54,job-3599d607259d4920,TIMED_OUT,432.46,RUNNING,1,-93.47,30.08,-93.47,30.08,applied,already_terminal,,6.61,"[[""publish#0"", ""aborted_deadline""]]",,False,False,False,False
-e5,55,job-58ab65f2e6344e80,CANCELLED,431.98,WAITING_EVENT,1,15.18,-10.42,15.18,-10.42,ignored_terminal,cancelled,WAITING_EVENT,-10.32,[],,False,False,False,False
-e5,56,job-fa8b8895f86f4aa3,TIMED_OUT,431.86,RUNNING,1,-81.76,44.68,-81.76,44.68,applied,already_terminal,,6.11,"[[""publish#0"", ""aborted_deadline""]]",,False,False,False,False
-e5,57,job-523efe7fa08e4d49,CANCELLED,431.76,WAITING_EVENT,1,-26.78,-33.0,-26.78,-33.0,ignored_terminal,cancelled,WAITING_EVENT,-32.9,[],,False,False,False,False
-e5,58,job-dcf14d8699774dd7,CANCELLED,431.66,RUNNING,1,-128.4,-34.88,-128.35,-34.88,applied,cancelled,RUNNING,-22.77,"[[""publish#0"", ""aborted_lease_lost""]]",40.57,True,True,False,False
-e5,59,job-eee715399a854e57,TIMED_OUT,431.57,WAITING_EVENT,1,3.82,30.65,3.83,30.65,deadline_won,already_terminal,,4.04,[],,False,False,False,False
-e5,60,job-2ab750bab7754dec,SUCCEEDED,428.37,RUNNING,1,-125.15,32.65,-125.14,32.65,applied,already_terminal,,-7.35,[],,True,False,False,False
-e5,61,job-f764d6c5aa4a4002,CANCELLED,427.93,WAITING_EVENT,1,16.65,15.73,16.66,15.73,ignored_terminal,cancelled,WAITING_EVENT,16.21,[],,False,False,False,False
-e5,62,job-1642499764444261,SUCCEEDED,427.86,RUNNING,1,-90.43,4.87,-90.43,4.91,applied,already_terminal,,-5.71,[],,True,False,False,False
-e5,63,job-dfcf52d68fc44360,CANCELLED,427.75,RUNNING,1,-127.73,-48.58,-127.73,-48.58,applied,cancelled,RUNNING,-48.45,"[[""save_report#0"", ""discarded_late_result""]]",6.11,False,False,False,False
-e5,64,job-9bfcf1e546944778,TIMED_OUT,427.64,WAITING_EVENT,1,15.05,14.97,15.05,14.97,ignored_terminal,already_terminal,,33.97,[],,False,False,False,False
-e5,65,job-c3b67dfada644e1c,SUCCEEDED,427.62,RUNNING,1,-60.48,43.36,-60.48,43.36,applied,already_terminal,,-3.28,[],,True,False,False,False
-e5,66,job-c60650185d984687,SUCCEEDED,427.53,RUNNING,1,-76.25,37.17,-76.25,37.18,applied,already_terminal,,-4.57,[],,True,False,False,False
-e5,67,job-6dd10912660b468d,CANCELLED,427.45,WAITING_EVENT,1,-9.55,-28.9,-9.55,-28.9,ignored_terminal,cancelled,WAITING_EVENT,-28.71,[],,False,False,False,False
-e5,68,job-e88c285f86004ff6,CANCELLED,427.4,RUNNING,1,-107.19,-20.7,-107.19,-20.7,applied,cancelled,RUNNING,-20.58,"[[""publish#0"", ""discarded_late_result""]]",12.28,True,True,False,False
-e5,69,job-f0298109ad6f4819,SUCCEEDED,427.34,RUNNING,1,-109.11,8.64,-109.11,8.64,applied,already_terminal,,-9.34,[],,True,False,False,False
-e5,70,job-d96e2a5dde2f4a2f,CANCELLED,461.58,RUNNING,1,-105.91,-8.1,-105.91,-8.1,applied,cancelled,RUNNING,-7.98,"[[""publish#0"", ""discarded_late_result""]]",15.19,True,True,False,False
-e5,71,job-fc75e9fb57994da5,SUCCEEDED,461.32,RUNNING,1,-127.72,41.0,-127.72,41.0,applied,already_terminal,,-32.13,[],,True,False,False,False
-e5,72,job-40c7f57feb104127,CANCELLED,461.09,RUNNING,1,-89.86,-4.18,-89.86,-4.18,applied,cancelled,RUNNING,-4.07,"[[""publish#0"", ""discarded_late_result""]]",15.96,True,True,False,False
-e5,73,job-5ad2c9a037134532,TIMED_OUT,414.78,RUNNING,1,-50.83,40.43,-50.83,40.43,applied,already_terminal,,3.02,"[[""save_report#0"", ""discarded_late_result""]]",,False,False,False,False
-e5,74,job-2d890a4766504f55,TIMED_OUT,414.22,RUNNING,1,-78.49,41.77,-78.49,41.77,applied,already_terminal,,2.75,"[[""publish#0"", ""aborted_deadline""]]",,False,False,False,False
-e5,75,job-e63baf907b8d4d92,TIMED_OUT,414.07,RUNNING,1,-64.72,3.18,-64.72,3.18,applied,already_terminal,,2.52,"[[""save_report#0"", ""discarded_late_result""]]",,False,False,False,False
-e5,76,job-0e1abd65d8c2455c,CANCELLED,414.0,QUEUED,1,-61.0,-48.13,-61.0,-48.13,applied,cancelled,QUEUED,-47.9,[],,False,False,False,False
-e5,77,job-4703e338adc44056,CANCELLED,413.94,RUNNING,1,-75.18,-31.69,-75.15,-31.69,applied,cancelled,RUNNING,-31.53,"[[""save_report#0"", ""discarded_late_result""]]",35.79,False,False,False,False
-e5,78,job-40b35cdb9e244604,SUCCEEDED,413.67,RUNNING,1,-149.33,29.92,-149.33,29.92,applied,already_terminal,,-36.81,[],,True,False,False,False
-e5,79,job-29c1378ba3f04d29,CANCELLED,413.52,QUEUED,1,-120.7,-2.65,-120.7,-2.65,applied,cancelled,QUEUED,-2.53,[],,False,False,False,False
-e5,80,job-373b52f174d6450a,TIMED_OUT,431.48,RUNNING,1,-26.72,5.65,-26.72,5.65,applied,already_terminal,,1.15,"[[""save_report#0"", ""aborted_deadline""]]",,False,False,False,False
-e5,81,job-6aad6139b7b241a7,SUCCEEDED,431.02,RUNNING,1,-94.58,1.83,-94.58,1.84,applied,already_terminal,,-6.2,[],,True,False,False,False
-e5,82,job-ea268c7a7f0d4b7c,TIMED_OUT,430.49,RUNNING,1,-55.57,28.43,-55.57,28.43,applied,already_terminal,,0.46,"[[""publish#0"", ""aborted_deadline""]]",,False,False,False,False
-e5,83,job-1b3a1116063c4c03,SUCCEEDED,430.17,RUNNING,1,-131.96,6.03,-131.96,6.03,applied,already_terminal,,-72.02,[],,True,False,False,False
-e5,84,job-a24eca5f016846e3,CANCELLED,430.02,RUNNING,1,-107.76,-22.31,-107.76,-22.31,applied,cancelled,RUNNING,-22.08,"[[""publish#0"", ""discarded_late_result""]]",14.7,True,True,False,False
-e5,85,job-3447d7d297634a65,TIMED_OUT,429.87,RUNNING,1,-18.72,0.77,-18.72,0.77,applied,already_terminal,,3.78,[],,False,False,False,False
-e5,86,job-d6eb3da364634119,TIMED_OUT,429.71,RUNNING,1,-54.51,26.0,-54.51,26.0,applied,already_terminal,,14.8,"[[""publish#0"", ""aborted_deadline""]]",,False,False,False,False
-e5,87,job-1fe58c3c088847c0,CANCELLED,429.38,WAITING_EVENT,1,5.12,-5.68,5.12,-5.68,ignored_terminal,cancelled,WAITING_EVENT,-5.46,[],,False,False,False,False
-e5,88,job-8b9d1ebd9a1a415c,TIMED_OUT,428.91,RUNNING,1,-45.87,0.56,-45.87,0.56,applied,already_terminal,,2.13,[],,False,False,False,False
-e5,89,job-12ea94186b4f4721,TIMED_OUT,426.46,RUNNING,1,-62.93,19.27,-62.93,19.28,applied,already_terminal,,14.11,"[[""publish#0"", ""aborted_deadline""]]",,False,False,False,False
-e5,90,job-f04c19b462564049,SUCCEEDED,461.88,RUNNING,1,-73.1,3.33,-73.1,3.33,applied,already_terminal,,-13.54,[],,True,False,False,False
-e5,91,job-948fbbe02ad54794,SUCCEEDED,461.13,RUNNING,1,-68.73,44.15,-68.73,44.15,applied,already_terminal,,-12.97,[],,True,False,False,False
-e5,92,job-881b53070b54466b,TIMED_OUT,460.6,RUNNING,1,-31.13,37.65,-31.13,37.65,applied,already_terminal,,2.52,"[[""publish#0"", ""aborted_deadline""]]",,False,False,False,False
-e5,93,job-cf1537e5f62a4bb9,CANCELLED,460.32,WAITING_EVENT,1,10.17,-24.04,10.17,-23.11,ignored_terminal,cancelled,WAITING_EVENT,-22.1,[],,False,False,False,False
-e5,94,job-cafd93995afe4016,TIMED_OUT,460.02,RUNNING,1,-54.88,44.33,-54.88,44.33,applied,already_terminal,,1.99,"[[""publish#0"", ""aborted_deadline""]]",,False,False,False,False
-e5,95,job-0c5eaca33cd24050,CANCELLED,459.72,WAITING_EVENT,1,-7.2,-36.29,-7.2,-36.29,ignored_terminal,cancelled,WAITING_EVENT,-36.08,[],,False,False,False,False
-e5,96,job-7c6d7d482fc24af5,SUCCEEDED,459.35,RUNNING,1,-129.32,-5.79,-129.32,-5.79,applied,already_terminal,,-58.5,[],,True,False,False,False
-e5,97,job-edb7aa88266a4fa9,SUCCEEDED,459.07,RUNNING,1,-137.67,-25.94,-137.67,-25.93,applied,already_terminal,,-46.15,[],,True,False,False,False
-e5,98,job-65924ea2af4446ab,SUCCEEDED,474.29,RUNNING,1,-137.57,16.95,-137.57,16.95,applied,already_terminal,,-72.92,[],,True,False,False,False
-e5,99,job-9d27bcd65abf4740,TIMED_OUT,478.07,RUNNING,1,-16.73,39.7,-16.73,39.7,applied,already_terminal,,0.17,"[[""save_report#0"", ""aborted_deadline""]]",,False,False,False,False
-e5,100,job-0625da30364643c2,SUCCEEDED,415.24,RUNNING,1,-123.74,21.61,-123.74,21.61,applied,already_terminal,,-68.11,[],,True,False,False,False
-e5,101,job-1a5d2374a8104cf3,CANCELLED,415.04,WAITING_EVENT,1,-37.76,-35.7,-37.76,-35.7,ignored_terminal,cancelled,WAITING_EVENT,-35.55,[],,False,False,False,False
-e5,102,job-c7885dcc2a4b4e91,TIMED_OUT,414.48,WAITING_EVENT,1,0.08,46.75,0.08,46.75,deadline_won,already_terminal,,0.33,[],,False,False,False,False
-e5,103,job-af2d9ca81be04dff,SUCCEEDED,414.02,RUNNING,1,-112.67,45.25,-112.67,45.25,applied,already_terminal,,-53.43,[],,True,False,False,False
-e5,104,job-96e961fec4074e9e,SUCCEEDED,413.74,RUNNING,1,-82.3,-1.27,-82.3,-1.27,applied,already_terminal,,-15.24,[],,True,False,False,False
-e5,105,job-6e6b75e6607e434f,TIMED_OUT,413.64,WAITING_EVENT,1,18.28,33.24,18.28,33.24,deadline_won,already_terminal,,18.75,[],,False,False,False,False
-e5,106,job-fc786031c2104c38,SUCCEEDED,413.54,RUNNING,1,-122.55,-6.85,-122.55,-6.85,applied,already_terminal,,-68.81,[],,True,False,False,False
-e5,107,job-126aaeb8090e455d,SUCCEEDED,413.39,RUNNING,1,-62.35,-16.09,-62.35,-16.09,applied,already_terminal,,-12.59,[],,True,False,False,False
-e5,108,job-4b07d23a8a0f420f,SUCCEEDED,413.24,RUNNING,1,-116.72,-18.15,-116.72,-18.15,applied,already_terminal,,-55.49,[],,True,False,False,False
-e5,109,job-3c5fa6beb99f408e,CANCELLED,413.14,WAITING_EVENT,1,-27.23,-48.05,-27.23,-48.05,ignored_terminal,cancelled,WAITING_EVENT,-47.9,[],,False,False,False,False
-e5,110,job-9c4026b616004b20,CANCELLED,423.73,RUNNING,1,-55.81,-5.95,-55.81,-5.95,applied,cancelled,RUNNING,-5.87,"[[""save_report#0"", ""discarded_late_result""]]",4.21,False,False,False,False
-e5,111,job-76c3b46c2d044dd8,SUCCEEDED,423.78,RUNNING,1,-146.93,-16.85,-146.93,-16.85,applied,already_terminal,,-94.82,[],,True,False,False,False
-e5,112,job-6ab76bc53a50455c,TIMED_OUT,423.74,RUNNING,1,-43.93,1.23,-43.93,1.23,applied,already_terminal,,4.56,"[[""save_report#0"", ""aborted_deadline""]]",,False,False,False,False
-e5,113,job-38aed0e519264f15,SUCCEEDED,423.55,RUNNING,1,-139.07,48.51,-139.07,48.51,applied,already_terminal,,-77.73,[],,True,False,False,False
-e5,114,job-7ecba25e4cb745b5,TIMED_OUT,423.23,RUNNING,1,-15.98,47.17,-15.98,47.17,applied,already_terminal,,3.99,"[[""save_report#0"", ""aborted_deadline""]]",,False,False,False,False
-e5,115,job-40e5856f4efe4f66,SUCCEEDED,422.24,RUNNING,1,-132.19,-23.44,-132.19,-23.44,applied,already_terminal,,-66.56,[],,True,False,False,False
-e5,116,job-7447015ac02f4ac4,SUCCEEDED,421.83,RUNNING,1,-143.27,27.9,-143.27,27.9,applied,already_terminal,,-79.65,[],,True,False,False,False
-e5,117,job-5903d2499dc5482b,SUCCEEDED,421.71,RUNNING,1,-104.02,-37.04,-104.02,-37.04,applied,already_terminal,,-49.56,[],,True,False,False,False
-e5,118,job-e614d3c0a47f4a13,SUCCEEDED,421.6,RUNNING,1,-78.22,41.14,-78.21,41.14,applied,already_terminal,,-1.66,[],,True,False,False,False
-e5,119,job-81ce87263993417e,CANCELLED,421.46,WAITING_EVENT,1,-10.77,-24.14,-10.77,-23.7,ignored_terminal,cancelled,WAITING_EVENT,-21.89,[],,False,False,False,False
-e5,120,job-5daf6d6c519d472e,TIMED_OUT,404.78,RUNNING,1,-124.61,41.92,-124.61,41.92,applied,already_terminal,,2.92,[],,False,False,False,False
-e5,121,job-ce92b8a44ef34bf9,TIMED_OUT,404.85,RUNNING,1,-53.0,20.04,-53.0,20.04,applied,already_terminal,,3.15,"[[""save_report#0"", ""aborted_deadline""]]",,False,False,False,False
-e5,122,job-041ee8ce01ef4557,CANCELLED,404.57,RUNNING,1,-134.79,-44.25,-134.79,-44.25,applied,cancelled,RUNNING,-44.11,"[[""save_report#0"", ""discarded_late_result""]]",45.09,False,False,False,False
-e5,123,job-32308593d4ed440b,CANCELLED,404.35,RUNNING,1,-33.01,-7.47,-33.0,-7.47,applied,cancelled,RUNNING,-7.38,"[[""save_report#0"", ""discarded_late_result""]]",21.89,False,False,False,False
-e5,124,job-fadabbf64be747ba,TIMED_OUT,404.29,QUEUED,1,-137.69,43.83,-137.69,43.83,applied,already_terminal,,2.09,[],,False,False,False,False
-e5,125,job-c950bc2204bf4e47,TIMED_OUT,404.28,RUNNING,1,-42.15,30.16,-42.15,30.16,applied,already_terminal,,1.74,"[[""save_report#0"", ""aborted_deadline""]]",,False,False,False,False
-e5,126,job-5e7400dc99a144d3,TIMED_OUT,404.26,QUEUED,1,-135.76,35.62,-135.76,35.62,applied,already_terminal,,1.38,[],,False,False,False,False
-e5,127,job-d49561a9ca4d427c,TIMED_OUT,404.24,QUEUED,1,-138.67,36.28,-138.67,36.28,applied,already_terminal,,1.05,[],,False,False,False,False
-e5,128,job-78aa009eddbf4da9,CANCELLED,404.24,RUNNING,1,-72.86,-16.08,-72.86,-16.08,applied,cancelled,RUNNING,-15.97,"[[""save_report#0"", ""discarded_late_result""]]",16.28,False,False,False,False
-e5,129,job-ab67a2031e3145c0,TIMED_OUT,404.11,RUNNING,1,-55.98,42.67,-55.94,42.67,applied,already_terminal,,0.48,"[[""save_report#0"", ""aborted_deadline""]]",,False,False,False,False
-e5,130,job-693f666cd05841a3,CANCELLED,428.89,RUNNING,1,-104.46,-37.08,-104.46,-37.08,applied,cancelled,RUNNING,-36.93,"[[""save_report#0"", ""discarded_late_result""]]",63.36,False,False,False,False
-e5,131,job-273d15aa3ce743dc,CANCELLED,428.89,RUNNING,1,-60.42,-26.16,-60.42,-26.16,applied,cancelled,RUNNING,-25.95,"[[""save_report#0"", ""discarded_late_result""]]",52.13,False,False,False,False
-e5,132,job-45c57e88585f4e2d,SUCCEEDED,428.87,RUNNING,1,-131.39,-33.86,-131.39,-33.85,applied,already_terminal,,-50.32,[],,True,False,False,False
-e5,133,job-ef0e49c72e6f4884,SUCCEEDED,428.83,RUNNING,1,-141.44,-29.82,-141.44,-29.82,applied,already_terminal,,-51.41,[],,True,False,False,False
-e5,134,job-d19003efb3e34871,CANCELLED,428.72,RUNNING,1,-96.96,-19.5,-96.96,-19.5,applied,cancelled,RUNNING,-10.71,"[[""save_report#0"", ""discarded_late_result""]]",34.85,False,False,False,False
-e5,135,job-bd2b3a66cd1a4479,CANCELLED,428.59,WAITING_EVENT,1,-20.89,-21.0,-20.89,-21.0,ignored_terminal,cancelled,WAITING_EVENT,-20.8,[],,False,False,False,False
-e5,136,job-51da30fa00ca403f,CANCELLED,428.47,RUNNING,1,-64.98,-32.21,-64.99,-32.21,applied,cancelled,RUNNING,-31.98,"[[""save_report#0"", ""discarded_late_result""]]",56.46,False,False,False,False
-e5,137,job-4c25650f504f4f62,CANCELLED,428.04,RUNNING,1,-91.01,-48.18,-91.01,-48.18,applied,cancelled,RUNNING,-42.7,"[[""save_report#0"", ""discarded_late_result""]]",66.51,False,False,False,False
-e5,138,job-e3ef70cee9f74c64,CANCELLED,427.3,RUNNING,1,-107.42,-48.47,-107.42,-48.46,applied,cancelled,RUNNING,-48.28,"[[""publish#0"", ""aborted_lease_lost""]]",73.67,True,True,False,False
-e5,139,job-978e85e558284a53,TIMED_OUT,427.19,QUEUED,1,-25.38,5.1,-25.38,5.11,applied,already_terminal,,19.86,[],,False,False,False,False
-e5,140,job-f034a3737e8d4c92,SUCCEEDED,430.55,RUNNING,1,-117.79,-2.52,-117.79,-2.52,applied,already_terminal,,-38.64,[],,True,False,False,False
-e5,141,job-a53845f7e4534caf,CANCELLED,430.76,WAITING_EVENT,1,8.89,-39.37,8.9,-39.37,ignored_terminal,cancelled,WAITING_EVENT,-27.24,[],,False,False,False,False
-e5,142,job-07efecddad914d11,CANCELLED,430.46,WAITING_EVENT,1,-10.78,-6.78,-10.77,-6.78,ignored_terminal,cancelled,WAITING_EVENT,-6.66,[],,False,False,False,False
-e5,143,job-59f0b924308440e0,TIMED_OUT,430.31,RUNNING,1,-65.85,33.46,-65.85,33.46,applied,already_terminal,,3.77,"[[""publish#0"", ""aborted_deadline""]]",,True,True,False,False
-e5,144,job-c686e0764eb14481,CANCELLED,430.5,RUNNING,1,-83.18,0.67,-83.18,0.67,applied,cancelled,RUNNING,0.83,"[[""publish#0"", ""aborted_lease_lost""]]",5.73,True,True,False,False
-e5,145,job-184be98bacd94765,TIMED_OUT,430.58,QUEUED,1,-33.08,48.24,-33.08,48.24,applied,already_terminal,,2.75,[],,False,False,False,False
-e5,146,job-34803c95dddf426c,TIMED_OUT,430.71,RUNNING,1,-91.74,33.23,-91.74,33.23,applied,already_terminal,,2.28,"[[""publish#0"", ""aborted_lease_lost""]]",,True,True,False,False
-e5,147,job-0b09b937ef244147,TIMED_OUT,430.84,WAITING_EVENT,1,-29.86,13.6,-29.86,13.6,ignored_terminal,already_terminal,,1.81,[],,False,False,False,False
-e5,148,job-099589b7c7494877,CANCELLED,430.97,RUNNING,1,-81.2,-15.24,-81.2,-15.23,applied,cancelled,RUNNING,-14.77,"[[""publish#0"", ""aborted_lease_lost""]]",19.83,True,True,False,False
-e5,149,job-d03d8c3ea88240d9,SUCCEEDED,431.03,RUNNING,1,-140.75,-37.02,-140.75,-37.02,applied,already_terminal,,-72.8,[],,True,False,False,False
-e5,150,job-dddf0202514c4270,SUCCEEDED,430.5,RUNNING,1,-137.98,24.09,-137.98,24.09,applied,already_terminal,,-11.44,[],,True,False,False,False
-e5,151,job-f6f46a4e976145bc,CANCELLED,430.68,RUNNING,1,-106.55,-33.68,-106.55,-33.68,applied,cancelled,RUNNING,-33.41,"[[""save_report#0"", ""discarded_late_result""]]",22.93,False,False,False,False
-e5,152,job-8975bf0d377a45c3,CANCELLED,430.58,RUNNING,1,-135.64,34.13,-135.64,34.13,applied,cancelled,RUNNING,34.58,[],,True,True,False,False
-e5,153,job-b5ceecb1ef0a421d,CANCELLED,430.41,QUEUED,1,-2.01,17.05,-2.01,17.06,applied,cancelled,QUEUED,19.83,[],,False,False,False,False
-e5,154,job-bf40cea6d4524722,CANCELLED,430.26,QUEUED,1,-102.07,-25.78,-102.07,-25.78,applied,cancelled,QUEUED,-25.55,[],,False,False,False,False
-e5,155,job-87e6856b891444fe,CANCELLED,430.16,RUNNING,1,-100.18,-4.05,-100.18,-4.05,applied,cancelled,RUNNING,-3.76,[],,True,True,False,False
-e5,156,job-79b49dd66efa498f,CANCELLED,430.06,RUNNING,1,-123.22,-5.42,-123.22,-5.42,applied,cancelled,RUNNING,3.4,[],,True,True,False,False
-e5,157,job-62ca9245c7ba4260,CANCELLED,429.92,RUNNING,1,-105.25,46.18,-105.25,46.18,applied,cancelled,RUNNING,46.6,[],,True,True,False,False
-e5,158,job-c76e3e593198458c,CANCELLED,429.76,WAITING_EVENT,1,15.35,4.71,15.35,4.71,ignored_terminal,cancelled,WAITING_EVENT,4.83,[],,False,False,False,False
-e5,159,job-bd0550f32a364ec1,CANCELLED,428.99,RUNNING,1,-108.44,46.57,-108.44,46.57,applied,cancelled,RUNNING,48.94,[],,True,True,False,False
-e5,160,job-b1ca84b911a64458,SUCCEEDED,430.4,RUNNING,1,-97.38,-14.34,-97.38,-14.32,applied,already_terminal,,-32.08,[],,True,False,False,False
-e5,161,job-281bff4bc4db4876,SUCCEEDED,429.84,RUNNING,1,-149.82,-11.84,-149.82,-11.84,applied,already_terminal,,-70.08,[],,True,False,False,False
-e5,162,job-b42fb08d341b44be,TIMED_OUT,429.74,RUNNING,1,-69.31,0.28,-69.31,0.29,applied,already_terminal,,14.5,"[[""publish#0"", ""aborted_lease_lost""]]",,True,True,False,False
-e5,163,job-960cb5353de44fb5,SUCCEEDED,429.85,RUNNING,1,-115.83,0.47,-115.83,0.47,applied,already_terminal,,-42.21,[],,True,False,False,False
-e5,164,job-06bb7d1594114cb3,SUCCEEDED,429.79,RUNNING,1,-149.16,-23.58,-149.16,-23.58,applied,already_terminal,,-62.07,[],,True,False,False,False
-e5,165,job-2f3fd70f24504a5e,SUCCEEDED,429.7,RUNNING,1,-134.74,-10.05,-134.74,-10.05,applied,already_terminal,,-58.8,[],,True,False,False,False
-e5,166,job-460e85a31b7a454d,SUCCEEDED,429.61,RUNNING,1,-142.92,-47.75,-142.92,-47.75,applied,already_terminal,,-59.86,[],,True,False,False,False
-e5,167,job-b77b0645db9f444d,SUCCEEDED,429.56,RUNNING,1,-98.28,-26.72,-98.28,-26.72,applied,already_terminal,,-32.32,[],,True,False,False,False
-e5,168,job-cd2187acd43b4141,CANCELLED,429.22,RUNNING,1,-50.45,2.92,-50.45,2.92,applied,cancelled,RUNNING,3.06,"[[""publish#0"", ""discarded_late_result""]]",22.09,True,True,False,False
-e5,169,job-6769abf5c0b94379,TIMED_OUT,428.37,RUNNING,1,-22.41,15.75,-22.41,15.76,applied,already_terminal,,12.48,"[[""save_report#0"", ""aborted_deadline""]]",,False,False,False,False
-e5,170,job-21685076d0a74c14,TIMED_OUT,431.73,QUEUED,1,-28.28,37.91,-28.28,37.91,applied,already_terminal,,0.68,[],,False,False,False,False
-e5,171,job-4036b244a7864e85,CANCELLED,431.43,RUNNING,1,-83.78,-17.39,-83.78,-17.39,applied,cancelled,RUNNING,-17.21,"[[""publish#0"", ""discarded_late_result""]]",24.64,True,True,False,False
-e5,172,job-c6ad7569c97c4146,CANCELLED,431.24,WAITING_EVENT,1,17.4,-35.05,17.4,-35.05,ignored_terminal,cancelled,WAITING_EVENT,-34.79,[],,False,False,False,False
-e5,173,job-266d82a38bf94b94,TIMED_OUT,431.07,QUEUED,1,-26.89,14.32,-26.89,14.32,applied,already_terminal,,4.11,[],,False,False,False,False
-e5,174,job-2515397e39114805,SUCCEEDED,431.01,RUNNING,1,-142.56,33.53,-142.56,33.53,applied,already_terminal,,-74.84,[],,True,False,False,False
-e5,175,job-2fd74972f2824281,TIMED_OUT,430.93,WAITING_EVENT,1,1.63,12.73,1.63,12.73,ignored_terminal,already_terminal,,3.58,[],,False,False,False,False
-e5,176,job-0bd7c6c9e9554ad2,TIMED_OUT,430.87,RUNNING,1,-25.25,31.22,-25.25,31.22,applied,already_terminal,,3.32,"[[""save_report#0"", ""aborted_deadline""]]",,False,False,False,False
-e5,177,job-460179922be4410b,SUCCEEDED,430.82,RUNNING,1,-126.32,2.38,-126.32,2.38,applied,already_terminal,,-45.41,[],,True,False,False,False
-e5,178,job-f7489141c3b7449c,TIMED_OUT,430.76,RUNNING,1,-64.26,33.49,-64.26,33.49,applied,already_terminal,,2.8,"[[""publish#0"", ""aborted_deadline""]]",,True,True,False,False
-e5,179,job-4075596cf42f40b0,TIMED_OUT,430.11,RUNNING,1,-13.2,32.64,-13.2,32.64,applied,already_terminal,,2.54,"[[""save_report#0"", ""aborted_deadline""]]",,False,False,False,False
-e5,180,job-91974a01753741da,TIMED_OUT,428.14,RUNNING,1,-50.71,39.28,-50.71,39.28,applied,already_terminal,,1.63,"[[""publish#0"", ""aborted_deadline""]]",,False,False,False,False
-e5,181,job-5f6e3281a9934eb7,TIMED_OUT,427.78,RUNNING,1,-33.91,19.33,-33.91,19.33,applied,already_terminal,,1.21,"[[""publish#0"", ""aborted_deadline""]]",,False,False,False,False
-e5,182,job-380da4a5d8ed4e5f,CANCELLED,427.16,RUNNING,1,-110.91,-46.88,-110.91,-46.88,applied,cancelled,RUNNING,-46.79,"[[""publish#0"", ""aborted_lease_lost""]]",16.52,True,True,False,False
-e5,183,job-404b369f5c2d4523,SUCCEEDED,426.91,RUNNING,1,-127.37,-13.93,-127.37,-13.93,applied,already_terminal,,-70.97,[],,True,False,False,False
-e5,184,job-d178a03069de410e,SUCCEEDED,426.89,RUNNING,1,-132.16,33.58,-132.16,33.58,applied,already_terminal,,-72.22,[],,True,False,False,False
-e5,185,job-35df0b25323444b5,CANCELLED,426.8,RUNNING,1,-55.05,12.78,-55.05,12.78,applied,cancelled,RUNNING,13.06,"[[""publish#0"", ""discarded_late_result""]]",10.77,True,True,False,False
-e5,186,job-8ae86c7aaaac4d9f,CANCELLED,426.77,RUNNING,1,-43.54,18.07,-43.54,18.08,applied,cancelled,RUNNING,18.2,"[[""publish#0"", ""discarded_late_result""]]",6.46,True,True,False,False
-e5,187,job-15957d83a7624e5b,CANCELLED,426.7,RUNNING,1,-66.82,-49.67,-66.82,-49.67,applied,cancelled,RUNNING,-49.46,"[[""save_report#0"", ""discarded_late_result""]]",39.1,False,False,False,False
-e5,188,job-36e28525dd404cac,TIMED_OUT,426.73,RUNNING,1,-14.39,24.83,-14.39,24.83,applied,already_terminal,,1.65,[],,False,False,False,False
-e5,189,job-7d55112bd18b4ede,CANCELLED,426.82,RUNNING,1,-64.49,3.52,-64.49,3.52,applied,cancelled,RUNNING,3.63,"[[""publish#0"", ""discarded_late_result""]]",17.95,True,True,False,False
-e5,190,job-6970eefb634f4460,CANCELLED,417.76,WAITING_EVENT,1,-37.92,-43.39,-37.91,-43.4,ignored_terminal,cancelled,WAITING_EVENT,-43.28,[],,False,False,False,False
-e5,191,job-ac4590905c2d4979,CANCELLED,417.57,WAITING_EVENT,1,-24.75,-24.78,-24.74,-24.78,ignored_terminal,cancelled,WAITING_EVENT,3.76,[],,False,False,False,False
-e5,192,job-a7bd2872b6f74f39,SUCCEEDED,417.46,RUNNING,1,-137.34,-23.44,-137.32,-23.44,applied,already_terminal,,-53.52,[],,True,False,False,False
-e5,193,job-134f509f6072423c,CANCELLED,417.38,WAITING_EVENT,1,-26.01,-29.48,-26.01,-29.48,ignored_terminal,cancelled,WAITING_EVENT,-29.25,[],,False,False,False,False
-e5,194,job-9d1c38db51d74a2b,TIMED_OUT,416.94,QUEUED,1,-24.23,47.57,-24.23,47.57,applied,already_terminal,,18.71,[],,False,False,False,False
-e5,195,job-acc0c389c5ea4cb6,CANCELLED,416.65,RUNNING,1,-66.03,-11.74,-66.03,-11.74,applied,cancelled,RUNNING,-11.65,"[[""publish#0"", ""aborted_lease_lost""]]",32.91,True,True,False,False
-e5,196,job-20d889d91dfe480f,TIMED_OUT,416.52,RUNNING,1,-68.57,18.37,-68.57,18.37,applied,already_terminal,,18.23,"[[""publish#0"", ""aborted_deadline""]]",,False,False,False,False
-e5,197,job-3bafebd31c654ff1,CANCELLED,416.43,QUEUED,1,-19.62,11.7,-19.62,11.7,applied,cancelled,QUEUED,11.96,[],,False,False,False,False
-e5,198,job-3cc7065343624a22,TIMED_OUT,416.32,WAITING_EVENT,1,-40.73,-42.25,-40.72,-42.25,ignored_terminal,already_terminal,,17.73,[],,False,False,False,False
-e5,199,job-d13316dafd8d4123,SUCCEEDED,416.19,RUNNING,1,-124.94,-24.61,-124.94,-24.61,applied,already_terminal,,-56.27,[],,True,False,False,False
-e5,200,job-3c2f0f28af3e4628,TIMED_OUT,430.63,QUEUED,1,-23.65,-19.56,-23.65,-19.55,applied,already_terminal,,3.95,[],,False,False,False,False
-e5,201,job-e03a7d2800fd44d0,CANCELLED,430.5,QUEUED,1,-53.48,-48.75,-53.48,-48.75,applied,cancelled,QUEUED,-48.61,[],,False,False,False,False
-e5,202,job-ec65b62919f64d17,SUCCEEDED,430.42,RUNNING,1,-139.69,-23.12,-139.69,-23.12,applied,already_terminal,,-83.03,[],,True,False,False,False
-e5,203,job-d0390c29bb594861,TIMED_OUT,430.27,RUNNING,1,-35.76,19.22,-35.76,19.22,applied,already_terminal,,3.01,"[[""save_report#0"", ""aborted_deadline""]]",,False,False,False,False
-e5,204,job-9bd7997980df40c2,CANCELLED,429.8,WAITING_EVENT,1,-35.13,-20.91,-35.13,-20.91,ignored_terminal,cancelled,WAITING_EVENT,-20.68,[],,False,False,False,False
-e5,205,job-bcba16de336f4ba4,CANCELLED,429.61,RUNNING,1,-62.19,-3.53,-62.19,-3.53,applied,cancelled,RUNNING,-3.23,"[[""publish#0"", ""discarded_late_result""]]",12.85,True,True,False,False
-e5,206,job-91f94423e7724e0e,CANCELLED,429.5,RUNNING,1,-70.72,-38.15,-70.72,-38.15,applied,cancelled,RUNNING,-37.94,"[[""publish#0"", ""discarded_late_result""]]",46.14,True,True,False,False
-e5,207,job-13791d4c4bb54772,CANCELLED,429.39,WAITING_EVENT,1,1.92,-30.07,2.06,-30.08,ignored_terminal,cancelled,WAITING_EVENT,-29.95,[],,False,False,False,False
-e5,208,job-8a7478a8c2554056,TIMED_OUT,411.1,WAITING_EVENT,1,16.28,43.63,16.28,43.63,ignored_terminal,already_terminal,,1.84,[],,False,False,False,False
-e5,209,job-46ee30cdd4a543ac,SUCCEEDED,410.02,RUNNING,1,-147.02,-4.1,-147.02,-4.1,applied,already_terminal,,-85.74,[],,True,False,False,False
-e5,210,job-007d7c844d8740af,TIMED_OUT,415.11,RUNNING,1,-10.62,46.81,-10.62,46.81,applied,already_terminal,,0.97,"[[""save_report#0"", ""aborted_deadline""]]",,False,False,False,False
-e5,211,job-b1d73101cde14754,CANCELLED,415.21,RUNNING,1,-73.59,-23.13,-73.59,-23.13,applied,cancelled,RUNNING,-13.55,"[[""publish#0"", ""discarded_late_result""]]",15.56,True,True,False,False
-e5,212,job-4cbb004f15ca4523,SUCCEEDED,415.14,RUNNING,1,-114.33,44.56,-114.33,44.69,applied,already_terminal,,-26.34,[],,True,False,False,False
-e5,213,job-5c7df66e934341de,SUCCEEDED,415.16,RUNNING,1,-114.18,8.15,-114.18,8.15,applied,already_terminal,,-24.25,[],,True,False,False,False
-e5,214,job-e0e3a75310cc4069,SUCCEEDED,414.93,RUNNING,1,-125.9,2.41,-125.9,2.41,applied,already_terminal,,-53.65,[],,True,False,False,False
-e5,215,job-950df27890ac48ad,CANCELLED,414.72,WAITING_EVENT,1,11.97,-36.74,11.97,-36.74,ignored_terminal,cancelled,WAITING_EVENT,-36.54,[],,False,False,False,False
-e5,216,job-ecd33578d3554867,TIMED_OUT,414.82,WAITING_EVENT,1,-10.56,0.87,-10.56,0.89,deadline_won,already_terminal,,0.84,[],,False,False,False,False
-e5,217,job-3a717d9b40ab4804,TIMED_OUT,414.77,WAITING_EVENT,1,0.77,20.33,0.78,20.33,deadline_won,already_terminal,,14.75,[],,False,False,False,False
-e5,218,job-d1154b9dc8014e57,SUCCEEDED,414.7,RUNNING,1,-110.66,39.77,-110.66,39.77,applied,already_terminal,,-22.59,[],,True,False,False,False
-e5,219,job-653636f834e34759,TIMED_OUT,414.63,RUNNING,1,-67.36,-47.52,-67.36,-47.52,applied,already_terminal,,29.27,[],,True,True,False,False
-e5,220,job-b0a846feb15241f7,SUCCEEDED,414.27,RUNNING,1,-149.39,-0.83,-149.39,-0.83,applied,already_terminal,,-52.14,[],,True,False,False,False
-e5,221,job-16be32e54fa4431d,CANCELLED,413.99,RUNNING,1,-73.37,-19.8,-73.37,-19.8,applied,cancelled,RUNNING,-19.33,"[[""publish#0"", ""discarded_late_result""]]",16.35,True,True,False,False
-e5,222,job-b3e3c6faa8434cd2,SUCCEEDED,413.89,RUNNING,1,-126.08,-15.6,-126.08,-15.6,applied,already_terminal,,-50.43,[],,True,False,False,False
-e5,223,job-6e39ca660cf1481f,SUCCEEDED,413.74,RUNNING,1,-96.27,34.02,-96.27,34.02,applied,already_terminal,,-21.63,[],,True,False,False,False
-e5,224,job-622fea11a8024797,SUCCEEDED,413.13,RUNNING,1,-149.7,25.07,-149.7,25.07,applied,already_terminal,,-52.05,[],,True,False,False,False
-e5,225,job-4c37ca3c40c24203,CANCELLED,412.84,WAITING_EVENT,1,-7.35,-38.0,-7.35,-38.0,ignored_terminal,cancelled,WAITING_EVENT,-37.89,[],,False,False,False,False
-e5,226,job-795a436c5498470d,TIMED_OUT,412.74,WAITING_EVENT,1,7.49,21.3,7.49,21.3,deadline_won,already_terminal,,7.88,[],,False,False,False,False
-e5,227,job-06c013ab233b4eed,CANCELLED,412.57,WAITING_EVENT,1,3.27,-21.02,3.27,-21.01,ignored_terminal,cancelled,WAITING_EVENT,3.4,[],,False,False,False,False
-e5,228,job-6a32882622aa4841,CANCELLED,412.39,RUNNING,1,-86.72,-10.71,-86.72,-10.71,applied,cancelled,RUNNING,-10.34,"[[""publish#0"", ""discarded_late_result""]]",4.31,True,True,False,False
-e5,229,job-a738c7c14df54c50,CANCELLED,412.2,WAITING_EVENT,1,19.79,8.92,19.79,8.92,ignored_terminal,cancelled,WAITING_EVENT,9.04,[],,False,False,False,False
-e5,230,job-4b827680c09c4c40,CANCELLED,427.49,RUNNING,1,-88.68,-7.19,-88.68,-7.19,applied,cancelled,RUNNING,-6.56,"[[""publish#0"", ""discarded_late_result""]]",32.6,True,True,False,False
-e5,231,job-1bd56be682c047a0,CANCELLED,427.35,RUNNING,1,-103.22,-45.17,-103.22,-45.17,applied,cancelled,RUNNING,-45.04,"[[""save_report#0"", ""discarded_late_result""]]",4.76,False,False,False,False
-e5,232,job-d46d7c7451744eb4,SUCCEEDED,427.31,RUNNING,1,-132.71,33.47,-132.71,33.47,applied,already_terminal,,-49.75,[],,True,False,False,False
-e5,233,job-6cb504fba8e643df,TIMED_OUT,427.41,RUNNING,1,-101.44,43.56,-101.44,43.56,applied,already_terminal,,21.56,"[[""publish#0"", ""discarded_late_result""]]",,True,True,False,False
-e5,234,job-d68f4e0fbb624497,CANCELLED,427.43,RUNNING,1,-107.61,-23.43,-107.61,-23.42,applied,cancelled,RUNNING,-23.21,"[[""publish#0"", ""discarded_late_result""]]",46.85,True,True,False,False
-e5,235,job-28bebbe29c6b48f4,CANCELLED,427.27,RUNNING,1,-63.14,-31.02,-63.14,-31.02,applied,cancelled,RUNNING,-30.76,"[[""save_report#0"", ""discarded_late_result""]]",4.51,False,False,False,False
-e5,236,job-fbdc6d78c1d04840,TIMED_OUT,427.21,RUNNING,1,-86.53,45.62,-86.53,45.62,applied,already_terminal,,20.64,"[[""publish#0"", ""discarded_late_result""]]",,True,True,False,False
-e5,237,job-4044d8d9bf694f42,TIMED_OUT,426.71,WAITING_EVENT,1,0.33,31.2,0.33,31.2,deadline_won,already_terminal,,0.7,[],,False,False,False,False
-e5,238,job-3769c9f47ab4478d,TIMED_OUT,425.82,RUNNING,1,-42.75,41.34,-42.75,41.34,applied,already_terminal,,20.05,"[[""save_report#0"", ""aborted_deadline""]]",,False,False,False,False
-e5,239,job-6b8dabd279e640c6,CANCELLED,425.29,WAITING_EVENT,1,9.92,4.92,9.92,4.93,ignored_terminal,cancelled,WAITING_EVENT,5.16,[],,False,False,False,False
-e5,240,job-df6334eb41254e2a,CANCELLED,407.64,WAITING_EVENT,1,-27.67,-45.05,-27.67,-45.05,ignored_terminal,cancelled,WAITING_EVENT,-44.72,[],,False,False,False,False
-e5,241,job-0395b4ba322846cc,CANCELLED,407.38,QUEUED,1,-25.5,-4.91,-25.5,-4.91,applied,cancelled,QUEUED,26.18,[],,False,False,False,False
-e5,242,job-8988445082d14611,CANCELLED,406.98,QUEUED,1,-22.05,14.45,-22.05,14.45,applied,cancelled,QUEUED,14.6,[],,False,False,False,False
-e5,243,job-50e213dcd99743c8,CANCELLED,406.66,RUNNING,1,-101.34,-45.1,-101.34,-45.1,applied,cancelled,RUNNING,-37.26,[],,True,True,False,False
-e5,244,job-899a2e8aa99b4d88,CANCELLED,406.37,WAITING_EVENT,1,7.55,-37.27,7.55,-37.27,ignored_terminal,cancelled,WAITING_EVENT,-21.85,[],,False,False,False,False
-e5,245,job-7855480606c84372,CANCELLED,405.32,QUEUED,1,-69.73,-15.63,-69.73,-15.63,applied,cancelled,QUEUED,-15.47,[],,False,False,False,False
-e5,246,job-efd58fd86f5c43f9,CANCELLED,404.96,RUNNING,1,-99.38,23.9,-99.38,23.9,applied,cancelled,RUNNING,24.02,[],,False,False,False,False
-e5,247,job-3af431564f914921,CANCELLED,404.59,WAITING_EVENT,1,15.97,-23.98,15.97,-23.98,ignored_terminal,cancelled,WAITING_EVENT,-23.73,[],,False,False,False,False
-e5,248,job-3192d4c2aeaa4f1c,CANCELLED,404.22,WAITING_EVENT,1,-38.48,-19.92,-38.48,-19.92,ignored_terminal,cancelled,WAITING_EVENT,-19.7,[],,False,False,False,False
-e5,249,job-f29b2732000c44df,CANCELLED,403.94,QUEUED,1,-55.26,-10.56,-55.26,-10.56,applied,cancelled,QUEUED,-10.45,[],,False,False,False,False
-e5,250,job-d9212988657d4d8a,CANCELLED,429.04,RUNNING,1,-121.55,-33.83,-121.55,-33.83,applied,cancelled,RUNNING,-33.52,"[[""publish#0"", ""discarded_late_result""]]",56.48,True,True,False,False
-e5,251,job-f48183a8fdfd4486,TIMED_OUT,428.82,RUNNING,1,-114.66,40.6,-114.65,40.6,applied,already_terminal,,18.42,"[[""publish#0"", ""aborted_deadline""]]",,True,True,False,False
-e5,252,job-f5c74cba0fde455f,CANCELLED,428.48,RUNNING,1,-65.5,-28.0,-65.5,-28.0,applied,cancelled,RUNNING,-12.77,"[[""publish#0"", ""discarded_late_result""]]",39.59,True,True,False,False
-e5,253,job-3eea5d4830a04121,TIMED_OUT,428.39,WAITING_EVENT,1,4.06,49.65,4.06,49.65,deadline_won,already_terminal,,4.41,[],,False,False,False,False
-e5,254,job-f6296dcc1af94804,TIMED_OUT,428.28,RUNNING,1,-73.51,-36.04,-73.51,-36.04,applied,already_terminal,,16.41,"[[""publish#0"", ""aborted_deadline""]]",,False,False,False,False
-e5,255,job-601fee9d368b4402,CANCELLED,428.14,RUNNING,1,-117.29,-40.93,-117.23,-40.93,applied,cancelled,RUNNING,-40.72,"[[""publish#0"", ""discarded_late_result""]]",60.82,True,True,False,False
-e5,256,job-8e2db72cbc3c41c8,CANCELLED,427.83,RUNNING,1,-91.87,-40.89,-91.87,-40.89,applied,cancelled,RUNNING,1.03,"[[""publish#0"", ""discarded_late_result""]]",23.09,True,True,False,False
-e5,257,job-216ccb0cffe44210,CANCELLED,427.79,RUNNING,1,-109.35,-24.16,-109.35,-24.16,applied,cancelled,RUNNING,-23.85,"[[""save_report#0"", ""discarded_late_result""]]",43.69,False,False,False,False
-e5,258,job-52e82bd059ff4c57,TIMED_OUT,411.53,RUNNING,1,-53.16,38.73,-53.16,38.73,applied,already_terminal,,15.18,"[[""save_report#0"", ""aborted_deadline""]]",,False,False,False,False
-e5,259,job-65f4160cafe64b65,CANCELLED,410.38,QUEUED,1,-22.56,-8.72,-22.56,-8.72,applied,cancelled,QUEUED,-8.57,[],,False,False,False,False
-e5,260,job-b95f745844974618,CANCELLED,430.48,RUNNING,1,-79.64,2.42,-79.64,2.42,applied,cancelled,RUNNING,2.52,"[[""publish#0"", ""discarded_late_result""]]",18.03,True,True,False,False
-e5,261,job-91d40d3c6bac4ca1,CANCELLED,430.12,QUEUED,1,-85.93,-16.18,-85.93,-16.18,applied,cancelled,QUEUED,-16.04,[],,False,False,False,False
-e5,262,job-23d7eea04ca14e3a,SUCCEEDED,429.99,RUNNING,1,-139.45,-22.25,-139.45,-22.25,applied,already_terminal,,-55.91,[],,True,False,False,False
-e5,263,job-84a8078726184f43,CANCELLED,429.84,WAITING_EVENT,1,14.51,-37.41,14.59,-37.41,ignored_terminal,cancelled,WAITING_EVENT,-37.29,[],,False,False,False,False
-e5,264,job-b2e68b27a9404452,TIMED_OUT,429.71,RUNNING,1,-64.42,12.96,-64.42,12.97,applied,already_terminal,,2.26,"[[""publish#0"", ""aborted_deadline""]]",,False,False,False,False
-e5,265,job-5854a7da39014ed6,CANCELLED,429.63,WAITING_EVENT,1,-3.31,-28.4,-2.51,-28.4,ignored_terminal,cancelled,WAITING_EVENT,-28.14,[],,False,False,False,False
-e5,266,job-68bbf01e978545de,CANCELLED,429.49,RUNNING,1,-103.93,-25.15,-103.93,-25.15,applied,cancelled,RUNNING,-25.02,"[[""publish#0"", ""aborted_lease_lost""]]",27.91,True,True,False,False
-e5,267,job-3763c33da24e4b06,CANCELLED,429.39,RUNNING,1,-82.04,-5.41,-82.04,-5.41,applied,cancelled,RUNNING,-4.96,"[[""publish#0"", ""discarded_late_result""]]",22.21,True,True,False,False
-e5,268,job-51940d0e450b420c,TIMED_OUT,429.24,WAITING_EVENT,1,12.17,34.87,12.17,34.87,ignored_terminal,already_terminal,,1.24,[],,False,False,False,False
-e5,269,job-e1cb7b2a1fcd48a4,CANCELLED,428.2,WAITING_EVENT,1,-1.61,-47.82,-1.61,-47.82,ignored_terminal,cancelled,WAITING_EVENT,-47.6,[],,False,False,False,False
-e5,270,job-9474edf7046a42aa,SUCCEEDED,417.96,RUNNING,1,-144.52,20.95,-144.52,20.95,applied,already_terminal,,-88.68,[],,True,False,False,False
-e5,271,job-b3faea2deecb4c3f,CANCELLED,417.6,WAITING_EVENT,1,2.27,-2.67,2.27,-2.67,ignored_terminal,cancelled,WAITING_EVENT,-2.51,[],,False,False,False,False
-e5,272,job-31df6d1c217e4917,CANCELLED,417.52,RUNNING,1,-50.18,-49.98,-50.18,-49.98,applied,cancelled,RUNNING,-13.55,"[[""save_report#0"", ""discarded_late_result""]]",17.03,False,False,False,False
-e5,273,job-70a2309e58954180,SUCCEEDED,417.4,RUNNING,1,-83.44,42.68,-83.44,42.8,applied,already_terminal,,-23.22,[],,True,False,False,False
-e5,274,job-da67d65c49c0460d,TIMED_OUT,417.26,QUEUED,1,-9.65,35.55,-9.65,35.55,applied,already_terminal,,1.26,[],,False,False,False,False
-e5,275,job-6270e30a22064b1e,CANCELLED,417.19,WAITING_EVENT,1,15.28,-25.15,15.28,-25.15,ignored_terminal,cancelled,WAITING_EVENT,-25.03,[],,False,False,False,False
-e5,276,job-a7ebc4b49f2944d7,SUCCEEDED,416.37,RUNNING,1,-131.46,-34.56,-131.46,-34.56,applied,already_terminal,,-71.92,[],,True,False,False,False
-e5,277,job-bad5a87657e543fe,TIMED_OUT,415.95,RUNNING,1,-61.2,18.21,-61.2,18.21,applied,already_terminal,,0.44,"[[""save_report#0"", ""aborted_deadline""]]",,False,False,False,False
-e5,278,job-bb34462a1ea44770,TIMED_OUT,415.79,WAITING_EVENT,1,10.05,22.17,10.05,22.17,ignored_terminal,already_terminal,,0.2,[],,False,False,False,False
-e5,279,job-1e2ddaf1032546fc,TIMED_OUT,415.75,RUNNING,1,-39.95,26.48,-39.95,26.48,applied,already_terminal,,1.9,[],,False,False,False,False
-e5,280,job-10b6fffc58264364,TIMED_OUT,431.65,RUNNING,1,-72.25,5.15,-72.25,5.15,applied,already_terminal,,2.21,"[[""publish#0"", ""aborted_deadline""]]",,False,False,False,False
-e5,281,job-852f8f4e32744c8a,SUCCEEDED,431.27,RUNNING,1,-143.28,28.23,-143.28,28.23,applied,already_terminal,,-54.42,[],,True,False,False,False
-e5,282,job-1a4893badc244c85,SUCCEEDED,430.69,RUNNING,1,-110.46,41.99,-110.46,42.41,applied,already_terminal,,-4.41,[],,True,False,False,False
-e5,283,job-d26c3e4259904ab5,CANCELLED,430.68,QUEUED,1,-40.26,-19.62,-40.26,-19.62,applied,cancelled,QUEUED,-19.47,[],,False,False,False,False
-e5,284,job-03b7fcad8537442e,CANCELLED,430.64,RUNNING,1,-128.25,-24.82,-128.25,-24.82,applied,cancelled,RUNNING,-24.68,"[[""publish#0"", ""discarded_late_result""]]",18.51,True,True,False,False
-e5,285,job-5ce943f21c7e46f7,TIMED_OUT,430.56,QUEUED,1,-41.83,19.86,-41.82,19.86,applied,already_terminal,,0.28,[],,False,False,False,False
-e5,286,job-475b1b35cfac4ed8,CANCELLED,430.51,RUNNING,1,-130.94,-42.96,-130.94,-42.96,applied,cancelled,RUNNING,-42.77,"[[""publish#0"", ""discarded_late_result""]]",35.09,True,True,False,False
-e5,287,job-f00a84ddd5a54535,CANCELLED,430.34,RUNNING,1,-60.85,8.29,-60.85,8.29,applied,cancelled,RUNNING,8.49,"[[""publish#0"", ""discarded_late_result""]]",17.11,True,True,False,False
-e5,288,job-93989a58ac1c4432,CANCELLED,430.2,RUNNING,1,-84.03,-27.64,-84.03,-27.64,applied,cancelled,RUNNING,-27.4,"[[""save_report#0"", ""discarded_late_result""]]",13.66,False,False,False,False
-e5,289,job-78fd7f10582143f7,CANCELLED,429.89,WAITING_EVENT,1,-47.82,-48.95,-47.82,-48.95,ignored_terminal,cancelled,WAITING_EVENT,-48.8,[],,False,False,False,False
-e5,290,job-1ba8f9daa5e941de,SUCCEEDED,428.82,RUNNING,1,-98.74,-3.93,-98.74,-3.93,applied,already_terminal,,-6.57,[],,True,False,False,False
-e5,291,job-e4c8cd66d7ee43db,TIMED_OUT,428.65,WAITING_EVENT,1,13.02,14.46,13.03,14.46,ignored_terminal,already_terminal,,0.71,[],,False,False,False,False
-e5,292,job-91c960747eae465b,TIMED_OUT,428.81,WAITING_EVENT,1,0.24,-2.47,0.26,-2.46,ignored_terminal,already_terminal,,0.16,[],,False,False,False,False
-e5,293,job-19f03e07ee4e4d00,SUCCEEDED,428.74,RUNNING,1,-110.09,-25.29,-109.6,-25.29,applied,already_terminal,,-37.15,[],,True,False,False,False
-e5,294,job-1888d9c613f0430e,TIMED_OUT,428.55,WAITING_EVENT,1,13.3,20.47,13.33,20.47,ignored_terminal,already_terminal,,19.69,[],,False,False,False,False
-e5,295,job-7f5935b299c34a40,CANCELLED,428.22,RUNNING,1,-97.74,-47.82,-97.74,-47.82,applied,cancelled,RUNNING,-47.68,"[[""publish#0"", ""discarded_late_result""]]",8.75,True,True,False,False
-e5,296,job-c01a07389921483a,SUCCEEDED,426.88,RUNNING,1,-65.29,17.45,-65.29,17.45,applied,already_terminal,,-3.15,[],,True,False,False,False
-e5,297,job-201dba1b20c94693,CANCELLED,426.59,RUNNING,1,-78.6,-24.27,-78.6,-24.27,applied,cancelled,RUNNING,-24.11,"[[""publish#0"", ""discarded_late_result""]]",20.18,True,True,False,False
-e5,298,job-3ea26982ca004c1d,TIMED_OUT,426.5,RUNNING,1,-36.55,42.52,-35.16,42.52,applied,already_terminal,,18.6,"[[""save_report#0"", ""discarded_late_result""]]",,False,False,False,False
-e5,299,job-3d1066c6bf814ddf,CANCELLED,426.33,RUNNING,1,-111.45,-46.59,-111.2,-46.59,applied,cancelled,RUNNING,-46.49,"[[""publish#0"", ""discarded_late_result""]]",5.64,True,True,False,False
+e5,0,job-d693ecd94b184ebe,SUCCEEDED,426.67,RUNNING,1,-120.04,-26.8,-120.04,-26.8,applied,already_terminal,,-63.74,[],,True,False,False,False
+e5,1,job-b0cfbc3dcb394b32,SUCCEEDED,424.39,RUNNING,1,-110.33,-1.5,-110.33,-1.5,applied,already_terminal,,-33.76,[],,True,False,False,False
+e5,2,job-ae782d68e0b74d5e,CANCELLED,423.66,RUNNING,1,-49.85,-23.73,-49.85,-23.31,applied,cancelled,RUNNING,37.86,"[[""publish#0"", ""aborted_lease_lost""]]",16.95,True,True,False,False
+e5,3,job-dab30d48743d460c,SUCCEEDED,423.78,RUNNING,1,-149.3,-8.11,-149.3,-8.11,applied,already_terminal,,-66.35,[],,True,False,False,False
+e5,4,job-76b19ca71cf146de,SUCCEEDED,423.88,RUNNING,1,-87.23,6.63,-87.23,6.63,applied,already_terminal,,-30.26,[],,True,False,False,False
+e5,5,job-d4c28955bf014aba,TIMED_OUT,423.92,WAITING_EVENT,1,12.03,19.05,12.04,19.05,deadline_won,already_terminal,,12.72,[],,False,False,False,False
+e5,6,job-08301ddc7f41495c,SUCCEEDED,424.07,RUNNING,1,-62.37,11.76,-62.37,12.36,applied,already_terminal,,-6.95,[],,True,False,False,False
+e5,7,job-682f4c7e801a488a,CANCELLED,423.71,WAITING_EVENT,1,-35.05,-44.6,-35.05,-44.6,ignored_terminal,cancelled,WAITING_EVENT,-44.45,[],,False,False,False,False
+e5,8,job-1cef2c92ae814287,TIMED_OUT,423.66,WAITING_EVENT,1,2.92,28.0,2.92,28.0,deadline_won,already_terminal,,3.6,[],,False,False,False,False
+e5,9,job-4c0f85d43d29454b,CANCELLED,423.73,QUEUED,1,-1.33,29.79,-1.33,29.79,applied,cancelled,QUEUED,29.98,[],,False,False,False,False
+e5,10,job-210eab5480684d90,CANCELLED,449.4,RUNNING,1,-83.3,-10.1,-83.3,-10.1,applied,cancelled,RUNNING,-9.96,[],,True,True,False,False
+e5,11,job-c84994541fc24f92,SUCCEEDED,449.05,RUNNING,1,-132.4,13.43,-132.4,13.45,applied,already_terminal,,-67.47,[],,True,False,False,False
+e5,12,job-5eacec580fea4192,SUCCEEDED,448.86,RUNNING,1,-139.42,-43.27,-139.42,-43.27,applied,already_terminal,,-72.54,[],,True,False,False,False
+e5,13,job-87da85095dae4680,SUCCEEDED,448.3,RUNNING,1,-114.51,-33.77,-114.51,-33.77,applied,already_terminal,,-45.71,[],,True,False,False,False
+e5,14,job-73766129096648f4,CANCELLED,448.0,RUNNING,1,-92.19,-44.74,-92.19,-44.72,applied,cancelled,RUNNING,-44.17,[],,True,True,False,False
+e5,15,job-d067a644a0e0482a,SUCCEEDED,447.78,RUNNING,1,-149.96,-34.87,-149.96,-34.87,applied,already_terminal,,-74.72,[],,True,False,False,False
+e5,16,job-bab239ba5b4649af,CANCELLED,447.57,RUNNING,1,-132.75,-13.64,-132.75,-13.63,applied,cancelled,RUNNING,27.5,[],,True,True,False,False
+e5,17,job-8ba35e7883964221,SUCCEEDED,447.25,RUNNING,1,-145.66,37.43,-145.66,37.43,applied,already_terminal,,-74.49,[],,True,False,False,False
+e5,18,job-bbaa75a7a42d4f12,CANCELLED,445.95,QUEUED,1,-45.61,-35.14,-45.6,-35.13,applied,cancelled,QUEUED,11.78,[],,False,False,False,False
+e5,19,job-f33a9f4877ee4780,CANCELLED,445.58,RUNNING,1,-107.12,-15.26,-107.12,-15.26,applied,cancelled,RUNNING,-14.94,[],,True,True,False,False
+e5,20,job-60a8330c62f44d9c,CANCELLED,413.92,RUNNING,1,-88.09,-37.72,-88.09,-37.72,applied,cancelled,RUNNING,-14.25,"[[""save_report#0"", ""discarded_late_result""]]",31.62,False,False,False,False
+e5,21,job-ba216e2cb4724117,TIMED_OUT,413.42,QUEUED,1,-5.68,49.31,-5.68,49.31,applied,already_terminal,,17.4,[],,False,False,False,False
+e5,22,job-bc6be9b78a354b3e,CANCELLED,413.14,QUEUED,1,-70.78,-1.62,-70.57,-1.62,applied,cancelled,QUEUED,-1.41,[],,False,False,False,False
+e5,23,job-46f55dde747d451f,SUCCEEDED,412.89,RUNNING,1,-135.4,-39.78,-133.14,-39.78,applied,already_terminal,,-70.49,[],,True,False,False,False
+e5,24,job-afcf5c6601a14fa3,CANCELLED,412.62,RUNNING,1,-91.75,-23.52,-91.75,-23.52,applied,cancelled,RUNNING,-23.38,"[[""save_report#0"", ""discarded_late_result""]]",38.99,False,False,False,False
+e5,25,job-884018a25b144df0,CANCELLED,412.23,QUEUED,1,-9.09,-33.86,-9.09,-33.85,applied,cancelled,QUEUED,-0.65,[],,False,False,False,False
+e5,26,job-ce4a425fdd2e4ecb,SUCCEEDED,411.94,RUNNING,1,-146.07,45.1,-146.07,45.1,applied,already_terminal,,-74.84,[],,True,False,False,False
+e5,27,job-fe15bce20ee2424c,CANCELLED,411.39,QUEUED,1,-60.2,-35.34,-60.2,-35.34,applied,cancelled,QUEUED,-34.95,[],,False,False,False,False
+e5,28,job-5d9fb2deaba142f4,CANCELLED,410.37,QUEUED,1,-57.66,-47.3,-57.66,-47.29,applied,cancelled,QUEUED,-47.08,[],,False,False,False,False
+e5,29,job-cc6a8c6cdaa04c2a,TIMED_OUT,410.07,QUEUED,1,-60.22,47.85,-60.22,47.85,applied,already_terminal,,15.13,[],,False,False,False,False
+e5,30,job-6181902fd93d407c,CANCELLED,433.19,QUEUED,1,-3.23,19.62,-3.23,19.62,applied,cancelled,QUEUED,19.76,[],,False,False,False,False
+e5,31,job-64b1ff22ddb7479d,CANCELLED,418.65,RUNNING,1,-105.61,-13.33,-105.61,-13.33,applied,cancelled,RUNNING,16.28,"[[""publish#0"", ""aborted_lease_lost""]]",19.32,True,True,False,False
+e5,32,job-f537f32b7ff94c93,SUCCEEDED,418.54,RUNNING,1,-121.6,27.19,-121.6,27.2,applied,already_terminal,,-21.05,[],,True,False,False,False
+e5,33,job-414f1a8470c8478d,CANCELLED,418.61,RUNNING,1,-59.46,27.91,-59.46,27.91,applied,cancelled,RUNNING,28.06,"[[""save_report#0"", ""discarded_late_result""]]",5.53,False,False,False,False
+e5,34,job-ce461212c22d4694,CANCELLED,418.29,RUNNING,1,-93.96,-27.7,-93.96,-27.69,applied,cancelled,RUNNING,-16.08,"[[""save_report#0"", ""discarded_late_result""]]",49.06,False,False,False,False
+e5,35,job-b7e05fd713834768,TIMED_OUT,417.55,QUEUED,1,-12.04,48.49,-12.04,48.5,applied,already_terminal,,30.9,[],,False,False,False,False
+e5,36,job-91dd142bf29143b2,TIMED_OUT,417.3,QUEUED,1,-5.05,30.61,-5.05,30.62,applied,already_terminal,,30.51,[],,False,False,False,False
+e5,37,job-6f4c432518c8417a,CANCELLED,417.15,QUEUED,1,-10.88,23.99,-10.88,23.99,applied,cancelled,QUEUED,24.34,[],,False,False,False,False
+e5,38,job-aa2a4062e08c43dd,CANCELLED,416.98,RUNNING,1,-111.45,1.76,-111.45,1.76,applied,cancelled,RUNNING,1.91,"[[""publish#0"", ""aborted_lease_lost""]]",30.9,True,True,False,False
+e5,39,job-f2aeab3a0b9e4d7a,CANCELLED,416.73,RUNNING,1,-89.55,-47.1,-89.55,-47.1,applied,cancelled,RUNNING,-46.92,"[[""save_report#0"", ""discarded_late_result""]]",15.08,False,False,False,False
+e5,40,job-7104878b18784690,SUCCEEDED,446.38,RUNNING,1,-145.25,-22.06,-145.25,-22.06,applied,already_terminal,,-88.28,[],,True,False,False,False
+e5,41,job-2051565a51014fa9,SUCCEEDED,445.16,RUNNING,1,-105.94,19.25,-105.94,19.25,applied,already_terminal,,-44.52,[],,True,False,False,False
+e5,42,job-e5b1506fbfc14501,CANCELLED,444.72,WAITING_EVENT,1,12.61,-5.28,12.61,-5.28,ignored_terminal,cancelled,WAITING_EVENT,-5.03,[],,False,False,False,False
+e5,43,job-16d8ebd2d5d84ea8,TIMED_OUT,444.41,WAITING_EVENT,1,9.29,48.8,9.29,48.8,deadline_won,already_terminal,,9.56,[],,False,False,False,False
+e5,44,job-b608603f147d4a5a,TIMED_OUT,444.18,WAITING_EVENT,1,12.35,-13.54,13.49,-13.54,ignored_terminal,already_terminal,,29.04,[],,False,False,False,False
+e5,45,job-bdba8e7d1957438f,SUCCEEDED,431.51,RUNNING,1,-112.52,-27.32,-112.52,-27.32,applied,already_terminal,,-60.88,[],,True,False,False,False
+e5,46,job-1431dcd19fe44264,SUCCEEDED,431.18,RUNNING,1,-116.56,-29.56,-116.56,-29.56,applied,already_terminal,,-60.41,[],,True,False,False,False
+e5,47,job-38fdd64a0f904112,TIMED_OUT,430.77,RUNNING,1,-43.91,40.03,-43.91,40.03,applied,already_terminal,,28.07,"[[""publish#0"", ""aborted_deadline""]]",,False,False,False,False
+e5,48,job-590f446cec2e44e0,TIMED_OUT,430.33,QUEUED,1,-7.13,-2.05,-7.13,-2.05,applied,already_terminal,,27.84,[],,False,False,False,False
+e5,49,job-f387102400c7433b,TIMED_OUT,430.01,RUNNING,1,-38.99,29.96,-38.99,29.97,applied,already_terminal,,27.6,"[[""publish#0"", ""aborted_deadline""]]",,False,False,False,False
+e5,50,job-919fb6e95ace4ed4,SUCCEEDED,414.66,RUNNING,1,-135.59,16.06,-135.59,16.06,applied,already_terminal,,-71.49,[],,True,False,False,False
+e5,51,job-8dd99e9ea37c4181,TIMED_OUT,414.66,WAITING_EVENT,1,4.66,28.23,4.66,28.23,deadline_won,already_terminal,,5.04,[],,False,False,False,False
+e5,52,job-8fef76d883054a8d,CANCELLED,414.85,RUNNING,1,-22.48,-2.2,-22.48,-2.2,applied,cancelled,RUNNING,-2.05,"[[""save_report#0"", ""discarded_late_result""]]",20.86,False,False,False,False
+e5,53,job-40c86035da284015,SUCCEEDED,414.75,RUNNING,1,-119.65,28.91,-119.65,28.91,applied,already_terminal,,-43.64,[],,True,False,False,False
+e5,54,job-c4d3cf76dc8a4420,SUCCEEDED,414.4,RUNNING,1,-93.47,30.08,-93.47,30.08,applied,already_terminal,,-11.88,[],,True,False,False,False
+e5,55,job-ac9d5985b8794c3f,CANCELLED,413.9,WAITING_EVENT,1,15.18,-10.42,15.35,-10.42,ignored_terminal,cancelled,WAITING_EVENT,-1.9,[],,False,False,False,False
+e5,56,job-851b9e24e9474ae5,SUCCEEDED,413.11,RUNNING,1,-81.76,44.68,-81.76,44.68,applied,already_terminal,,-10.66,[],,True,False,False,False
+e5,57,job-15906f133c1c47f4,CANCELLED,412.85,WAITING_EVENT,1,-26.78,-33.0,-26.78,-33.0,ignored_terminal,cancelled,WAITING_EVENT,-32.52,[],,False,False,False,False
+e5,58,job-81f6ad2d4cde4639,SUCCEEDED,412.62,RUNNING,1,-128.4,-34.88,-128.4,-34.88,applied,already_terminal,,-73.98,[],,True,False,False,False
+e5,59,job-52c63c6ea4574dfa,TIMED_OUT,412.29,WAITING_EVENT,1,3.82,30.65,3.82,30.65,deadline_won,already_terminal,,4.12,[],,False,False,False,False
+e5,60,job-e4cea4649b454deb,TIMED_OUT,410.46,RUNNING,1,-125.15,32.65,-125.15,32.65,applied,already_terminal,,1.87,"[[""save_report#0"", ""aborted_deadline""]]",,False,False,False,False
+e5,61,job-067f55c7343a423a,TIMED_OUT,410.16,WAITING_EVENT,1,16.65,15.73,16.65,15.73,ignored_terminal,already_terminal,,1.43,[],,False,False,False,False
+e5,62,job-898e048b9f1c4e67,TIMED_OUT,409.9,RUNNING,1,-90.43,4.87,-90.43,5.25,applied,already_terminal,,1.18,"[[""save_report#0"", ""aborted_deadline""]]",,False,False,False,False
+e5,63,job-3edcb151be3f46c8,CANCELLED,409.72,QUEUED,1,-127.73,-48.58,-127.73,-48.58,applied,cancelled,QUEUED,-48.38,[],,False,False,False,False
+e5,64,job-d0207756857f4c24,TIMED_OUT,409.46,WAITING_EVENT,1,15.05,14.97,15.08,14.97,ignored_terminal,already_terminal,,0.74,[],,False,False,False,False
+e5,65,job-bfb5ecc664ca4a52,TIMED_OUT,409.14,RUNNING,1,-60.48,43.36,-60.48,43.36,applied,already_terminal,,0.5,"[[""save_report#0"", ""aborted_deadline""]]",,False,False,False,False
+e5,66,job-d2cc9225891f4df7,TIMED_OUT,408.92,RUNNING,1,-76.25,37.17,-76.25,37.17,applied,already_terminal,,0.27,"[[""save_report#0"", ""aborted_deadline""]]",,False,False,False,False
+e5,67,job-a7cc0c8aca1044f1,CANCELLED,408.36,WAITING_EVENT,1,-9.55,-28.9,-9.55,-28.9,ignored_terminal,cancelled,WAITING_EVENT,-28.38,[],,False,False,False,False
+e5,68,job-1635fc69a66d4d7e,CANCELLED,408.11,QUEUED,1,-107.19,-20.7,-107.19,-20.7,applied,cancelled,QUEUED,-20.46,[],,False,False,False,False
+e5,69,job-86266fa14bbf4139,TIMED_OUT,408.17,RUNNING,1,-109.11,8.64,-109.1,8.64,applied,already_terminal,,4.21,[],,False,False,False,False
+e5,70,job-43d2f76574b8416f,CANCELLED,401.29,RUNNING,1,-105.91,-8.1,-105.73,-8.1,applied,cancelled,RUNNING,-7.96,"[[""publish#0"", ""discarded_late_result""]]",39.55,True,True,False,False
+e5,71,job-82664bb819ee4dc1,SUCCEEDED,401.2,RUNNING,1,-127.72,41.0,-127.72,41.0,applied,already_terminal,,-63.89,[],,True,False,False,False
+e5,72,job-4a7e7644968d4e93,CANCELLED,401.21,RUNNING,1,-89.86,-4.18,-89.86,-4.18,applied,cancelled,RUNNING,-4.05,"[[""publish#0"", ""discarded_late_result""]]",35.66,True,True,False,False
+e5,73,job-973b352e73864934,TIMED_OUT,401.25,QUEUED,1,-50.83,40.43,-50.83,40.43,applied,already_terminal,,1.72,[],,False,False,False,False
+e5,74,job-0052e4a7bc78446e,TIMED_OUT,401.35,QUEUED,1,-78.49,41.77,-78.49,41.77,applied,already_terminal,,1.31,[],,False,False,False,False
+e5,75,job-92b6e0c2d8a64690,TIMED_OUT,401.44,QUEUED,1,-64.72,3.18,-64.72,3.18,applied,already_terminal,,0.87,[],,False,False,False,False
+e5,76,job-c400870a04af4630,CANCELLED,401.34,QUEUED,1,-61.0,-48.13,-61.0,-48.13,applied,cancelled,QUEUED,-47.59,[],,False,False,False,False
+e5,77,job-eeba070b5fcb4969,CANCELLED,400.59,RUNNING,1,-75.18,-31.69,-75.18,-31.69,applied,cancelled,RUNNING,-31.53,"[[""save_report#0"", ""discarded_late_result""]]",16.15,False,False,False,False
+e5,78,job-dc73e9c8b0e24c2b,SUCCEEDED,399.98,RUNNING,1,-149.33,29.92,-146.97,29.92,applied,already_terminal,,-67.85,[],,True,False,False,False
+e5,79,job-d6c126e20cae4d28,SUCCEEDED,399.95,RUNNING,1,-120.7,-2.65,-120.69,-2.65,applied,already_terminal,,-4.29,[],,True,False,False,False
+e5,80,job-5fa6950a9a384edd,CANCELLED,400.7,RUNNING,1,-26.72,5.65,-26.71,5.65,applied,cancelled,RUNNING,5.73,[],,False,False,False,False
+e5,81,job-fc0365b1c2d447b3,SUCCEEDED,400.59,RUNNING,1,-94.58,1.83,-94.58,1.84,applied,already_terminal,,-0.07,[],,True,False,False,False
+e5,82,job-1ccb19bcbf074d48,CANCELLED,400.43,RUNNING,1,-55.57,28.43,-55.57,28.43,applied,cancelled,RUNNING,41.71,[],,True,True,False,False
+e5,83,job-2479eebd42a6429d,SUCCEEDED,400.25,RUNNING,1,-131.96,6.03,-131.96,6.03,applied,already_terminal,,-62.13,[],,True,False,False,False
+e5,84,job-b49d8c0e4f394873,SUCCEEDED,400.08,RUNNING,1,-107.76,-22.31,-107.76,-21.37,applied,already_terminal,,-27.55,[],,True,False,False,False
+e5,85,job-65000d1249344427,CANCELLED,399.89,RUNNING,1,-18.72,0.77,-14.99,0.77,applied,cancelled,RUNNING,56.51,[],,False,False,False,False
+e5,86,job-e05c4065a0c0440a,CANCELLED,399.69,RUNNING,1,-54.51,26.0,-54.51,26.0,applied,cancelled,RUNNING,26.21,[],,True,True,False,False
+e5,87,job-fb571aeb9d5e4297,TIMED_OUT,398.54,WAITING_EVENT,1,5.12,-5.68,5.12,-5.67,deadline_won,already_terminal,,5.27,[],,False,False,False,False
+e5,88,job-144c6cde3dc54fb5,CANCELLED,398.17,RUNNING,1,-45.87,0.56,-45.87,0.6,applied,cancelled,RUNNING,0.81,[],,True,True,False,False
+e5,89,job-5bc6ebb9ab78418d,CANCELLED,398.03,RUNNING,1,-62.93,19.27,-62.93,19.27,applied,cancelled,RUNNING,19.52,[],,True,True,False,False
+e5,90,job-c25228a00e7c46ca,TIMED_OUT,436.05,RUNNING,1,-73.1,3.33,-73.1,3.33,applied,already_terminal,,3.35,"[[""publish#0"", ""aborted_deadline""]]",,False,False,False,False
+e5,91,job-5de180c1f3ef42cb,TIMED_OUT,435.86,RUNNING,1,-68.73,44.15,-68.73,44.15,applied,already_terminal,,2.94,"[[""publish#0"", ""aborted_deadline""]]",,False,False,False,False
+e5,92,job-230acbfce1e8475f,TIMED_OUT,435.58,RUNNING,1,-31.13,37.65,-31.13,37.65,applied,already_terminal,,2.66,"[[""save_report#0"", ""aborted_deadline""]]",,False,False,False,False
+e5,93,job-21f5c8ef7bce4d27,CANCELLED,435.3,WAITING_EVENT,1,10.17,-24.04,10.17,-24.04,ignored_terminal,cancelled,WAITING_EVENT,-23.96,[],,False,False,False,False
+e5,94,job-db54395d615a4f58,TIMED_OUT,416.6,RUNNING,1,-54.88,44.33,-54.88,44.33,applied,already_terminal,,2.21,"[[""save_report#0"", ""aborted_deadline""]]",,False,False,False,False
+e5,95,job-4eaf46ddca7b475b,CANCELLED,416.32,WAITING_EVENT,1,-7.2,-36.29,-7.2,-36.29,ignored_terminal,cancelled,WAITING_EVENT,-36.12,[],,False,False,False,False
+e5,96,job-12c6295795504713,SUCCEEDED,416.47,RUNNING,1,-129.32,-5.79,-129.32,-5.79,applied,already_terminal,,-57.63,[],,True,False,False,False
+e5,97,job-03b0d9fa6b5a4da0,SUCCEEDED,416.56,RUNNING,1,-137.67,-25.94,-137.67,-25.93,applied,already_terminal,,-58.97,[],,True,False,False,False
+e5,98,job-9b56a9bda5824945,SUCCEEDED,416.9,RUNNING,1,-137.57,16.95,-137.57,17.02,applied,already_terminal,,-57.54,[],,True,False,False,False
+e5,99,job-44993d1283ac4bf0,TIMED_OUT,417.02,RUNNING,1,-16.73,39.7,-16.72,39.7,applied,already_terminal,,15.19,"[[""save_report#0"", ""aborted_deadline""]]",,False,False,False,False
+e5,100,job-480979ad939848f7,SUCCEEDED,433.46,RUNNING,1,-123.74,21.61,-123.74,21.62,applied,already_terminal,,-78.7,[],,True,False,False,False
+e5,101,job-19e37f9110d54729,CANCELLED,428.58,QUEUED,1,-37.76,-35.7,-37.76,-35.7,applied,cancelled,QUEUED,-35.59,[],,False,False,False,False
+e5,102,job-511dd9c7cbbc4d65,TIMED_OUT,427.96,WAITING_EVENT,1,0.08,46.75,0.08,46.75,ignored_terminal,already_terminal,,31.7,[],,False,False,False,False
+e5,103,job-ac4a8cee996446ca,SUCCEEDED,427.84,RUNNING,1,-112.67,45.25,-112.67,45.25,applied,already_terminal,,-54.74,[],,True,False,False,False
+e5,104,job-55bd4870fc634922,CANCELLED,427.59,RUNNING,1,-82.3,-1.27,-82.3,-1.27,applied,cancelled,RUNNING,-0.96,"[[""publish#0"", ""discarded_late_result""]]",38.4,True,True,False,False
+e5,105,job-8588c24a9f134811,TIMED_OUT,427.51,WAITING_EVENT,1,18.28,33.24,18.28,33.24,deadline_won,already_terminal,,18.56,[],,False,False,False,False
+e5,106,job-c1379e0df6254501,SUCCEEDED,427.54,RUNNING,1,-122.55,-6.85,-122.46,-6.85,applied,already_terminal,,-54.06,[],,True,False,False,False
+e5,107,job-09c29452863d488f,CANCELLED,427.58,RUNNING,1,-62.35,-16.09,-61.97,-16.09,applied,cancelled,RUNNING,14.52,"[[""save_report#0"", ""discarded_late_result""]]",16.61,False,False,False,False
+e5,108,job-69762be167814b2f,SUCCEEDED,427.6,RUNNING,1,-116.72,-18.15,-116.72,-18.15,applied,already_terminal,,-55.57,[],,True,False,False,False
+e5,109,job-e3c5380211024228,CANCELLED,427.98,WAITING_EVENT,1,-27.23,-48.05,-27.23,-48.05,ignored_terminal,cancelled,WAITING_EVENT,-33.34,[],,False,False,False,False
+e5,110,job-1f1d02ac92804816,CANCELLED,432.89,RUNNING,1,-55.81,-5.95,-55.81,-5.95,applied,cancelled,RUNNING,-0.47,"[[""publish#0"", ""discarded_late_result""]]",18.14,True,True,False,False
+e5,111,job-ab4802cae9394698,SUCCEEDED,431.63,RUNNING,1,-146.93,-16.85,-146.93,-16.85,applied,already_terminal,,-88.78,[],,True,False,False,False
+e5,112,job-e8b5fbccac644a33,CANCELLED,431.26,RUNNING,1,-43.93,1.23,-43.93,1.23,applied,cancelled,RUNNING,1.39,"[[""publish#0"", ""discarded_late_result""]]",16.33,True,True,False,False
+e5,113,job-58e9816643564f83,SUCCEEDED,431.23,RUNNING,1,-139.07,48.51,-139.07,48.51,applied,already_terminal,,-33.0,[],,True,False,False,False
+e5,114,job-232e33ef53de4a8a,TIMED_OUT,431.33,WAITING_EVENT,1,-15.98,47.17,-15.98,47.18,ignored_terminal,already_terminal,,13.37,[],,False,False,False,False
+e5,115,job-c9ee2dfb40a147b8,SUCCEEDED,430.81,RUNNING,1,-132.19,-23.44,-132.19,-23.44,applied,already_terminal,,-59.34,[],,True,False,False,False
+e5,116,job-9930bccfa3ff474c,SUCCEEDED,430.76,RUNNING,1,-143.27,27.9,-143.27,27.9,applied,already_terminal,,-90.64,[],,True,False,False,False
+e5,117,job-b8cf92056cec42a8,CANCELLED,430.47,RUNNING,1,-104.02,-37.04,-104.02,-37.04,applied,cancelled,RUNNING,-36.78,"[[""publish#0"", ""discarded_late_result""]]",3.58,True,True,False,False
+e5,118,job-d67201f187824500,SUCCEEDED,430.09,RUNNING,1,-78.22,41.14,-78.22,41.15,applied,already_terminal,,-16.3,[],,True,False,False,False
+e5,119,job-807d9f7b3fc148d1,CANCELLED,429.8,WAITING_EVENT,1,-10.77,-24.14,-10.77,-24.14,ignored_terminal,cancelled,WAITING_EVENT,-23.97,[],,False,False,False,False
+e5,120,job-525d0c00d5bf457d,SUCCEEDED,414.54,RUNNING,1,-124.61,41.92,-124.61,41.92,applied,already_terminal,,-26.38,[],,True,False,False,False
+e5,121,job-4862ec763bb945c8,TIMED_OUT,414.54,RUNNING,1,-53.0,20.04,-53.0,20.04,applied,already_terminal,,1.31,"[[""publish#0"", ""aborted_deadline""]]",,False,False,False,False
+e5,122,job-d27839623d9444fa,CANCELLED,414.52,RUNNING,1,-134.79,-44.25,-134.79,-44.25,applied,cancelled,RUNNING,-43.97,"[[""publish#0"", ""discarded_late_result""]]",16.1,True,True,False,False
+e5,123,job-b895e9f31b5e4543,CANCELLED,414.48,RUNNING,1,-33.01,-7.47,-33.0,-7.39,applied,cancelled,RUNNING,-7.03,"[[""save_report#0"", ""discarded_late_result""]]",10.24,False,False,False,False
+e5,124,job-62c5f9943caa4a4b,SUCCEEDED,414.55,RUNNING,1,-137.69,43.83,-137.69,43.84,applied,already_terminal,,-29.2,[],,True,False,False,False
+e5,125,job-b85794032ea4413a,TIMED_OUT,414.57,RUNNING,1,-42.15,30.16,-42.12,30.16,applied,already_terminal,,1.92,[],,False,False,False,False
+e5,126,job-771d819d49a24488,SUCCEEDED,414.65,RUNNING,1,-135.76,35.62,-135.76,35.62,applied,already_terminal,,-28.97,[],,True,False,False,False
+e5,127,job-751c3736cbae4476,TIMED_OUT,414.74,RUNNING,1,-138.67,36.28,-138.67,36.28,applied,already_terminal,,3.12,"[[""publish#0"", ""aborted_deadline""]]",,True,True,False,False
+e5,128,job-0c24a6bc867743a4,TIMED_OUT,414.28,RUNNING,1,-72.86,-16.08,-72.86,-16.08,applied,already_terminal,,2.76,"[[""publish#0"", ""aborted_deadline""]]",,True,True,False,False
+e5,129,job-05e50b42fc9b4e10,TIMED_OUT,413.81,RUNNING,1,-55.98,42.67,-55.98,42.67,applied,already_terminal,,2.39,"[[""save_report#0"", ""aborted_deadline""]]",,False,False,False,False
+e5,130,job-58175af253bc48cd,CANCELLED,433.17,RUNNING,1,-104.46,-37.08,-104.46,-37.08,applied,cancelled,RUNNING,-36.87,"[[""save_report#0"", ""discarded_late_result""]]",46.61,False,False,False,False
+e5,131,job-a8836a7a347e4cad,CANCELLED,432.79,RUNNING,1,-60.42,-26.16,-60.41,-26.16,applied,cancelled,RUNNING,-25.94,"[[""save_report#0"", ""discarded_late_result""]]",37.74,False,False,False,False
+e5,132,job-77938702df2c4b22,SUCCEEDED,431.96,RUNNING,1,-131.39,-33.86,-131.39,-33.85,applied,already_terminal,,-73.66,[],,True,False,False,False
+e5,133,job-6fdc245342094556,SUCCEEDED,431.21,RUNNING,1,-141.44,-29.82,-141.44,-29.82,applied,already_terminal,,-75.07,[],,True,False,False,False
+e5,134,job-a4f3ce05cab84580,TIMED_OUT,430.87,RUNNING,1,-96.96,-19.5,-96.96,-19.48,applied,already_terminal,,0.69,"[[""publish#0"", ""aborted_deadline""]]",,False,False,False,False
+e5,135,job-0a32ce9017c34691,CANCELLED,430.51,WAITING_EVENT,1,-20.89,-21.0,-20.88,-21.0,ignored_terminal,cancelled,WAITING_EVENT,-20.53,[],,False,False,False,False
+e5,136,job-a8ce8aef283947ce,CANCELLED,430.2,QUEUED,1,-64.98,-32.21,-64.98,-32.21,applied,cancelled,QUEUED,-31.87,[],,False,False,False,False
+e5,137,job-54976d0479954f4e,TIMED_OUT,429.94,RUNNING,1,-91.01,-48.18,-91.01,-48.18,applied,already_terminal,,4.79,"[[""publish#0"", ""aborted_deadline""]]",,False,False,False,False
+e5,138,job-35648549226e4de3,CANCELLED,429.58,RUNNING,1,-107.42,-48.47,-107.42,-48.46,applied,cancelled,RUNNING,-48.24,"[[""save_report#0"", ""discarded_late_result""]]",43.16,False,False,False,False
+e5,139,job-ab827495f326416c,TIMED_OUT,420.58,RUNNING,1,-25.38,5.1,-24.99,5.11,applied,already_terminal,,4.36,"[[""save_report#0"", ""aborted_deadline""]]",,False,False,False,False
+e5,140,job-3ff0ba17d2c04d0b,SUCCEEDED,418.46,RUNNING,1,-117.79,-2.52,-117.79,-2.52,applied,already_terminal,,-30.38,[],,True,False,False,False
+e5,141,job-caacbcf744384687,CANCELLED,418.21,WAITING_EVENT,1,8.89,-39.37,8.89,-39.27,ignored_terminal,cancelled,WAITING_EVENT,-39.03,[],,False,False,False,False
+e5,142,job-17208fd20b594c52,TIMED_OUT,417.93,RUNNING,1,-10.78,-6.78,-10.78,-6.32,applied,already_terminal,,1.69,"[[""save_report#0"", ""aborted_deadline""]]",,False,False,False,False
+e5,143,job-9bdef67d52d848f7,TIMED_OUT,417.79,RUNNING,1,-65.85,33.46,-65.85,33.46,applied,already_terminal,,1.44,"[[""publish#0"", ""aborted_deadline""]]",,False,False,False,False
+e5,144,job-d8afd205b3ca4a44,TIMED_OUT,417.81,RUNNING,1,-83.18,0.67,-83.18,0.67,applied,already_terminal,,1.01,"[[""publish#0"", ""aborted_deadline""]]",,False,False,False,False
+e5,145,job-35fec07fe2db420e,TIMED_OUT,417.73,WAITING_EVENT,1,-33.08,48.24,-33.08,48.24,ignored_terminal,already_terminal,,0.6,[],,False,False,False,False
+e5,146,job-976f898ead864ca8,SUCCEEDED,417.26,RUNNING,1,-91.74,33.23,-91.74,33.23,applied,already_terminal,,-0.8,[],,True,False,False,False
+e5,147,job-6c77e70366d74e8b,TIMED_OUT,416.77,RUNNING,1,-29.86,13.6,-29.86,13.6,applied,already_terminal,,4.16,"[[""publish#0"", ""aborted_deadline""]]",,False,False,False,False
+e5,148,job-62f832d588774cfd,CANCELLED,416.75,QUEUED,1,-81.2,-15.24,-81.2,-15.24,applied,cancelled,QUEUED,-14.91,[],,False,False,False,False
+e5,149,job-f4478a7474494b0d,SUCCEEDED,416.68,RUNNING,1,-140.75,-37.02,-140.73,-37.02,applied,already_terminal,,-81.74,[],,True,False,False,False
+e5,150,job-04a535c729b54406,SUCCEEDED,430.69,RUNNING,1,-137.98,24.09,-137.98,24.09,applied,already_terminal,,-30.68,[],,True,False,False,False
+e5,151,job-a1acbd2405604469,CANCELLED,430.21,RUNNING,1,-106.55,-33.68,-106.55,-33.67,applied,cancelled,RUNNING,-13.16,"[[""publish#0"", ""discarded_late_result""]]",24.74,True,True,False,False
+e5,152,job-0d376ba244d34d70,TIMED_OUT,430.2,RUNNING,1,-135.64,34.13,-134.07,34.13,applied,already_terminal,,1.31,"[[""publish#0"", ""aborted_deadline""]]",,False,False,False,False
+e5,153,job-d2249cfb41924c07,TIMED_OUT,430.49,WAITING_EVENT,1,-2.01,17.05,-2.0,17.05,ignored_terminal,already_terminal,,0.5,[],,False,False,False,False
+e5,154,job-93db365f423e4a35,CANCELLED,430.53,RUNNING,1,-102.07,-25.78,-102.07,-25.78,applied,cancelled,RUNNING,-25.62,"[[""publish#0"", ""discarded_late_result""]]",36.63,True,True,False,False
+e5,155,job-1d250b96197d410e,TIMED_OUT,430.95,RUNNING,1,-100.18,-4.05,-100.18,-4.03,applied,already_terminal,,3.8,"[[""publish#0"", ""aborted_deadline""]]",,True,True,False,False
+e5,156,job-7c0511c9de374390,CANCELLED,430.94,RUNNING,1,-123.22,-5.42,-123.21,-5.42,applied,cancelled,RUNNING,-4.36,"[[""publish#0"", ""discarded_late_result""]]",13.08,True,True,False,False
+e5,157,job-2adb3a859fb842e7,TIMED_OUT,430.33,RUNNING,1,-105.25,46.18,-105.25,46.18,applied,already_terminal,,3.03,"[[""publish#0"", ""aborted_deadline""]]",,True,True,False,False
+e5,158,job-0c517a5063d74f89,TIMED_OUT,428.94,WAITING_EVENT,1,15.35,4.71,15.35,4.71,ignored_terminal,already_terminal,,2.75,[],,False,False,False,False
+e5,159,job-db34557dc3874d2a,TIMED_OUT,428.53,RUNNING,1,-108.44,46.57,-108.44,46.57,applied,already_terminal,,2.52,"[[""publish#0"", ""aborted_deadline""]]",,True,True,False,False
+e5,160,job-c06b04472a414a26,SUCCEEDED,417.0,RUNNING,1,-97.38,-14.34,-97.38,-14.32,applied,already_terminal,,-28.11,[],,True,False,False,False
+e5,161,job-4599fc62c58041e0,SUCCEEDED,416.64,RUNNING,1,-149.82,-11.84,-149.82,-11.84,applied,already_terminal,,-75.08,[],,True,False,False,False
+e5,162,job-0112e721976444c5,SUCCEEDED,416.08,RUNNING,1,-69.31,0.28,-69.31,0.28,applied,already_terminal,,-23.34,[],,True,False,False,False
+e5,163,job-a222a16b398d4701,SUCCEEDED,418.0,RUNNING,1,-115.83,0.47,-115.83,0.47,applied,already_terminal,,-40.19,[],,True,False,False,False
+e5,164,job-5705d37b54ab4a7e,SUCCEEDED,417.57,RUNNING,1,-149.16,-23.58,-149.16,-23.58,applied,already_terminal,,-85.46,[],,True,False,False,False
+e5,165,job-933874ec7f8448ec,SUCCEEDED,417.29,RUNNING,1,-134.74,-10.05,-134.74,-10.05,applied,already_terminal,,-56.98,[],,True,False,False,False
+e5,166,job-86926906304d42b6,SUCCEEDED,417.27,RUNNING,1,-142.92,-47.75,-142.92,-47.75,applied,already_terminal,,-85.14,[],,True,False,False,False
+e5,167,job-2542147f70bb45e7,SUCCEEDED,417.32,RUNNING,1,-98.28,-26.72,-98.28,-26.72,applied,already_terminal,,-36.25,[],,True,False,False,False
+e5,168,job-b3232efa57eb43bf,SUCCEEDED,417.33,RUNNING,1,-50.45,2.92,-50.45,2.92,applied,already_terminal,,-5.25,[],,True,False,False,False
+e5,169,job-0a11eb9f7c554bb7,TIMED_OUT,417.31,RUNNING,1,-22.41,15.75,-22.41,15.75,applied,already_terminal,,15.82,"[[""save_report#0"", ""discarded_late_result""]]",,False,False,False,False
+e5,170,job-a7aed10edbbb4ae9,TIMED_OUT,415.89,RUNNING,1,-28.28,37.91,-28.28,37.91,applied,already_terminal,,31.47,"[[""save_report#0"", ""aborted_deadline""]]",,False,False,False,False
+e5,171,job-f7b3dceacc254785,CANCELLED,415.95,RUNNING,1,-83.78,-17.39,-83.78,-17.39,applied,cancelled,RUNNING,-17.16,"[[""publish#0"", ""discarded_late_result""]]",3.75,True,True,False,False
+e5,172,job-1d5eda6771144e51,CANCELLED,415.93,WAITING_EVENT,1,17.4,-35.05,17.4,-35.05,ignored_terminal,cancelled,WAITING_EVENT,-34.86,[],,False,False,False,False
+e5,173,job-b50425fbf6e14bb4,CANCELLED,415.62,RUNNING,1,-26.89,14.32,-26.89,14.32,applied,cancelled,RUNNING,14.49,"[[""save_report#0"", ""discarded_late_result""]]",47.38,False,False,False,False
+e5,174,job-c779761eea164581,SUCCEEDED,415.37,RUNNING,1,-142.56,33.53,-142.56,33.53,applied,already_terminal,,-72.3,[],,True,False,False,False
+e5,175,job-73d2ec35a8b14896,TIMED_OUT,415.14,WAITING_EVENT,1,1.63,12.73,1.63,12.73,deadline_won,already_terminal,,2.15,[],,False,False,False,False
+e5,176,job-e67284e6d4ab428c,TIMED_OUT,412.41,RUNNING,1,-25.25,31.22,-25.24,31.22,applied,already_terminal,,28.93,"[[""save_report#0"", ""aborted_deadline""]]",,False,False,False,False
+e5,177,job-c46b34bf7d8b4d8b,SUCCEEDED,411.16,RUNNING,1,-126.32,2.38,-126.32,2.38,applied,already_terminal,,-71.77,[],,True,False,False,False
+e5,178,job-a83f6982079b40a8,TIMED_OUT,410.49,RUNNING,1,-64.26,33.49,-64.25,33.5,applied,already_terminal,,28.22,"[[""publish#0"", ""aborted_deadline""]]",,False,False,False,False
+e5,179,job-932151e36f41451b,TIMED_OUT,409.9,QUEUED,1,-13.2,32.64,-13.18,32.64,applied,already_terminal,,27.85,[],,False,False,False,False
+e5,180,job-c8b57a241d734b6e,TIMED_OUT,386.91,RUNNING,1,-50.71,39.28,-50.71,39.28,applied,already_terminal,,2.17,"[[""save_report#0"", ""aborted_deadline""]]",,False,False,False,False
+e5,181,job-43c1e77c474049aa,TIMED_OUT,386.27,RUNNING,1,-33.91,19.33,-33.91,19.33,applied,already_terminal,,1.45,"[[""save_report#0"", ""aborted_deadline""]]",,False,False,False,False
+e5,182,job-67013165daa4431d,CANCELLED,385.83,RUNNING,1,-110.91,-46.88,-110.91,-46.88,applied,cancelled,RUNNING,-18.16,"[[""save_report#0"", ""discarded_late_result""]]",18.88,False,False,False,False
+e5,183,job-4641db4456fa488c,CANCELLED,385.64,RUNNING,1,-127.37,-13.93,-127.37,-13.93,applied,cancelled,RUNNING,-13.74,"[[""publish#0"", ""aborted_lease_lost""]]",16.76,True,True,False,False
+e5,184,job-fffa2d92244440f7,TIMED_OUT,385.59,RUNNING,1,-132.16,33.58,-132.16,33.58,applied,already_terminal,,0.06,"[[""publish#0"", ""aborted_deadline""]]",,False,False,False,False
+e5,185,job-be0714af493545b0,TIMED_OUT,385.66,RUNNING,1,-55.05,12.78,-55.05,12.78,applied,already_terminal,,3.99,"[[""save_report#0"", ""aborted_deadline""]]",,False,False,False,False
+e5,186,job-ed40e07181e24439,TIMED_OUT,385.58,RUNNING,1,-43.54,18.07,-43.54,18.07,applied,already_terminal,,3.55,"[[""save_report#0"", ""aborted_deadline""]]",,False,False,False,False
+e5,187,job-3c940b12bef24bf5,CANCELLED,385.71,QUEUED,1,-66.82,-49.67,-66.82,-49.67,applied,cancelled,QUEUED,-49.46,[],,False,False,False,False
+e5,188,job-396ca603e6b24617,TIMED_OUT,385.57,RUNNING,1,-14.39,24.83,-14.39,24.83,applied,already_terminal,,2.67,"[[""save_report#0"", ""aborted_deadline""]]",,False,False,False,False
+e5,189,job-3fea775edf874a15,TIMED_OUT,385.13,RUNNING,1,-64.49,3.52,-64.49,3.52,applied,already_terminal,,2.35,"[[""save_report#0"", ""aborted_deadline""]]",,False,False,False,False
+e5,190,job-5e845456e6174524,CANCELLED,473.12,WAITING_EVENT,1,-37.92,-43.39,-37.92,-41.33,ignored_terminal,cancelled,WAITING_EVENT,-40.98,[],,False,False,False,False
+e5,191,job-bc0a1cc2d55f4444,CANCELLED,477.96,WAITING_EVENT,1,-24.75,-24.78,-24.74,-24.78,ignored_terminal,cancelled,WAITING_EVENT,-5.43,[],,False,False,False,False
+e5,192,job-1c9a3c89e5604490,SUCCEEDED,479.64,RUNNING,1,-137.34,-23.44,-137.34,-23.44,applied,already_terminal,,-81.48,[],,True,False,False,False
+e5,193,job-051021576c504bf1,CANCELLED,436.82,WAITING_EVENT,1,-26.01,-29.48,-26.01,-29.48,ignored_terminal,cancelled,WAITING_EVENT,-29.04,[],,False,False,False,False
+e5,194,job-267a20675c74444e,TIMED_OUT,438.7,QUEUED,1,-24.23,47.57,-24.23,47.57,applied,already_terminal,,25.59,[],,False,False,False,False
+e5,195,job-f4a4dc2d9d02438e,CANCELLED,437.88,RUNNING,1,-66.03,-11.74,-66.03,-11.74,applied,cancelled,RUNNING,-11.59,"[[""save_report#0"", ""discarded_late_result""]]",38.96,False,False,False,False
+e5,196,job-b4aa83233c404636,CANCELLED,439.15,RUNNING,1,-68.57,18.37,-68.57,18.37,applied,cancelled,RUNNING,18.62,"[[""save_report#0"", ""discarded_late_result""]]",6.6,False,False,False,False
+e5,197,job-e840e2fe526446e1,CANCELLED,439.41,QUEUED,1,-19.62,11.7,-19.62,11.7,applied,cancelled,QUEUED,11.9,[],,False,False,False,False
+e5,198,job-1f29002bf06f4512,CANCELLED,438.76,RUNNING,1,-40.73,-42.25,-40.73,-42.25,applied,cancelled,RUNNING,7.55,"[[""save_report#0"", ""discarded_late_result""]]",17.21,False,False,False,False
+e5,199,job-120abaf2f33e434c,SUCCEEDED,438.68,RUNNING,1,-124.94,-24.61,-124.94,-24.61,applied,already_terminal,,-33.58,[],,True,False,False,False
+e5,200,job-89b0a5d830144040,CANCELLED,408.37,QUEUED,1,-23.65,-19.56,-23.65,-19.56,applied,cancelled,QUEUED,-19.24,[],,False,False,False,False
+e5,201,job-736ed2cfa6754cab,CANCELLED,408.52,WAITING_EVENT,1,-53.48,-48.75,-53.48,-48.75,ignored_terminal,cancelled,WAITING_EVENT,-48.61,[],,False,False,False,False
+e5,202,job-b0dd803830444453,SUCCEEDED,408.47,RUNNING,1,-139.69,-23.12,-139.69,-23.12,applied,already_terminal,,-80.97,[],,True,False,False,False
+e5,203,job-98cbf45daa02482b,TIMED_OUT,408.56,WAITING_EVENT,1,-35.76,19.22,-35.76,19.38,deadline_won,already_terminal,,21.87,[],,False,False,False,False
+e5,204,job-c69c8c28253c4f06,CANCELLED,408.76,WAITING_EVENT,1,-35.13,-20.91,-35.13,-20.91,ignored_terminal,cancelled,WAITING_EVENT,-9.6,[],,False,False,False,False
+e5,205,job-67ffb907cdc94f7a,CANCELLED,408.47,RUNNING,1,-62.19,-3.53,-62.19,-3.53,applied,cancelled,RUNNING,-3.18,"[[""publish#0"", ""aborted_lease_lost""]]",71.57,True,True,False,False
+e5,206,job-8150eae3b2f949dd,CANCELLED,408.3,RUNNING,1,-70.72,-38.15,-70.72,-38.15,applied,cancelled,RUNNING,4.69,"[[""publish#0"", ""aborted_lease_lost""]]",62.98,True,True,False,False
+e5,207,job-bd9484a3a6854e9f,CANCELLED,408.3,WAITING_EVENT,1,1.92,-30.07,1.92,-30.07,ignored_terminal,cancelled,WAITING_EVENT,-29.91,[],,False,False,False,False
+e5,208,job-616db3e95a614138,TIMED_OUT,408.25,WAITING_EVENT,1,16.28,43.63,16.28,43.63,deadline_won,already_terminal,,17.5,[],,False,False,False,False
+e5,209,job-d1b94e8efb124a5b,SUCCEEDED,408.26,RUNNING,1,-147.02,-4.1,-147.02,-4.1,applied,already_terminal,,-85.77,[],,True,False,False,False
+e5,210,job-856ca3cc9c124509,TIMED_OUT,403.38,RUNNING,1,-10.62,46.81,-10.62,46.81,applied,already_terminal,,40.78,"[[""save_report#0"", ""aborted_deadline""]]",,False,False,False,False
+e5,211,job-ad5714d8137e40b8,CANCELLED,403.33,RUNNING,1,-73.59,-23.13,-73.59,-23.13,applied,cancelled,RUNNING,-22.91,"[[""save_report#0"", ""discarded_late_result""]]",1.83,False,False,False,False
+e5,212,job-cab7b5858e4c4542,TIMED_OUT,403.24,RUNNING,1,-114.33,44.56,-114.32,44.56,applied,already_terminal,,39.67,"[[""publish#0"", ""aborted_deadline""]]",,False,False,False,False
+e5,213,job-1f525c7811b3473f,SUCCEEDED,403.25,RUNNING,1,-114.18,8.15,-114.18,8.15,applied,already_terminal,,-12.59,[],,True,False,False,False
+e5,214,job-b808a8530a9d4b9d,SUCCEEDED,403.35,RUNNING,1,-125.9,2.41,-125.9,2.41,applied,already_terminal,,-46.68,[],,True,False,False,False
+e5,215,job-daa109dacb714713,CANCELLED,403.32,WAITING_EVENT,1,11.97,-36.74,11.97,-36.74,ignored_terminal,cancelled,WAITING_EVENT,-36.58,[],,False,False,False,False
+e5,216,job-9f97599e16734f68,CANCELLED,403.22,RUNNING,1,-10.56,0.87,-10.56,0.88,applied,cancelled,RUNNING,1.29,"[[""save_report#0"", ""discarded_late_result""]]",41.64,False,False,False,False
+e5,217,job-def9cc69662c44c4,CANCELLED,403.09,WAITING_EVENT,1,0.77,20.33,0.77,20.33,ignored_terminal,cancelled,WAITING_EVENT,20.52,[],,False,False,False,False
+e5,218,job-2d66548e3b6e4a7e,SUCCEEDED,403.02,RUNNING,1,-110.66,39.77,-110.66,39.79,applied,already_terminal,,-16.17,[],,True,False,False,False
+e5,219,job-c4c0deca59a14fb5,CANCELLED,403.02,RUNNING,1,-67.36,-47.52,-67.36,-47.52,applied,cancelled,RUNNING,-40.51,"[[""save_report#0"", ""discarded_late_result""]]",17.72,False,False,False,False
+e5,220,job-5dad398aa72941d8,CANCELLED,401.12,RUNNING,1,-149.39,-0.83,-149.39,-0.83,applied,cancelled,RUNNING,-0.5,"[[""publish#0"", ""aborted_lease_lost""]]",60.97,True,True,False,False
+e5,221,job-b973d8bad8804a40,CANCELLED,400.68,RUNNING,1,-73.37,-19.8,-73.37,-19.8,applied,cancelled,RUNNING,-19.29,"[[""save_report#0"", ""discarded_late_result""]]",15.5,False,False,False,False
+e5,222,job-d937b041f007481b,CANCELLED,400.7,RUNNING,1,-126.08,-15.6,-126.08,-15.6,applied,cancelled,RUNNING,-15.38,"[[""publish#0"", ""discarded_late_result""]]",75.76,True,True,False,False
+e5,223,job-da7d3618cfdc4131,CANCELLED,400.69,RUNNING,1,-96.27,34.02,-96.27,34.02,applied,cancelled,RUNNING,34.2,"[[""publish#0"", ""aborted_lease_lost""]]",24.04,False,False,False,False
+e5,224,job-954bf99500034646,CANCELLED,400.77,RUNNING,1,-149.7,25.07,-149.69,25.07,applied,cancelled,RUNNING,25.55,"[[""publish#0"", ""aborted_lease_lost""]]",33.53,True,True,False,False
+e5,225,job-bde0e4452bd3420f,CANCELLED,400.8,WAITING_EVENT,1,-7.35,-38.0,-6.46,-38.0,ignored_terminal,cancelled,WAITING_EVENT,-37.75,[],,False,False,False,False
+e5,226,job-051671cd070d4f9c,TIMED_OUT,400.96,WAITING_EVENT,1,7.49,21.3,7.49,21.31,deadline_won,already_terminal,,7.88,[],,False,False,False,False
+e5,227,job-f05263f57cf94cab,TIMED_OUT,400.96,WAITING_EVENT,1,3.27,-21.02,3.27,-21.02,deadline_won,already_terminal,,3.7,[],,False,False,False,False
+e5,228,job-1ba645e362344c92,CANCELLED,400.8,RUNNING,1,-86.72,-10.71,-86.72,-10.71,applied,cancelled,RUNNING,-10.5,"[[""save_report#0"", ""discarded_late_result""]]",3.11,False,False,False,False
+e5,229,job-610859f0348c4301,CANCELLED,400.63,WAITING_EVENT,1,19.79,8.92,19.8,8.92,ignored_terminal,cancelled,WAITING_EVENT,9.06,[],,False,False,False,False
+e5,230,job-e6347df4e4c5414e,SUCCEEDED,416.93,RUNNING,1,-88.68,-7.19,-88.68,-7.19,applied,already_terminal,,-14.56,[],,True,False,False,False
+e5,231,job-33bdec9f67e34211,SUCCEEDED,416.7,RUNNING,1,-103.22,-45.17,-103.22,-45.17,applied,already_terminal,,-43.4,[],,True,False,False,False
+e5,232,job-8232a9fcf43e4223,SUCCEEDED,415.69,RUNNING,1,-132.71,33.47,-132.71,33.47,applied,already_terminal,,-72.59,[],,True,False,False,False
+e5,233,job-31b5ae0f9fac4f03,SUCCEEDED,415.11,RUNNING,1,-101.44,43.56,-101.44,43.56,applied,already_terminal,,-43.83,[],,True,False,False,False
+e5,234,job-2d8d81cdafe04bc5,SUCCEEDED,414.78,RUNNING,1,-107.61,-23.43,-107.61,-23.43,applied,already_terminal,,-45.16,[],,True,False,False,False
+e5,235,job-67fafb6c7dd44c02,CANCELLED,414.19,RUNNING,1,-63.14,-31.02,-63.14,-30.93,applied,cancelled,RUNNING,-30.2,"[[""save_report#0"", ""discarded_late_result""]]",10.74,False,False,False,False
+e5,236,job-dc8d2c7f36bd4446,SUCCEEDED,413.2,RUNNING,1,-86.53,45.62,-86.53,45.62,applied,already_terminal,,-16.41,[],,True,False,False,False
+e5,237,job-9fff6e2bf86d48f3,TIMED_OUT,413.46,WAITING_EVENT,1,0.33,31.2,0.72,31.2,deadline_won,already_terminal,,1.07,[],,False,False,False,False
+e5,238,job-737799eb07454481,TIMED_OUT,413.11,RUNNING,1,-42.75,41.34,-42.75,41.34,applied,already_terminal,,21.8,"[[""publish#0"", ""aborted_deadline""]]",,False,False,False,False
+e5,239,job-67cc94d688d64583,CANCELLED,412.62,WAITING_EVENT,1,9.92,4.92,9.92,4.92,ignored_terminal,cancelled,WAITING_EVENT,5.35,[],,False,False,False,False
+e5,240,job-10828898d4df4d69,CANCELLED,400.97,WAITING_EVENT,1,-27.67,-45.05,-27.67,-45.05,ignored_terminal,cancelled,WAITING_EVENT,-30.6,[],,False,False,False,False
+e5,241,job-a62e3aa2602e4bdf,CANCELLED,400.7,QUEUED,1,-25.5,-4.91,-25.5,-4.91,applied,cancelled,QUEUED,-4.76,[],,False,False,False,False
+e5,242,job-ccb99681df5343de,TIMED_OUT,400.47,WAITING_EVENT,1,-22.05,14.45,-22.05,14.45,ignored_terminal,already_terminal,,3.24,[],,False,False,False,False
+e5,243,job-1b63c4a7f3574772,CANCELLED,400.45,RUNNING,1,-101.34,-45.1,-101.34,-45.09,applied,cancelled,RUNNING,-44.79,"[[""publish#0"", ""discarded_late_result""]]",45.3,True,True,False,False
+e5,244,job-574f6fbf181d41e8,CANCELLED,400.5,WAITING_EVENT,1,7.55,-37.27,7.55,-37.27,ignored_terminal,cancelled,WAITING_EVENT,-37.03,[],,False,False,False,False
+e5,245,job-51a2127e4f064e48,CANCELLED,400.65,RUNNING,1,-69.73,-15.63,-69.73,-15.63,applied,cancelled,RUNNING,-15.5,"[[""save_report#0"", ""discarded_late_result""]]",13.17,False,False,False,False
+e5,246,job-776652bb2f804633,SUCCEEDED,400.1,RUNNING,1,-99.38,23.9,-99.38,23.9,applied,already_terminal,,-0.32,[],,True,False,False,False
+e5,247,job-37dc7b15806e4e3e,CANCELLED,399.94,WAITING_EVENT,1,15.97,-23.98,15.97,-23.98,ignored_terminal,cancelled,WAITING_EVENT,-23.33,[],,False,False,False,False
+e5,248,job-f3d9d36ce8f24f47,CANCELLED,400.01,WAITING_EVENT,1,-38.48,-19.92,-38.48,-19.92,ignored_terminal,cancelled,WAITING_EVENT,-19.76,[],,False,False,False,False
+e5,249,job-117013a646f545d9,CANCELLED,400.0,RUNNING,1,-55.26,-10.56,-55.26,-10.56,applied,cancelled,RUNNING,-10.42,"[[""save_report#0"", ""discarded_late_result""]]",18.08,False,False,False,False
+e5,250,job-afbee3dfb9014d2e,SUCCEEDED,417.74,RUNNING,1,-121.55,-33.83,-121.55,-33.83,applied,already_terminal,,-43.12,[],,True,False,False,False
+e5,251,job-36eeb4f337714c40,TIMED_OUT,417.25,RUNNING,1,-114.66,40.6,-114.66,40.6,applied,already_terminal,,9.95,"[[""publish#0"", ""aborted_deadline""]]",,False,False,False,False
+e5,252,job-8f63c458e91949f2,CANCELLED,417.01,RUNNING,1,-65.5,-28.0,-65.5,-28.0,applied,cancelled,RUNNING,-27.77,"[[""publish#0"", ""aborted_lease_lost""]]",43.89,True,True,False,False
+e5,253,job-1396794e72334ebb,TIMED_OUT,416.95,WAITING_EVENT,1,4.06,49.65,4.06,49.65,deadline_won,already_terminal,,4.57,[],,False,False,False,False
+e5,254,job-4a115e5288ca4299,CANCELLED,417.0,RUNNING,1,-73.51,-36.04,-73.51,-36.04,applied,cancelled,RUNNING,-35.8,"[[""publish#0"", ""aborted_lease_lost""]]",50.46,True,True,False,False
+e5,255,job-a259be41743344f9,SUCCEEDED,417.07,RUNNING,1,-117.29,-40.93,-117.29,-40.92,applied,already_terminal,,-44.67,[],,True,False,False,False
+e5,256,job-5b720beff58740b3,CANCELLED,417.22,RUNNING,1,-91.87,-40.89,-91.87,-40.89,applied,cancelled,RUNNING,-39.06,"[[""publish#0"", ""aborted_lease_lost""]]",52.1,True,True,False,False
+e5,257,job-be3249f12c054cd2,CANCELLED,417.12,RUNNING,1,-109.35,-24.16,-109.35,-24.15,applied,cancelled,RUNNING,-8.12,"[[""publish#0"", ""aborted_lease_lost""]]",20.27,True,True,False,False
+e5,258,job-255ab9cd0aee4f3f,TIMED_OUT,417.17,RUNNING,1,-53.16,38.73,-53.16,38.73,applied,already_terminal,,6.75,"[[""save_report#0"", ""aborted_deadline""]]",,False,False,False,False
+e5,259,job-51f676c3c2a34fba,TIMED_OUT,417.39,QUEUED,1,-22.56,-8.72,-22.56,-8.72,applied,already_terminal,,6.13,[],,False,False,False,False
+e5,260,job-e728b678cd5c43d1,TIMED_OUT,412.6,RUNNING,1,-79.64,2.42,-79.64,2.42,applied,already_terminal,,33.68,"[[""publish#0"", ""aborted_deadline""]]",,False,False,False,False
+e5,261,job-593926df20504666,CANCELLED,412.53,RUNNING,1,-85.93,-16.18,-85.93,-16.18,applied,cancelled,RUNNING,17.95,"[[""publish#0"", ""aborted_lease_lost""]]",18.74,True,True,False,False
+e5,262,job-009a0e508a80460e,SUCCEEDED,412.3,RUNNING,1,-139.45,-22.25,-139.45,-22.25,applied,already_terminal,,-56.33,[],,True,False,False,False
+e5,263,job-7f2a9dff84674010,CANCELLED,412.29,WAITING_EVENT,1,14.51,-37.41,14.53,-37.41,ignored_terminal,cancelled,WAITING_EVENT,-36.84,[],,False,False,False,False
+e5,264,job-41f5a67a97464fc0,CANCELLED,412.31,RUNNING,1,-64.42,12.96,-64.42,12.96,applied,cancelled,RUNNING,13.54,"[[""publish#0"", ""aborted_lease_lost""]]",49.24,True,True,False,False
+e5,265,job-f61a98888ec0468f,TIMED_OUT,412.33,WAITING_EVENT,1,-3.31,-28.4,-3.31,-28.4,ignored_terminal,already_terminal,,31.27,[],,False,False,False,False
+e5,266,job-552986a8084840d5,SUCCEEDED,412.49,RUNNING,1,-103.93,-25.15,-103.93,-25.15,applied,already_terminal,,-18.33,[],,True,False,False,False
+e5,267,job-bcef03ab15484765,CANCELLED,412.56,RUNNING,1,-82.04,-5.41,-82.04,-5.41,applied,cancelled,RUNNING,-5.02,"[[""publish#0"", ""aborted_lease_lost""]]",65.98,True,True,False,False
+e5,268,job-23cfc2b0af7d47aa,TIMED_OUT,411.95,WAITING_EVENT,1,12.17,34.87,12.18,34.91,ignored_terminal,already_terminal,,30.05,[],,False,False,False,False
+e5,269,job-efe4b1d1e2c84079,CANCELLED,411.24,WAITING_EVENT,1,-1.61,-47.82,-1.61,-47.82,ignored_terminal,cancelled,WAITING_EVENT,-47.63,[],,False,False,False,False
+e5,270,job-b4428cc93166451b,SUCCEEDED,399.91,RUNNING,1,-144.52,20.95,-144.52,20.95,applied,already_terminal,,-89.92,[],,True,False,False,False
+e5,271,job-04591d818baf44b1,CANCELLED,399.56,WAITING_EVENT,1,2.27,-2.67,2.27,-2.67,ignored_terminal,cancelled,WAITING_EVENT,-2.5,[],,False,False,False,False
+e5,272,job-0f2a0e3dd4114c22,CANCELLED,400.38,WAITING_EVENT,1,-50.18,-49.98,-50.18,-49.98,ignored_terminal,cancelled,WAITING_EVENT,-49.8,[],,False,False,False,False
+e5,273,job-df7dfb71ee754561,SUCCEEDED,400.63,RUNNING,1,-83.44,42.68,-83.44,42.68,applied,already_terminal,,-13.85,[],,True,False,False,False
+e5,274,job-62173c90e6a94786,TIMED_OUT,400.69,RUNNING,1,-9.65,35.55,-9.65,35.55,applied,already_terminal,,3.58,"[[""save_report#0"", ""aborted_deadline""]]",,False,False,False,False
+e5,275,job-d845749aafaa400f,CANCELLED,400.41,WAITING_EVENT,1,15.28,-25.15,15.28,-25.15,ignored_terminal,cancelled,WAITING_EVENT,-24.9,[],,False,False,False,False
+e5,276,job-08c6114f93734fd9,SUCCEEDED,399.33,RUNNING,1,-131.46,-34.56,-130.97,-34.56,applied,already_terminal,,-77.25,[],,True,False,False,False
+e5,277,job-c0a5314bac794b90,TIMED_OUT,398.85,RUNNING,1,-61.2,18.21,-61.2,18.21,applied,already_terminal,,1.4,[],,False,False,False,False
+e5,278,job-eca1ee7678c44a67,TIMED_OUT,398.42,WAITING_EVENT,1,10.05,22.17,10.05,22.17,ignored_terminal,already_terminal,,2.4,[],,False,False,False,False
+e5,279,job-a87cda2d3709410d,TIMED_OUT,398.36,RUNNING,1,-39.95,26.48,-39.95,26.48,applied,already_terminal,,1.47,[],,False,False,False,False
+e5,280,job-291fcfe0b382484e,CANCELLED,427.61,RUNNING,1,-72.25,5.15,-72.25,5.15,applied,cancelled,RUNNING,5.46,"[[""save_report#0"", ""discarded_late_result""]]",30.77,False,False,False,False
+e5,281,job-bb76529a3feb41f3,SUCCEEDED,426.95,RUNNING,1,-143.28,28.23,-141.86,28.23,applied,already_terminal,,-67.83,[],,True,False,False,False
+e5,282,job-fda5d3423ce140f2,TIMED_OUT,426.63,RUNNING,1,-110.46,41.99,-110.46,42.0,applied,already_terminal,,36.61,"[[""publish#0"", ""discarded_late_result""]]",,True,True,False,False
+e5,283,job-c13094b38da246ec,CANCELLED,426.56,WAITING_EVENT,1,-40.26,-19.62,-40.26,-19.62,ignored_terminal,cancelled,WAITING_EVENT,-19.44,[],,False,False,False,False
+e5,284,job-c621672d29d944b8,SUCCEEDED,426.3,RUNNING,1,-128.25,-24.82,-128.25,-24.82,applied,already_terminal,,-33.36,[],,True,False,False,False
+e5,285,job-2d11c270283040f5,CANCELLED,425.86,QUEUED,1,-41.83,19.86,-41.83,19.86,applied,cancelled,QUEUED,20.84,[],,False,False,False,False
+e5,286,job-36421f346c614568,SUCCEEDED,424.79,RUNNING,1,-130.94,-42.96,-130.94,-42.96,applied,already_terminal,,-36.22,[],,True,False,False,False
+e5,287,job-96b5cc0d61164a7e,CANCELLED,423.47,RUNNING,1,-60.85,8.29,-60.85,8.29,applied,cancelled,RUNNING,8.53,"[[""save_report#0"", ""discarded_late_result""]]",10.11,False,False,False,False
+e5,288,job-b390288483db4723,TIMED_OUT,422.95,RUNNING,1,-84.03,-27.64,-84.03,-27.62,applied,already_terminal,,34.56,"[[""publish#0"", ""aborted_deadline""]]",,False,False,False,False
+e5,289,job-6c445cad18234fec,CANCELLED,422.7,WAITING_EVENT,1,-47.82,-48.95,-47.82,-48.95,ignored_terminal,cancelled,WAITING_EVENT,-47.44,[],,False,False,False,False
+e5,290,job-c32d6935c72c4ccb,CANCELLED,402.6,RUNNING,1,-98.74,-3.93,-98.74,-3.93,applied,cancelled,RUNNING,11.56,[],,True,True,False,False
+e5,291,job-16b808c7005848bc,TIMED_OUT,402.47,WAITING_EVENT,1,13.02,14.46,13.02,14.46,deadline_won,already_terminal,,13.99,[],,False,False,False,False
+e5,292,job-79e206e22ef84a4a,CANCELLED,402.4,WAITING_EVENT,1,0.24,-2.47,0.24,-2.47,ignored_terminal,cancelled,WAITING_EVENT,-2.32,[],,False,False,False,False
+e5,293,job-9905c4979b4840e1,CANCELLED,401.95,RUNNING,1,-110.09,-25.29,-109.92,-25.29,applied,cancelled,RUNNING,-25.1,[],,True,True,False,False
+e5,294,job-5fc6aca0d2034810,CANCELLED,401.4,WAITING_EVENT,1,13.3,20.47,13.3,20.47,ignored_terminal,cancelled,WAITING_EVENT,20.66,[],,False,False,False,False
+e5,295,job-f41fbb7d1eec45dd,CANCELLED,401.5,RUNNING,1,-97.74,-47.82,-97.74,-47.82,applied,cancelled,RUNNING,-47.65,"[[""save_report#0"", ""discarded_late_result""]]",15.04,False,False,False,False
+e5,296,job-55c8b3e440ca44a8,CANCELLED,401.32,RUNNING,1,-65.29,17.45,-65.29,17.45,applied,cancelled,RUNNING,17.72,[],,True,True,False,False
+e5,297,job-ace0bb84c3654b49,CANCELLED,401.02,RUNNING,1,-78.6,-24.27,-78.6,-24.27,applied,cancelled,RUNNING,-24.1,[],,True,True,False,False
+e5,298,job-8d7e89b258a14c21,CANCELLED,401.07,QUEUED,1,-36.55,42.52,-36.54,42.52,applied,cancelled,QUEUED,42.7,[],,False,False,False,False
+e5,299,job-b739654519444e70,CANCELLED,400.83,RUNNING,1,-111.45,-46.59,-111.45,-46.59,applied,cancelled,RUNNING,-46.39,"[[""save_report#0"", ""discarded_late_result""]]",12.22,False,False,False,False

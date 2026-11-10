@@ -22,7 +22,7 @@ docker compose -p agentrt up -d --build      # publisher :8765, api :8000, worke
 .\scripts\run_linux.ps1                      # тесты + Part 1/2/3 в Linux-контейнере (POSIX SIGKILL) -> results/raw_linux/
 .\scripts\run_linux.ps1 -Parts tests         # только тесты (вывод: results/raw_linux/pytest_output.txt)
 ```
-Linux/macOS с Docker: `bash scripts/run_linux.sh [tests,recovery,events,load]`. Репозиторий монтируется в контейнер
+Linux/macOS с Docker: `bash scripts/run_linux.sh [tests,recovery,events,load,diag]` (или `make linux`). Репозиторий монтируется в контейнер
 только для чтения, писать можно лишь в `results/raw_linux/`; полный прогон ≈ 15 мин.
 `demo_docker.ps1` проверяет: два `POST /jobs` с одним `Idempotency-Key` → 201 и 200 с тем же `job_id`;
 `docker compose kill -s SIGKILL worker` посреди job → после `start` job продолжается сама (шаги с чекпоинтом не
@@ -98,7 +98,7 @@ python -m agentrt.cli cancel --db state.db <job_id>
 измерить их. В Temporal эти механизмы скрыты в платформе (их нельзя изменить, например вставить
 своё DRR-планирование по tenant на границах шагов или CAS-приоритеты отмены). FastStream решает только
 транспорт: состояние, дедуп, таймеры и outbox всё равно пришлось бы писать. SQLite даёт ACID-транзакции и
-сериализацию писателей «бесплатно», а вся логика гарантий лежит в ~2200 строках кода (`src/agentrt`), которые можно
+сериализацию писателей «бесплатно», а вся логика гарантий лежит в ~2300 строках кода (`src/agentrt`), которые можно
 прочитать и протестировать. Цена — один узел (single-writer), см. «Ограничения» в REPORT.md.
 
 ## Архитектура
@@ -167,8 +167,10 @@ flowchart LR
 ## Event
 
 ```json
-{"event_id": "evt-123", "type": "approval", "payload": {"approval_id": "apr-…", "decision": "approve|reject", "comment": "…"}}
+{"event_id": "evt-123", "job_id": "job-…", "type": "approval", "payload": {"approval_id": "apr-…", "decision": "approve|reject", "comment": "…"}}
 ```
+`job_id` в HTTP API передаётся в пути (`POST /jobs/{job_id}/events`, тело — `event_id`, `type`, `payload`), в CLI —
+позиционным аргументом; в inbox (`events`) хранятся все четыре поля плюс `received_at`.
 Типы: `approval`, `cancel`. Правила (`Store.submit_event`, одна транзакция):
 1. `INSERT OR IGNORE INTO events` — если `event_id` уже есть → `duplicate`, состояние не меняется.
 2. job терминальна → `ignored_terminal` (позднее событие, счётчик `events_late`).
@@ -297,9 +299,19 @@ lease 2.0, poll 3 мс; Part 3 — `time_scale = 0.1`, lease 10, heartbeat 1.0.
   Идущий шаг узнаёт об отмене на ближайшем heartbeat (≤ `heartbeat_interval`) или сразу, если таймер
   сработал в том же воркере, и прерывается (`asyncio` cancel); его поздний результат отбрасывается.
   Внешний вызов, уже отправленный в LLM/tool, может быть выполнен и оплачен провайдером — это не отменить.
-  **Компенсация** нужна только для `publish`: если публикация успела пройти, а job завершилась
-  `CANCELLED/TIMED_OUT`, воркер вызывает идемпотентный `DELETE /v1/publications/{key}` (retract) и пишет в
-  `compensations`. Инвариант: ни одна живая публикация не принадлежит не-`SUCCEEDED` job (проверяется в E5).
+  **Компенсация** нужна только для `publish`: если публикация могла пройти, а job завершилась
+  `CANCELLED/TIMED_OUT/FAILED`, публикация отзывается идемпотентным `DELETE /v1/publications/{key}` (retract):
+  - *долговечно*: если по job когда-либо стартовал шаг `publish`, сообщение `compensate.retract_publication`
+    пишется в `outbox` в **той же транзакции**, что и терминальный переход, и доставляется relay любого воркера
+    (at-least-once, после закрытия всех открытых `step_runs` этой job, чтобы не опередить запрос, ещё идущий по сети);
+    поэтому компенсация переживает падение воркера (`test_recovery.py::test_publication_retracted_durably_when_job_cancelled_after_worker_crash`);
+  - *быстро*: воркер, у которого отбросили поздний результат или прервали `publish`, отзывает сразу (то же
+    идемпотентное действие). Всё пишется в `compensations`.
+
+  Инвариант «ни одна живая публикация не принадлежит не-`SUCCEEDED` job» — **конечный** (eventual): между
+  коммитом публикации и отзывом она существует (окно = до закрытия run + интервал relay). Проверен в E5 (гонки без
+  падений) и тестом выше (падение воркера после коммита публикации). Не проверялось: долгая недоступность сервиса
+  публикаций (relay повторяет отзыв без ограничения числа попыток).
 
 ## Планирование
 
@@ -307,8 +319,11 @@ lease 2.0, poll 3 мс; Part 3 — `time_scale = 0.1`, lease 10, heartbeat 1.0.
 * `drr` — deficit round robin по tenant: каждый визит добавляет `quantum × weight` вирт. секунд «работы»,
   выбранный шаг списывает свою оценку длительности; внутри tenant — приоритет с aging
   `eff = priority + wait / aging_interval`. Состояние DRR — в таблице `scheduler` (общее для воркеров).
-* Решение принимается на **границе шагов**: длинная job (≈10 с) состоит из шагов ≤ 1.5 с, поэтому короткой
-  задаче другого tenant не нужно ждать окончания всей длинной job — только освобождения слота.
+* Решение принимается на **границе шагов**: длинная job (≈10 с) состоит из шагов ≤ 1.5 с; после каждого шага job
+  возвращается в очередь. Поэтому шагу, стоящему первым в очереди, не нужно ждать окончания всей длинной job —
+  только освобождения слота (≤ длины самого длинного шага; с реальной LLM — до `step_timeout_s`). Но короткая job
+  проходит очередь заново перед каждым своим шагом, так что при backlog её суммарное ожидание растёт как
+  «число шагов × очередь» (разбор и числа — REPORT, Part 3, «Планирование на границах шагов»).
 
 ## Логи
 

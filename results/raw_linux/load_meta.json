@@ -1,6 +1,6 @@
 {
   "env": {
-    "os": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.41",
+    "os": "Linux-6.18.58.1-microsoft-standard-WSL2-x86_64-with-glibc2.41",
     "python": "3.13.18",
     "machine": "x86_64",
     "processor": "",
@@ -114,8 +114,8 @@
       "arrivals": 607,
       "admitted": 526,
       "rejected": 81,
-      "makespan_v": 480.198,
-      "real_seconds": 48.06,
+      "makespan_v": 480.205,
+      "real_seconds": 48.07,
       "max_global_concurrency_observed": 6,
       "global_limit": 6,
       "max_per_tenant_observed": {
@@ -125,17 +125,18 @@
       },
       "per_tenant_limit": 6,
       "counters": {
-        "rejected_queue_full": 81
+        "rejected_queue_full": 81,
+        "late_results_discarded": 1
       }
     },
     {
       "policy": "drr",
       "seed": 11,
       "arrivals": 607,
-      "admitted": 549,
-      "rejected": 58,
-      "makespan_v": 480.208,
-      "real_seconds": 48.09,
+      "admitted": 552,
+      "rejected": 55,
+      "makespan_v": 480.19,
+      "real_seconds": 48.07,
       "max_global_concurrency_observed": 6,
       "global_limit": 6,
       "max_per_tenant_observed": {
@@ -145,17 +146,17 @@
       },
       "per_tenant_limit": 6,
       "counters": {
-        "rejected_queue_full": 58
+        "rejected_queue_full": 55
       }
     },
     {
       "policy": "drr_iso",
       "seed": 11,
       "arrivals": 607,
-      "admitted": 496,
-      "rejected": 111,
-      "makespan_v": 480.203,
-      "real_seconds": 48.11,
+      "admitted": 498,
+      "rejected": 109,
+      "makespan_v": 480.206,
+      "real_seconds": 48.09,
       "max_global_concurrency_observed": 6,
       "global_limit": 6,
       "max_per_tenant_observed": {
@@ -165,7 +166,7 @@
       },
       "per_tenant_limit": 3,
       "counters": {
-        "rejected_tenant_queue_full": 111
+        "rejected_tenant_queue_full": 109
       }
     },
     {
@@ -174,8 +175,8 @@
       "arrivals": 605,
       "admitted": 534,
       "rejected": 71,
-      "makespan_v": 489.976,
-      "real_seconds": 49.07,
+      "makespan_v": 489.979,
+      "real_seconds": 49.05,
       "max_global_concurrency_observed": 6,
       "global_limit": 6,
       "max_per_tenant_observed": {
@@ -192,9 +193,9 @@
       "policy": "drr",
       "seed": 12,
       "arrivals": 605,
-      "admitted": 556,
-      "rejected": 49,
-      "makespan_v": 489.481,
+      "admitted": 555,
+      "rejected": 50,
+      "makespan_v": 489.489,
       "real_seconds": 49.0,
       "max_global_concurrency_observed": 6,
       "global_limit": 6,
@@ -205,17 +206,18 @@
       },
       "per_tenant_limit": 6,
       "counters": {
-        "rejected_queue_full": 49
+        "rejected_queue_full": 50,
+        "late_results_discarded": 1
       }
     },
     {
       "policy": "drr_iso",
       "seed": 12,
       "arrivals": 605,
-      "admitted": 501,
-      "rejected": 104,
-      "makespan_v": 489.489,
-      "real_seconds": 49.02,
+      "admitted": 502,
+      "rejected": 103,
+      "makespan_v": 489.478,
+      "real_seconds": 48.98,
       "max_global_concurrency_observed": 6,
       "global_limit": 6,
       "max_per_tenant_observed": {
@@ -225,7 +227,7 @@
       },
       "per_tenant_limit": 3,
       "counters": {
-        "rejected_tenant_queue_full": 104
+        "rejected_tenant_queue_full": 103
       }
     },
     {
@@ -234,8 +236,8 @@
       "arrivals": 599,
       "admitted": 542,
       "rejected": 57,
-      "makespan_v": 479.531,
-      "real_seconds": 48.03,
+      "makespan_v": 479.544,
+      "real_seconds": 47.99,
       "max_global_concurrency_observed": 6,
       "global_limit": 6,
       "max_per_tenant_observed": {
@@ -245,8 +247,7 @@
       },
       "per_tenant_limit": 6,
       "counters": {
-        "rejected_queue_full": 57,
-        "late_results_discarded": 1
+        "rejected_queue_full": 57
       }
     },
     {
@@ -255,7 +256,7 @@
       "arrivals": 599,
       "admitted": 564,
       "rejected": 35,
-      "makespan_v": 479.547,
+      "makespan_v": 479.549,
       "real_seconds": 48.01,
       "max_global_concurrency_observed": 6,
       "global_limit": 6,
@@ -273,9 +274,9 @@
       "policy": "drr_iso",
       "seed": 13,
       "arrivals": 599,
-      "admitted": 503,
-      "rejected": 96,
-      "makespan_v": 479.542,
+      "admitted": 502,
+      "rejected": 97,
+      "makespan_v": 479.538,
       "real_seconds": 48.03,
       "max_global_concurrency_observed": 6,
       "global_limit": 6,
@@ -286,7 +287,7 @@
       },
       "per_tenant_limit": 3,
       "counters": {
-        "rejected_tenant_queue_full": 96
+        "rejected_tenant_queue_full": 97
       }
     }
   ]

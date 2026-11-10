@@ -103,7 +103,15 @@ class Worker:
             for msg in self.store.pending_outbox():
                 try:
                     import json
-                    await self.notifier.notify(msg["message_id"], msg["topic"], json.loads(msg["payload"]))
+                    payload = json.loads(msg["payload"])
+                    if msg["topic"] == "compensate.retract_publication":
+                        done = await self.publisher.retract(payload["idempotency_key"])
+                        self.store.record_compensation(msg["job_id"], "retract_publication(outbox)",
+                                                       f"{payload['idempotency_key']} retracted={done}")
+                        log(logger, logging.WARNING, "compensation (outbox): retract publication",
+                            job_id=msg["job_id"], retracted=done)
+                    else:
+                        await self.notifier.notify(msg["message_id"], msg["topic"], payload)
                     if self.cfg.faults.get("crash_after_outbox_send"):
                         os._exit(137)
                     self.store.outbox_delivered(msg["message_id"])
