@@ -11,13 +11,14 @@ test:
 	$(PY) -m pytest -v | tee results/pytest_output.txt
 
 exp-recovery:
-	$(PY) -m experiments.exp_recovery --reps 5
+	$(PY) -m experiments.exp_recovery --reps 10
 
 exp-events:
 	$(PY) -m experiments.exp_events --race-reps 300
 
 exp-load:
-	$(PY) -m experiments.exp_load --seeds 11,12,13 --policies fifo,drr,drr_iso --scale 0.1
+	$(PY) -m experiments.exp_load --seeds 11,12,13,14,15 --policies fifo,drr,drr_iso --scale 0.1
+	$(PY) -m experiments.exp_load --seeds 11,12,13,14,15 --policies drr --approval-share 0.5 --approval-delay 20 --prefix loadappr_ --scale 0.1
 
 report:
 	$(PY) -m experiments.sample_log

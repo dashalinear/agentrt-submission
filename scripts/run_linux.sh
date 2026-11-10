@@ -15,9 +15,9 @@ for p in ${PARTS//,/ }; do
   echo "== linux: $p"
   case "$p" in
     tests)    run "python -m pytest -v -p no:cacheprovider > /out/pytest_output.txt 2>&1; tail -1 /out/pytest_output.txt" ;;
-    recovery) run "python -m experiments.exp_recovery --reps 5 --out /out" ;;
+    recovery) run "python -m experiments.exp_recovery --reps 10 --out /out" ;;
     events)   run "python -m experiments.exp_events --race-reps 300 --out /out" ;;
-    load)     run "python -m experiments.exp_load --seeds 11,12,13 --policies fifo,drr,drr_iso --scale 0.1 --out /out" ;;
+    load)     run "python -m experiments.exp_load --seeds 11,12,13,14,15 --policies fifo,drr,drr_iso --scale 0.1 --out /out" ;;
     diag)     run "python -m experiments.diag_e5_polling --out /out" ;;
   esac
 done

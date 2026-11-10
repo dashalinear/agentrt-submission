@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 set -euo pipefail
 source "$(dirname "$0")/_py.sh"
-"$PY" -m experiments.exp_recovery --reps 5 "$@"
+"$PY" -m experiments.exp_recovery --reps 10 "$@"

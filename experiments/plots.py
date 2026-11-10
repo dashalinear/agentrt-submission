@@ -173,7 +173,7 @@ def load_p95(ld):
     ax.set_xticks(range(len(labels)), labels)
     ax.set_ylim(0, max(g["p95"] for g in groups) * 1.18)
     ax.set_ylabel("p95 queue wait (virtual s)")
-    ax.set_title("Part 3: p95 wait by user × class, pooled over 3 seeds (N above bars)")
+    ax.set_title("Part 3: p95 wait by user × class, pooled over all seeds (N above bars)")
     ax.legend(fontsize=8)
     return _save(fig, "load_wait_p95.png")
 

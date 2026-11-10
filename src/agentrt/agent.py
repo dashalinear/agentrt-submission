@@ -82,23 +82,83 @@ class ReportAgent:
                                       "completion_tokens": res.completion_tokens, "model": res.model},
                               tokens=res.total_tokens, next_step=nxt)
 
-    async def step_decide(self, job, idx) -> StepCompletion:
-        """Agent policy (rule-based, guarded by limits):
+    def _rule_action(self, job, n_docs: int, lim) -> str:
+        """Rule policy (also the fallback for the LLM policy):
         1. not enough documents and tool budget left -> call_tool (fetch next page)
         2. approval required                         -> request_approval (WAITING_EVENT)
         3. otherwise                                 -> finish (save_report)"""
-        await self._work(self.sim(job)["decide"])
-        lim = self.store.limits_of(job)
-        n_docs = sum(r["n_docs"] for r in self.store.step_results(job["job_id"], "extract#").values())
         p = job["params"]
         if n_docs < int(p.get("min_docs", 0)) and job["tool_calls"] < lim.max_tool_calls:
-            k = job["tool_calls"] + 1
-            return StepCompletion(result={"action": "call_tool", "n_docs": n_docs}, next_step=f"fetch_documents#{k}",
-                                  job_updates={"tool_calls": k})
+            return "call_tool"
         if p.get("require_approval", True):
-            return StepCompletion(result={"action": "request_approval", "n_docs": n_docs}, action="wait_approval",
+            return "request_approval"
+        return "finish"
+
+    def _allowed_actions(self, job, lim) -> set[str]:
+        """Hard guardrails the LLM cannot override: tool budget, and a required human approval cannot be skipped."""
+        allowed = {"request_approval"}
+        if job["tool_calls"] < lim.max_tool_calls:
+            allowed.add("call_tool")
+        if not job["params"].get("require_approval", True):
+            allowed.add("finish")
+        return allowed
+
+    async def _llm_action(self, job, n_docs: int, lim) -> tuple[str | None, dict]:
+        drafts = self.store.step_results(job["job_id"], "draft#")
+        excerpt = " ".join(v.get("text", "") for v in drafts.values())[:600]
+        p = job["params"]
+        prompt = (
+            "You control a report-writing agent. Choose its next action.\n"
+            f"Documents read so far: {n_docs}. Documents wanted: {int(p.get('min_docs', 0))}.\n"
+            f"Extra document fetches used: {job['tool_calls']} of {lim.max_tool_calls}.\n"
+            f"Human approval required by policy: {'yes' if p.get('require_approval', True) else 'no'}.\n"
+            f"Draft excerpt: {excerpt}\n\n"
+            "Actions: CALL_TOOL (fetch more documents), REQUEST_APPROVAL (send the draft to a human), "
+            "FINISH (publish without approval).\nAnswer with exactly one word: CALL_TOOL, REQUEST_APPROVAL or FINISH.")
+        max_out = 10
+        if job["tokens_used"] + estimate_tokens(prompt) + max_out > lim.max_tokens:
+            raise BudgetExceeded(f"token budget exceeded: used={job['tokens_used']} max_tokens={lim.max_tokens}")
+        res = await self.llm.complete(prompt, max_tokens=max_out, system="Reply with one word only.",
+                                      meta=CallMeta(job["job_id"], job["next_step"], job["attempt"], self.sim(job)["decide"]))
+        raw = (res.text or "").upper()
+        found = [(raw.find(tok), act) for tok, act in (("CALL_TOOL", "call_tool"), ("REQUEST_APPROVAL", "request_approval"),
+                                                       ("FINISH", "finish")) if tok in raw]
+        choice = min(found)[1] if found else None
+        return choice, {"llm_raw": (res.text or "")[:80], "tokens": res.total_tokens}
+
+    async def step_decide(self, job, idx) -> StepCompletion:
+        """The agent chooses its next action: call a tool, request approval, or finish.
+        decide_mode = "rules" (default) or "llm" (job param or Config.decide_mode). In "llm" mode the model
+        proposes the action; guardrails (_allowed_actions) are enforced in code and an invalid / disallowed
+        answer falls back to the rule policy. The decision is checkpointed like any step result, so a retry
+        after a crash may ask the model again but a committed decision is never re-made."""
+        lim = self.store.limits_of(job)
+        n_docs = sum(r["n_docs"] for r in self.store.step_results(job["job_id"], "extract#").values())
+        mode = job["params"].get("decide_mode") or getattr(self.cfg, "decide_mode", "rules")
+        info: dict = {"decide_mode": mode}
+        tokens = 0
+        if mode == "llm":
+            choice, meta = await self._llm_action(job, n_docs, lim)
+            tokens = meta.pop("tokens")
+            info.update(meta, llm_choice=choice)
+            if choice is None:
+                action, info["decision_source"] = self._rule_action(job, n_docs, lim), "fallback_unparseable"
+            elif choice not in self._allowed_actions(job, lim):
+                action, info["decision_source"] = self._rule_action(job, n_docs, lim), "fallback_guardrail"
+            else:
+                action, info["decision_source"] = choice, "llm"
+        else:
+            await self._work(self.sim(job)["decide"])
+            action, info["decision_source"] = self._rule_action(job, n_docs, lim), "rules"
+        result = {"action": action, "n_docs": n_docs, **info}
+        if action == "call_tool":
+            k = job["tool_calls"] + 1
+            return StepCompletion(result=result, next_step=f"fetch_documents#{k}", job_updates={"tool_calls": k},
+                                  tokens=tokens)
+        if action == "request_approval":
+            return StepCompletion(result=result, action="wait_approval", tokens=tokens,
                                   job_updates={"approval_id": "apr-" + uuid.uuid4().hex[:12]})
-        return StepCompletion(result={"action": "finish", "n_docs": n_docs}, next_step="save_report#0")
+        return StepCompletion(result=result, next_step="save_report#0", tokens=tokens)
 
     def _report_body(self, job) -> dict:
         drafts = self.store.step_results(job["job_id"], "draft#")

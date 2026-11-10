@@ -1,0 +1,46 @@
+# Separate Linux machine (GitHub-hosted ubuntu runner): tests + Part 1 (real POSIX SIGKILL) + Part 2,
+# then code-checked guarantees. Results: run summary page + "ci-results" artifact.
+name: ci
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  linux:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    env:
+      PYTHONPATH: src
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install pinned dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Environment
+        run: |
+          uname -a
+          python --version
+          nproc
+      - name: Automated tests
+        run: |
+          set -o pipefail
+          mkdir -p ci_results
+          python -m pytest -v -p no:cacheprovider | tee ci_results/pytest_output.txt
+      - name: Part 1 - recovery experiment (worker killed with SIGKILL)
+        run: python -m experiments.exp_recovery --reps 5 --out ci_results
+      - name: Part 2 - event lifecycle experiments (E1-E7)
+        run: python -m experiments.exp_events --race-reps 300 --out ci_results
+      - name: Check guarantees (fails the job on any violation)
+        run: python -m experiments.ci_check ci_results
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ci-results
+          path: ci_results

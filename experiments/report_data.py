@@ -102,14 +102,14 @@ def events(base: str = RAW):
 TENANTS = ("heavy", "light1", "light2")
 
 
-def load(base: str = RAW):
-    meta = load_json("load_meta.json", base) or {}
-    jobs = load_csv("load_jobs.csv", base)
+def load(base: str = RAW, prefix: str = "load_"):
+    meta = load_json(f"{prefix}meta.json", base) or {}
+    jobs = load_csv(f"{prefix}jobs.csv", base)
     if not jobs:
         return {"meta": meta, "jobs": [], "groups": [], "per_policy": [], "policies": [], "seeds": []}
-    runs = load_csv("load_step_runs.csv", base)
-    ts = load_csv("load_timeseries.csv", base)
-    rej = load_csv("load_rejections.csv", base)
+    runs = load_csv(f"{prefix}step_runs.csv", base)
+    ts = load_csv(f"{prefix}timeseries.csv", base)
+    rej = load_csv(f"{prefix}rejections.csv", base)
     policies = list(dict.fromkeys(r["policy"] for r in jobs))
     seeds = sorted({r["seed"] for r in jobs})
     groups = []

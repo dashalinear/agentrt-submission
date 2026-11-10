@@ -1,9 +1,11 @@
 # agentrt — durable event-driven runtime для агента, готовящего отчёты
 
+[![ci](https://github.com/dashalinear/agentrt-submission/actions/workflows/ci.yml/badge.svg)](https://github.com/dashalinear/agentrt-submission/actions/workflows/ci.yml)
+
 Собственный (вариант «Your choice») рантайм на **Python 3.11+ / asyncio** с **SQLite в режиме WAL**
 как durable state store (таблицы `jobs`, `events`, `outbox`, `timers`, `scheduler`, `step_results`, `step_runs`),
 HTTP API на **FastAPI** и CLI-обёрткой. Агент: `register job → fetch_documents (tool) → extract → draft (LLM)
-→ decide (policy) → WAITING_EVENT (approval) → save_report → publish` во внешний `FakePublisherService`
+→ decide (LLM или правила, с ограничениями в коде) → WAITING_EVENT (approval) → save_report → publish` во внешний `FakePublisherService`
 (отдельный HTTP-процесс со своим SQLite), который дедуплицирует публикации по `Idempotency-Key`.
 
 Результаты экспериментов и ответы на вопросы задания — в [REPORT.md](REPORT.md) / `REPORT.pdf`.
@@ -13,6 +15,16 @@ HTTP API на **FastAPI** и CLI-обёрткой. Агент: `register job →
 Проверено: Windows 10 (PowerShell / Git Bash), Python 3.13.7 (`.python-version`); код требует ≥ 3.11.
 Также проверено в Linux-контейнере (`Dockerfile`, Python 3.13.18): все тесты, эксперименты Part 1–3
 (`results/raw_linux/`, отдельный блок в отчёте) и `docker-compose.yml`. Docker не обязателен.
+
+### CI на отдельной Linux-машине (GitHub Actions)
+
+`.github/workflows/ci.yml` на каждый push поднимает чистую VM `ubuntu-24.04`, ставит зависимости из
+`requirements.txt`, гоняет все автотесты, эксперимент Part 1 (воркер убивается POSIX SIGKILL, 5 повторов на
+сценарий) и Part 2 (E1–E7, 300 повторов гонки), затем `python -m experiments.ci_check` проверяет гарантии и
+**роняет сборку** при любом нарушении: не тот итог сценария, повторно выполненный шаг с чекпоинтом, дубль
+логической публикации, нарушение инвариантов или правила гонок, шаги во время ожидания approval. Сводка — на
+странице прогона (Summary), сырые результаты — артефакт `ci-results`. Это отдельная от машины автора Linux-машина;
+нагрузочный Part 3 в CI не гоняется (общий раннер с непредсказуемой ёмкостью исказил бы времена).
 
 ### Docker (опционально)
 
@@ -66,7 +78,7 @@ python -m agentrt.cli cancel --db state.db <job_id>
 | ручное демо в отдельных процессах: дубль создания по ключу → kill воркера посреди job → автоматическое возобновление → дубль approval с тем же `event_id` → позднее событие и cancel после терминала → 1 логическая публикация | `.\scripts\demo_manual.ps1` (только PowerShell) |
 | все сценарии Part 1 (kill между шагами, kill во время LLM, крэш после publish, потерянный ack, повторяющаяся transient-ошибка) | `.\scripts\exp_recovery.ps1`; один сценарий, не трогая отчётные данные: `python -m experiments.exp_recovery --cases s1_kill_between_steps --reps 1 --out results/work/try` |
 | E1–E7 Part 2 (в т.ч. E3 — дубли событий, E5 — гонки) | `.\scripts\exp_events.ps1` |
-| нагрузка Part 3, 3 политики × 3 seed | `.\scripts\exp_load.ps1` |
+| нагрузка Part 3, 3 политики × 5 seed (+ approval под нагрузкой) | `.\scripts\exp_load.ps1` |
 | вручную отправить одно и то же событие дважды | `python -m agentrt.cli event --db state.db <job_id> --event-id evt-1` (повторить) → второй ответ `"outcome": "duplicate"` |
 
 Реальная LLM: `OPENAI_API_KEY`, `OPENAI_BASE_URL`, `MODEL` (см. `.env.example`; `.env` в `.gitignore`).
@@ -162,7 +174,20 @@ flowchart LR
 | `max_tool_calls` | 3 | сколько раз политика может дозапросить документы |
 | `max_revisions` | 1 | сколько раз отклонённый черновик может быть переписан |
 
-Параметры: `require_approval` (по умолчанию `true`), `min_docs`, `collection_id`, `topic`, `max_output_tokens`.
+Параметры: `require_approval` (по умолчанию `true`), `min_docs`, `collection_id`, `topic`, `max_output_tokens`,
+`decide_mode` (`rules` | `llm`, по умолчанию из `Config.decide_mode = rules`).
+
+### Решение агента (шаг `decide`)
+
+Агент сам выбирает следующее действие: `call_tool` (дозапросить документы), `request_approval` (отдать черновик
+человеку) или `finish`. В режиме `decide_mode = llm` действие предлагает модель (ответ одним словом), а код
+применяет жёсткие ограничения: `call_tool` — только пока `tool_calls < max_tool_calls`; `finish` запрещён, если
+политика требует approval (LLM не может обойти человека); `request_approval` разрешён всегда. Недопустимый или
+нераспознанный ответ → решение по правилам. В результат шага пишутся `decision_source`
+(`llm` / `fallback_guardrail` / `fallback_unparseable` / `rules`), `llm_choice`, `llm_raw`; решение — обычный
+чекпоинт: после коммита не принимается повторно. Токены решения входят в бюджет `max_tokens`. Тесты:
+`tests/test_decide.py`. Режим `llm` используется в прогоне с реальной LLM; симуляционные эксперименты Part 1–3
+идут на правилах (детерминизм и сравнимость политик планирования).
 
 ## Event
 

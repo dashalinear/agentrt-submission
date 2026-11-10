@@ -37,6 +37,9 @@ def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--jobs", type=int, default=3)
     ap.add_argument("--skip-recovery", action="store_true")
+    ap.add_argument("--recovery-reps", type=int, default=5, help="repetitions per recovery scenario")
+    ap.add_argument("--decide-mode", default="llm", choices=["llm", "rules"],
+                    help="llm: the model chooses the next action (with code guardrails)")
     ap.add_argument("--out", default=OUT, help="output dir (default results/real_llm)")
     a = ap.parse_args(argv)
     out = a.out
@@ -65,7 +68,8 @@ def main(argv=None):
     with ThreadWorker(db, cfg, publisher_db=os.path.join(d, "pub.db"), ledger_path=ledger, llm_kind="real"):
         for i in range(a.jobs):
             j, _ = store.create_job("real-tenant", f"real-{uuid.uuid4().hex[:6]}", params={
-                "topic": "operational review of a web service", "collection_id": f"real-{i}"},
+                "topic": "operational review of a web service", "collection_id": f"real-{i}",
+                "min_docs": 5, "decide_mode": a.decide_mode},
                 limits={"step_timeout_s": 120, "deadline_s": 900})
             jobs.append(j["job_id"])
         pending = set(jobs)
@@ -87,9 +91,13 @@ def main(argv=None):
         j = store.get_job(jid)
         job_rows.append({"job_id": jid, "state": j["state"], "error": j["error"], "tokens_used": j["tokens_used"],
                          "e2e_s": round((j["finished_at"] or time.time()) - j["created_at"], 3),
-                         "steps": list(store.step_results(jid).keys())})
+                         "steps": list(store.step_results(jid).keys()),
+                         "decisions": [{k: v for k, v in r.items() if k in ("action", "decision_source", "llm_choice",
+                                                                             "llm_raw", "n_docs")}
+                                       for r in store.step_results(jid, "decide#").values()]})
     summary = {
-        "kind": "REAL LLM RUN", "model": os.environ.get("MODEL", "gpt-4o-mini"),
+        "kind": "REAL LLM RUN", "model": os.environ.get("MODEL", "gpt-4o-mini"), "decide_mode": a.decide_mode,
+        "recovery_reps": 0 if a.skip_recovery else a.recovery_reps,
         "base_url": os.environ.get("OPENAI_BASE_URL", "https://api.openai.com/v1"),
         "env": environment(), "jobs": job_rows,
         "llm_calls": len(calls), "llm_calls_ok": len(lat),
@@ -106,7 +114,7 @@ def main(argv=None):
     if not a.skip_recovery:
         from experiments import exp_recovery
 
-        exp_recovery.main(["--reps", "1", "--llm", "real", "--out", out,
+        exp_recovery.main(["--reps", str(a.recovery_reps), "--llm", "real", "--out", out,
                            "--cases", "baseline,s2b_kill_during_llm_restart,s3a_crash_after_publish"])
     return 0
 

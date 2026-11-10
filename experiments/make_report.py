@@ -133,7 +133,7 @@ def _part1_linux():
             for c in lr["cases"]]
     return ["", "### Part 1 на Linux: тот же эксперимент в Docker-контейнере (настоящий SIGKILL)", "",
             f"Окружение: {env.get('os', '?')}, Python {env.get('python', '?')} (образ из `Dockerfile`, Docker Desktop "
-            "на этой же машине, ядро WSL2). Код и параметры те же (`python -m experiments.exp_recovery --reps 5`), "
+            f"на этой же машине, ядро WSL2). Код и параметры те же (`python -m experiments.exp_recovery --reps {lr['cases'][0]['n']}`), "
             "но `Popen.kill()` здесь посылает POSIX SIGKILL. Сырые данные — отдельно, в `results/raw_linux/`; с "
             "Windows-прогоном выше не смешиваются. Команда: `.\\scripts\\run_linux.ps1 -Parts recovery`.", "",
             table(["сценарий", "N", "итог", "время job p50 [min–max], с", "воркер готов → возобновление p50, с",
@@ -453,8 +453,8 @@ def section_part3(ld):
         "### Ожидание по user × class (ожидание = суммарное время в очереди в состоянии «готов к запуску», "
         "по всем шагам; для истёкших в очереди — до момента истечения)", "", gt, "",
         "![p95](results/figures/load_wait_p95.png)", "",
-        "### Ожидание по приоритету (aging и защита от голодания; все 3 seed)", "", prio_t, "", *prio_note, "",
-        "### Сводка по политикам (сумма/максимум по 3 прогонам)", "", pt, "",
+        f"### Ожидание по приоритету (aging и защита от голодания; все {len(ld['seeds'])} seed)", "", prio_t, "", *prio_note, "",
+        f"### Сводка по политикам (сумма/максимум по {len(ld['seeds'])} прогонам на политику)", "", pt, "",
         f"Масштабирование времени добавляет накладные расходы: медиана (фактическая − номинальная длительность шага) = "
         f"{fmt(ld['step_overhead_p50'], 3)} вирт. с, p95 = {fmt(ld['step_overhead_p95'], 3)} вирт. с "
         f"(транзакции SQLite и цикл asyncio в реальном времени не масштабируются).", "",
@@ -518,8 +518,71 @@ def section_part3(ld):
         "`tests/test_timers_and_slots.py::test_waiting_job_does_not_occupy_execution_slot` (при `global_concurrency=1` "
         "вторая job полностью выполняется, пока первая ждёт approval) и E2/E6 (0 открытых `step_runs` в ожидании).",
     ]
+    out += _part3_approval(ld)
     out += _part3_linux()
     return "\n".join(out)
+
+
+def _part3_approval(ld):
+    """Approval under load: same trace/seeds/resources as the main drr runs, a seeded share of jobs needs approval."""
+    la = load(os.path.join(ROOT, "results", "raw"), prefix="loadappr_")
+    if not la["jobs"]:
+        return []
+    meta = la["meta"]
+    base = next((p for p in ld["per_policy"] if p["policy"] == "drr"), None)
+    appr = la["per_policy"][0]
+
+    def extra(d, label_jobs):
+        ts = d["ts"] if "ts" in d else []
+        waiting = [x for x in ts if (x.get("waiting_total") or 0) > 0]
+        lim = d["per_policy"][0]["global_limit"] if d["per_policy"] else None
+        full = sum(1 for x in waiting if x["active_total"] == lim)
+        # steps of a job executed while that same job was waiting for approval (must be 0)
+        win = {(r["seed"], r["job_id"]): (r["approval_wait_start_v"], r["approval_wait_end_v"])
+               for r in label_jobs if r.get("approval_wait_start_v") is not None and r.get("approval_wait_end_v") is not None}
+        overlap = sum(1 for r in d["runs"] if (r["seed"], r["job_id"]) in win
+                      and win[(r["seed"], r["job_id"])][0] < r["start_v"] < win[(r["seed"], r["job_id"])][1])
+        return {"max_wait_n": max([x.get("waiting_total") or 0 for x in ts] or [0]),
+                "waiting_samples": len(waiting), "full_when_waiting": full, "overlap": overlap,
+                "need": sum(1 for r in label_jobs if r.get("require_approval")),
+                "waited": sum(1 for r in label_jobs if r.get("approval_wait_start_v") is not None)}
+
+    seeds = set(la["seeds"])
+    base_jobs = [r for r in ld["jobs"] if r["policy"] == "drr" and r["seed"] in seeds]
+    eb = extra({"ts": [x for x in ld["ts"] if x["policy"] == "drr" and x["seed"] in seeds],
+                "runs": [r for r in ld["runs"] if r["policy"] == "drr" and r["seed"] in seeds],
+                "per_policy": [base] if base else []}, base_jobs)
+    ea = extra(la, la["jobs"])
+
+    def g(d, p, t, c):
+        x = next((x for x in d["groups"] if x["policy"] == p and x["tenant"] == t and x["job_class"] == c), None)
+        return f"{fmt(x['p95'])} (N = {x['n']})" if x else "–"
+
+    def row(name, p, e, d):
+        return [name, p["admitted"], e["need"], e["waited"], p["succeeded"], p["timed_out"], fmt(p["throughput"], 3),
+                f"{p['slot_utilization_burst']:.1%}", g(d, "drr", "light1", "short"), e["max_wait_n"],
+                f"{p['max_global_obs']} / {p['global_limit']}",
+                f"{e['full_when_waiting']} из {e['waiting_samples']}" if e["waiting_samples"] else "–", e["overlap"]]
+
+    rows = []
+    if base:
+        rows.append(row("drr, без approval (основной прогон)", base, eb, ld))
+    rows.append(row(f"drr, approval у {meta.get('approval_share', 0):.0%} job", appr, ea, la))
+    return ["", "### Approval под нагрузкой (ожидание не занимает слоты)", "",
+            f"Тот же поток заявок, те же seeds {la['seeds']} и ресурсы, политика `drr`; доля job, требующих approval, — "
+            f"{meta.get('approval_share', 0):.0%} (выбор по seed, поток заявок не меняется); симулированный «человек» "
+            f"отвечает через {fmt(meta.get('approval_delay_v'), 0)} вирт. с после входа job в `WAITING_EVENT` (ожидание "
+            "считается в дедлайн). Базовая строка — прогоны `drr` из основной таблицы. Сырые данные: "
+            "`results/raw/loadappr_*` (`--approval-share 0.5 --approval-delay 20 --prefix loadappr_`).", "",
+            table(["вариант", "принято", "требуют approval", "дошли до ожидания approval", "SUCCEEDED", "TIMED_OUT", "jobs/s",
+                   "загрузка слотов в burst", "p95 ожидания в очереди light1 short, с",
+                   "max одновременно в WAITING_EVENT", "max активных шагов / лимит",
+                   "моменты с ожидающими job, когда заняты все слоты", "шагов job во время её же ожидания"], rows), "",
+            "Ожидание approval не держит слот: одновременно в `WAITING_EVENT` находились десятки job, а активных шагов "
+            "никогда не было больше лимита, и в большинстве моментов с ожидающими job все слоты были заняты *другой* "
+            "работой; ни один шаг job не исполнялся, пока она ждала approval (последний столбец). Цена ожидания "
+            "видна в истечениях: время ожидания approval входит в дедлайн, поэтому при перегрузке часть ожидающих "
+            "job истекает."]
 
 
 def _part3_linux():
@@ -742,8 +805,8 @@ LIMITS = """
 * **Масштабированное время** в Part 3 (1 вирт. с = 0.1 с): накладные расходы рантайма (транзакции, поллинг)
   не масштабируются и в вирт. секундах выглядят больше (оценка приведена). Абсолютные значения — для этой
   машины и этого масштаба; сравнение политик корректно, т.к. условия одинаковые.
-* **Статистика.** Part 1: 5 повторов на сценарий; Part 3: 3 прогона на политику — разброс p95 по seed показан,
-  доверительные интервалы не считались. Для `light*`×`long` число наблюдений невелико (см. N в таблице).
+* **Статистика.** Part 1: 10 повторов на сценарий; Part 2: 300 повторов гонки E5; Part 3: 5 прогонов (seed) на политику —
+  разброс p95 по seed показан, доверительные интервалы не считались. Для `light*`×`long` и priority = 1 наблюдений меньше (см. N).
 * **Неопределённость внешних вызовов** не устранима на стороне клиента: прерванный LLM-вызов может быть
   оплачен; мы даём верхнюю оценку (prompt + max_output_tokens), а не точное значение.
 * **Окно публикации при cancel.** Отмена во время `publish` не может «отозвать» уже отправленный запрос;

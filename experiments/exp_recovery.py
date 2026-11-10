@@ -4,7 +4,7 @@ Worker = separate OS process (``python -m agentrt.cli worker``), killed with
 Popen.kill() (SIGKILL on POSIX, TerminateProcess on Windows).
 FakePublisherService = separate HTTP process with its own SQLite file.
 
-Usage: python -m experiments.exp_recovery [--reps 5] [--llm sim|real] [--out results/raw]
+Usage: python -m experiments.exp_recovery [--reps 10] [--llm sim|real] [--out results/raw]
 """
 from __future__ import annotations
 

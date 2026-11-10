@@ -4,7 +4,10 @@ Same arrival trace (per seed) for every policy, same resources (global_concurren
 Time is SCALED: 1 virtual second = TIME_SCALE real seconds (default 0.1 -> 100 ms).
 All reported times are virtual seconds.
 
-Usage: python -m experiments.exp_load [--seeds 11,12,13] [--policies fifo,drr,drr_iso] [--scale 0.1]
+Usage: python -m experiments.exp_load [--seeds 11,12,13,14,15] [--policies fifo,drr,drr_iso] [--scale 0.1]
+Approval under load (Part 3 addendum): --policies drr --approval-share 0.5 --approval-delay 20 --prefix loadappr_
+  -> a seeded share of jobs requires human approval; a simulated approver answers approval_delay virtual seconds
+     after the job entered WAITING_EVENT. Same arrival trace as the main runs, so the main drr runs are the baseline.
 """
 from __future__ import annotations
 
@@ -72,7 +75,13 @@ def make_cfg(policy: str, seed: int, scale: float) -> Config:
                   **POLICIES[policy])
 
 
-async def run_once(policy: str, seed: int, trace: list[dict], scale: float, sample_v: float = 0.5) -> dict:
+def needs_approval(seed: int, arrival_id: int, share: float) -> bool:
+    # separate RNG: does not change the arrival trace
+    return share > 0 and random.Random(seed * 1_000_003 + arrival_id).random() < share
+
+
+async def run_once(policy: str, seed: int, trace: list[dict], scale: float, sample_v: float = 0.5,
+                   approval_share: float = 0.0, approval_delay_v: float = 20.0) -> dict:
     d = fresh_dir("load", f"{policy}_{seed}")
     db = os.path.join(d, "s.db")
     cfg = make_cfg(policy, seed, scale)
@@ -82,7 +91,7 @@ async def run_once(policy: str, seed: int, trace: list[dict], scale: float, samp
     while worker.ready_at is None:
         await asyncio.sleep(0.001)
     t0 = time.time()
-    samples, created, rejected = [], {}, []
+    samples, created, rejected, approvals = [], {}, [], []
     done = asyncio.Event()
 
     async def arrivals():
@@ -92,7 +101,8 @@ async def run_once(policy: str, seed: int, trace: list[dict], scale: float, samp
                 await asyncio.sleep(delay)
             try:
                 job, _ = store.create_job(a["tenant"], f"arr-{a['arrival_id']}", a["job_class"], a["priority"],
-                                          params={"require_approval": False, "collection_id": f"c{a['arrival_id']}"},
+                                          params={"require_approval": needs_approval(seed, a["arrival_id"], approval_share),
+                                                  "collection_id": f"c{a['arrival_id']}"},
                                           limits={"deadline_s": DEADLINE_V[a["job_class"]], "step_timeout_s": 60})
                 created[job["job_id"]] = a
                 worker.wake()
@@ -113,22 +123,42 @@ async def run_once(policy: str, seed: int, trace: list[dict], scale: float, samp
                 row[f"active_{t}"] = r.get(t, 0)
             row["queued_total"] = sum(q.values())
             row["active_total"] = sum(r.values())
+            row["waiting_total"] = store.conn.execute("SELECT COUNT(*) FROM jobs WHERE state='WAITING_EVENT'").fetchone()[0]
             row["oldest_queued_age_v"] = round((now - oldest) / scale, 3) if oldest else 0.0
             samples.append(row)
             await asyncio.sleep(sample_v * scale)
 
+    async def approver():  # simulated human: approves approval_delay_v after the job started waiting
+        while not done.is_set():
+            now = time.time()
+            for jid, apr, since in store.conn.execute(
+                    "SELECT job_id, approval_id, updated_at FROM jobs WHERE state='WAITING_EVENT'").fetchall():
+                if now - since >= approval_delay_v * scale:
+                    r = store.submit_event(jid, f"evt-appr-{jid}-{apr}", "approval",
+                                           {"approval_id": apr, "decision": "approve"})
+                    approvals.append(r["outcome"])
+                    worker.wake()
+            await asyncio.sleep(sample_v * scale)
+
     st = asyncio.create_task(sampler())
+    ap_task = asyncio.create_task(approver()) if approval_share > 0 else None
     await arrivals()
     while store.conn.execute("SELECT COUNT(*) FROM jobs WHERE state IN ('QUEUED','RUNNING','WAITING_EVENT')").fetchone()[0]:
         await asyncio.sleep(0.05)
     t_end = time.time()
     done.set()
     await st
+    if ap_task:
+        await ap_task
     worker.stop()
     await wtask
 
     jobs = []
     last_src = dict(store.conn.execute("SELECT job_id, src FROM transitions WHERE dst='TIMED_OUT'").fetchall())
+    wait_in = dict(store.conn.execute("SELECT job_id, MIN(ts) FROM transitions WHERE dst='WAITING_EVENT' "
+                                      "GROUP BY job_id").fetchall())
+    wait_out = dict(store.conn.execute("SELECT job_id, MIN(ts) FROM transitions WHERE src='WAITING_EVENT' "
+                                       "GROUP BY job_id").fetchall())
     for r in store.conn.execute("SELECT * FROM jobs"):
         a = created[r["job_id"]]
         # a job that expired while queued: its last queued interval is never closed by a claim
@@ -141,7 +171,10 @@ async def run_once(policy: str, seed: int, trace: list[dict], scale: float, samp
                      "wait_first_v": round((r["first_started_at"] - r["created_at"]) / scale, 4)
                      if r["first_started_at"] else None,
                      "e2e_v": round((r["finished_at"] - r["created_at"]) / scale, 4),
-                     "steps": r["step_seq"], "error": r["error"]})
+                     "steps": r["step_seq"], "error": r["error"],
+                     "require_approval": bool(json.loads(r["params"] or "{}").get("require_approval")),
+                     "approval_wait_start_v": round((wait_in[r["job_id"]] - t0) / scale, 4) if r["job_id"] in wait_in else None,
+                     "approval_wait_end_v": round((wait_out[r["job_id"]] - t0) / scale, 4) if r["job_id"] in wait_out else None})
     runs = []
     for r in store.conn.execute("SELECT job_id, tenant_id, job_class, step_key, started_at, ended_at, outcome FROM step_runs"):
         runs.append({"policy": policy, "seed": seed, "job_id": r[0], "tenant": r[1], "job_class": r[2],
@@ -151,7 +184,7 @@ async def run_once(policy: str, seed: int, trace: list[dict], scale: float, samp
         s.update(policy=policy, seed=seed)
     for rj in rejected:
         rj.update(policy=policy, seed=seed)
-    return {"jobs": jobs, "runs": runs, "samples": samples, "rejected": rejected,
+    return {"jobs": jobs, "runs": runs, "samples": samples, "rejected": rejected, "approvals": approvals,
             "makespan_v": round((t_end - t0) / scale, 3), "counters": store.counts()["counters"]}
 
 
@@ -170,11 +203,15 @@ def max_overlap(intervals):
 
 def main(argv=None):
     ap = argparse.ArgumentParser()
-    ap.add_argument("--seeds", default="11,12,13")
+    ap.add_argument("--seeds", default="11,12,13,14,15")
     ap.add_argument("--policies", default=",".join(POLICIES))
     ap.add_argument("--scale", type=float, default=0.1)
     ap.add_argument("--out", default=RAW)
+    ap.add_argument("--approval-share", type=float, default=0.0)
+    ap.add_argument("--approval-delay", type=float, default=20.0, help="virtual seconds until the approver answers")
+    ap.add_argument("--prefix", default="load_")
     a = ap.parse_args(argv)
+    P = a.prefix
     high_res_timer()
     from agentrt.logs import setup_logging
 
@@ -185,10 +222,12 @@ def main(argv=None):
     all_jobs, all_runs, all_samples, all_rej, meta_runs = [], [], [], [], []
     for seed in seeds:
         trace = make_trace(seed)
-        write_csv(os.path.join(a.out, f"load_arrivals_seed{seed}.csv"), trace)
+        if P == "load_":
+            write_csv(os.path.join(a.out, f"load_arrivals_seed{seed}.csv"), trace)
         for policy in a.policies.split(","):
             t_real = time.time()
-            res = asyncio.run(run_once(policy, seed, trace, a.scale))
+            res = asyncio.run(run_once(policy, seed, trace, a.scale, approval_share=a.approval_share,
+                                       approval_delay_v=a.approval_delay))
             all_jobs += res["jobs"]
             all_runs += res["runs"]
             all_samples += res["samples"]
@@ -201,18 +240,21 @@ def main(argv=None):
                  "real_seconds": round(time.time() - t_real, 2),
                  "max_global_concurrency_observed": max_overlap(iv_all), "global_limit": cfg.global_concurrency,
                  "max_per_tenant_observed": per_t, "per_tenant_limit": cfg.per_tenant_concurrency,
-                 "counters": res["counters"]}
+                 "counters": res["counters"], "approval_share": a.approval_share,
+                 "approval_delay_v": a.approval_delay,
+                 "approval_outcomes": {o: res["approvals"].count(o) for o in set(res["approvals"])}}
             meta_runs.append(m)
             print(json.dumps(m), flush=True)
-    write_csv(os.path.join(a.out, "load_jobs.csv"), all_jobs)
-    write_csv(os.path.join(a.out, "load_step_runs.csv"), all_runs)
-    write_csv(os.path.join(a.out, "load_timeseries.csv"), all_samples)
-    write_csv(os.path.join(a.out, "load_rejections.csv"), all_rej)
-    with open(os.path.join(a.out, "load_meta.json"), "w") as fh:
+    write_csv(os.path.join(a.out, f"{P}jobs.csv"), all_jobs)
+    write_csv(os.path.join(a.out, f"{P}step_runs.csv"), all_runs)
+    write_csv(os.path.join(a.out, f"{P}timeseries.csv"), all_samples)
+    write_csv(os.path.join(a.out, f"{P}rejections.csv"), all_rej)
+    with open(os.path.join(a.out, f"{P}meta.json"), "w") as fh:
         json.dump({"env": environment(), "time_scale": a.scale,
                    "time_scale_note": f"1 virtual second = {a.scale} real seconds", "seeds": seeds,
                    "phases": PHASES, "long_share": LONG_SHARE, "priority_share": PRIO_SHARE,
                    "deadlines_v": DEADLINE_V, "policies": POLICIES, "global_concurrency": GLOBAL_CONC,
+                   "approval_share": a.approval_share, "approval_delay_v": a.approval_delay,
                    "nominal_work_v": {c: nominal_work(c) for c in ("short", "long")},
                    "config_example": make_cfg("drr", seeds[0], a.scale).to_dict(), "runs": meta_runs}, fh, indent=2)
 

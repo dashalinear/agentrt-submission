@@ -71,6 +71,9 @@ class Config:
 
     seed: int = 42
 
+    # --- agent policy ----------------------------------------------------------
+    decide_mode: str = "rules"           # "rules" | "llm" (LLM proposes, code guardrails; job param overrides)
+
     def real(self, virtual_seconds: float) -> float:
         return virtual_seconds * self.time_scale
 
