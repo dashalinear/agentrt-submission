@@ -55,6 +55,7 @@ def test_kill_between_steps_does_not_repeat_checkpointed_steps(tmp_path):
         wait_for(lambda: _state(store, job["job_id"]) == "SUCCEEDED", timeout=30)
     finally:
         w2.kill()
+        w2.wait()  # Windows: let the killed process release the SQLite files before reading them
     calls = _calls(ledger)
     assert sum(1 for c in calls if c["name"] == "fetch_documents") == 1  # not repeated
     keys = [c["step_key"] for c in calls]
@@ -78,6 +79,7 @@ def test_kill_during_llm_call_is_retried_after_lease_expiry(tmp_path):
         wait_for(lambda: _state(store, job["job_id"]) == "SUCCEEDED", timeout=30)
     finally:
         w2.kill()
+        w2.wait()  # Windows: let the killed process release the SQLite files before reading them
     draft0 = [c for c in _calls(ledger) if c["step_key"] == "draft#0.0"]
     assert len(draft0) == 2 and draft0[0]["ended_at"] is None and draft0[1]["outcome"] == "ok"
     runs = store.conn.execute("SELECT outcome, started_at FROM step_runs WHERE job_id=? AND step_key='draft#0.0' "
@@ -109,6 +111,7 @@ def test_publication_retracted_durably_when_job_cancelled_after_worker_crash(tmp
         wait_for(lambda: FakePublisherService(pub).stats()["active_publications"] == 0 and compensated(), timeout=30)
     finally:
         w2.kill()
+        w2.wait()  # Windows: let the killed process release the SQLite files before reading them
     st = FakePublisherService(pub).stats()
     assert st["logical_publications"] == 1 and st["retracted"] == 1
     assert _state(store, job["job_id"]) == "CANCELLED"  # terminal state unchanged
@@ -127,6 +130,7 @@ def test_side_effect_without_ack_is_not_duplicated(tmp_path):
         wait_for(lambda: _state(store, job["job_id"]) == "SUCCEEDED", timeout=30)
     finally:
         w2.kill()
+        w2.wait()  # Windows: let the killed process release the SQLite files before reading them
     st = FakePublisherService(pub).stats()
     assert st["physical_publish_requests"] == 2
     assert st["logical_publications"] == 1 and st["replays"] == 1
