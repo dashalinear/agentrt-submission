@@ -14,7 +14,8 @@ HTTP API на **FastAPI** и CLI-обёрткой. Агент: `register job →
 
 Проверено: Windows 10 (PowerShell / Git Bash), Python 3.13.7 (`.python-version`); код требует ≥ 3.11.
 Также проверено в Linux-контейнере (`Dockerfile`, Python 3.13.18): все тесты, эксперименты Part 1–3
-(`results/raw_linux/`, отдельный блок в отчёте) и `docker-compose.yml`. Docker не обязателен.
+(`results/raw_linux/`, отдельный блок в отчёте), `docker-compose.yml` и манифесты Kubernetes (`k8s/`). Docker не
+обязателен.
 
 ### CI на отдельной Linux-машине (GitHub Actions)
 
@@ -43,6 +44,35 @@ Linux/macOS с Docker: `bash scripts/run_linux.sh [tests,recovery,events,load,di
 `approval_id` сохранены, approval применяется; у FakePublisherService 2 логические публикации на 2 job.
 Воркер в compose подхватывает `.env`, если он есть (в образ он не попадает — см. `.dockerignore`); ключи нужны
 только при `LLM=real`, по умолчанию `LLM=sim`.
+
+### Kubernetes (опционально)
+
+Манифесты — `k8s/agentrt.yaml` (проверено на локальном кластере Docker Desktop, kubeadm, Kubernetes v1.36.1):
+
+| объект | что внутри |
+|---|---|
+| `Namespace agentrt` | всё остальное |
+| `StatefulSet publisher` + `Service publisher:8765` | FakePublisherService со своей БД на своём PVC |
+| `StatefulSet agentrt` + `Service api:8000` | один под с двумя контейнерами, `api` и `worker`, и общим PVC с `state.db` |
+
+`api` и `worker` живут в одном поде, потому что SQLite (WAL) требует, чтобы оба процесса видели один файл на одном
+узле; поэтому `replicas: 1` (single-writer, см. «Ограничения» в REPORT.md). Восстановление на двух уровнях: упал
+контейнер воркера — kubelet перезапускает его (`restartPolicy: Always`), удалён под — StatefulSet создаёт его заново
+на том же PVC. `shareProcessNamespace: true` нужен для демо: воркер не PID 1 пода, поэтому `kill -9` действительно
+его убивает. Образ собирается локально и не тянется из реестра (`imagePullPolicy: Never`). Ключи реальной LLM — только
+в Secret: `kubectl -n agentrt create secret generic agentrt-llm --from-env-file=.env` и `LLM=real` в манифесте.
+
+```powershell
+docker build -t agentrt:local .
+kubectl apply -f k8s/agentrt.yaml
+kubectl -n agentrt port-forward svc/api 8000:8000       # API на http://127.0.0.1:8000
+.\scripts\demo_k8s.ps1 -Fresh                           # сквозная проверка (ниже); -Pause — пауза перед каждым шагом
+```
+`demo_k8s.ps1` проверяет: два `POST /jobs` с одним `Idempotency-Key` → один `job_id`; `kill -9` процесса воркера внутри
+пода → контейнер перезапущен (exit 137), job продолжается сама, шаги с чекпоинтом не повторяются, прерванный —
+вторая попытка; удаление всего пода во время `WAITING_EVENT` → новый под на том же PVC, состояние, дедлайн и
+`approval_id` сохранены; дубль approval → `duplicate`; cancel после `SUCCEEDED` → `already_terminal`; у
+FakePublisherService 1 логическая публикация. Отчётные эксперименты в Kubernetes не запускались.
 
 ### Локально, без Docker (основной способ; так получены основные результаты отчёта)
 
@@ -76,6 +106,7 @@ python -m agentrt.cli cancel --db state.db <job_id>
 | что | команда (Windows; для Linux/macOS — `scripts/*.sh`) |
 |---|---|
 | ручное демо в отдельных процессах: дубль создания по ключу → kill воркера посреди job → автоматическое возобновление → дубль approval с тем же `event_id` → позднее событие и cancel после терминала → 1 логическая публикация | `.\scripts\demo_manual.ps1` (только PowerShell) |
+| то же в Kubernetes: kill -9 воркера в поде, удаление пода во время ожидания approval, дубль события | `.\scripts\demo_k8s.ps1 -Fresh` (нужен локальный кластер) |
 | все сценарии Part 1 (kill между шагами, kill во время LLM, крэш после publish, потерянный ack, повторяющаяся transient-ошибка) | `.\scripts\exp_recovery.ps1`; один сценарий, не трогая отчётные данные: `python -m experiments.exp_recovery --cases s1_kill_between_steps --reps 1 --out results/work/try` |
 | E1–E7 Part 2 (в т.ч. E3 — дубли событий, E5 — гонки) | `.\scripts\exp_events.ps1` |
 | нагрузка Part 3, 3 политики × 5 seed (+ approval под нагрузкой) | `.\scripts\exp_load.ps1` |
@@ -373,7 +404,8 @@ src/agentrt/      config, db (схема+триггеры), states, store, worke
 experiments/      exp_recovery.py (Part 1), exp_events.py (Part 2), exp_load.py (Part 3),
                   real_llm_run.py, make_report.py (графики + REPORT.md/PDF)
 tests/            pytest (вывод: results/pytest_output.txt)
-scripts/          *.sh и *.ps1 обёртки
+scripts/          *.sh и *.ps1 обёртки, демо (demo_manual, demo_docker, demo_k8s)
+k8s/              манифесты Kubernetes (agentrt.yaml)
 results/raw/      сырые CSV/JSONL/JSON всех симулированных прогонов
 results/figures/  PNG
 results/real_llm/         реальная LLM, Ollama локально (scripts/run_real_llm.*)

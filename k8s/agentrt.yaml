@@ -1,0 +1,126 @@
+# agentrt on Kubernetes (single node; checked on the local Docker Desktop cluster).
+#
+#   publisher  StatefulSet, 1 replica, own PVC   -> Service publisher:8765  (FakePublisherService)
+#   agentrt    StatefulSet, 1 replica, one PVC   -> Service api:8000        (containers: api + worker)
+#
+# api and worker are two containers of ONE pod because SQLite (WAL) needs both processes on the same
+# filesystem and host; the PVC keeps jobs, events, timers and checkpoints across container restarts and
+# pod re-creation. Scaling beyond one replica is not supported (single-writer store, see REPORT.md).
+# shareProcessNamespace: the worker is not PID 1 of the pod, so `kill -9` really kills it and the kubelet
+# restarts the container (restartPolicy Always) - used by scripts/demo_k8s.ps1.
+#
+# Image: built locally (`docker build -t agentrt:local .`), never pulled (imagePullPolicy: Never).
+# Real LLM (optional): kubectl -n agentrt create secret generic agentrt-llm --from-env-file=.env
+# and set LLM=real below; without the secret the worker uses the deterministic SimulatedLLM.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: agentrt
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: publisher
+  namespace: agentrt
+spec:
+  selector: {app: publisher}
+  ports: [{name: http, port: 8765, targetPort: 8765}]
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: publisher
+  namespace: agentrt
+spec:
+  serviceName: publisher
+  replicas: 1
+  selector:
+    matchLabels: {app: publisher}
+  template:
+    metadata:
+      labels: {app: publisher}
+    spec:
+      containers:
+        - name: publisher
+          image: agentrt:local
+          imagePullPolicy: Never
+          command: [python, -m, agentrt.cli, publisher, --db, /data/publisher.db, --host, 0.0.0.0, --port, "8765"]
+          ports: [{containerPort: 8765}]
+          readinessProbe:
+            httpGet: {path: /health, port: 8765}
+            periodSeconds: 2
+          resources:
+            requests: {cpu: 50m, memory: 96Mi}
+            limits: {memory: 384Mi}
+          volumeMounts: [{name: data, mountPath: /data}]
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: [ReadWriteOnce]
+        resources:
+          requests: {storage: 256Mi}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api
+  namespace: agentrt
+spec:
+  selector: {app: agentrt}
+  ports: [{name: http, port: 8000, targetPort: 8000}]
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: agentrt
+  namespace: agentrt
+spec:
+  serviceName: api
+  replicas: 1                     # single-writer SQLite store: exactly one pod
+  selector:
+    matchLabels: {app: agentrt}
+  template:
+    metadata:
+      labels: {app: agentrt}
+    spec:
+      shareProcessNamespace: true
+      terminationGracePeriodSeconds: 5
+      containers:
+        - name: api
+          image: agentrt:local
+          imagePullPolicy: Never
+          command: [python, -m, agentrt.cli, serve, --db, /data/state.db, --host, 0.0.0.0, --port, "8000"]
+          ports: [{containerPort: 8000}]
+          readinessProbe:
+            httpGet: {path: /metrics, port: 8000}
+            periodSeconds: 2
+          livenessProbe:
+            httpGet: {path: /metrics, port: 8000}
+            periodSeconds: 10
+            failureThreshold: 3
+          resources:
+            requests: {cpu: 50m, memory: 128Mi}
+            limits: {memory: 512Mi}
+          volumeMounts: [{name: data, mountPath: /data}]
+        - name: worker
+          image: agentrt:local
+          imagePullPolicy: Never
+          # fixed --name: a restarted worker takes over the lease of its own dead incarnation at once
+          command: [sh, -c, 'exec python -m agentrt.cli worker --db /data/state.db --name w1
+                    --publisher-url http://publisher:8765 --llm "$LLM"']
+          env:
+            - {name: LLM, value: sim}
+          envFrom:
+            - secretRef: {name: agentrt-llm, optional: true}
+          resources:
+            requests: {cpu: 100m, memory: 128Mi}
+            limits: {memory: 512Mi}
+          volumeMounts: [{name: data, mountPath: /data}]
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: [ReadWriteOnce]
+        resources:
+          requests: {storage: 512Mi}
